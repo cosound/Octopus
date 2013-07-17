@@ -1,0 +1,8 @@
+!lib/
+.Idea/
+target/
+
+*.class
+*.iml
+
+surefire-reports/
