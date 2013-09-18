@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>parent-project</artifactId>
+        <groupId>com.chaos.octopus</groupId>
+        <version>2.0</version>
+    </parent>
+
+    <artifactId>octopus-agent</artifactId>
+
+    <properties>
+        <powermock.version>1.5.1</powermock.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>powermock</groupId>
+            <artifactId>powermock-api-eastmock</artifactId>
+            <version>1.5.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../lib/powermock-easymock-junit-1.5.1/powermock-easymock-1.5.1-full.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>powermock</groupId>
+            <artifactId>eastmock</artifactId>
+            <version>3.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../lib/powermock-easymock-junit-1.5.1/easymock-3.1.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>powermock</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>1.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../lib/powermock-easymock-junit-1.5.1/objenesis-1.2.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>powermock</groupId>
+            <artifactId>cglib</artifactId>
+            <version>2.2.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../lib/powermock-easymock-junit-1.5.1/cglib-nodep-2.2.2.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+</project>
