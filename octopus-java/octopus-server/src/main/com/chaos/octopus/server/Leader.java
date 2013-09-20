@@ -8,22 +8,22 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Server implements Runnable, AutoCloseable
+public class Leader implements Runnable, AutoCloseable
 {
-	private ArrayList<Socket> _agents; 
-	private boolean           _isRunning;
-	private Thread            _thread;
-	private ServerSocket      _socket;
-	private int               _port;
+	private ArrayList<AgentProxy> _agents; 
+	private boolean               _isRunning;
+	private Thread                _thread;
+	private ServerSocket          _socket;
+	private int                   _port;
 	
-	public Server(int port)
+	public Leader(int port)
 	{
-		_agents    = new ArrayList<Socket>();
+		_agents    = new ArrayList<AgentProxy>();
 		_port      = port;
 		_isRunning = false;
 	}
 
-	public ArrayList<Socket> get_Agents() 
+	public ArrayList<AgentProxy> get_Agents() 
 	{
 		synchronized (_agents)
 		{
@@ -55,10 +55,10 @@ public class Server implements Runnable, AutoCloseable
 			{
 				Socket agent = _socket.accept();
 				String result = readString(agent.getInputStream());
-
+				
 				if("ACK".equals(result))
 				{
-					get_Agents().add(agent);
+					get_Agents().add(new AgentProxy(agent));
 				}
 			} 
 			catch (SocketException se)
@@ -70,17 +70,36 @@ public class Server implements Runnable, AutoCloseable
 			catch (IOException e)
 			{
 				e.printStackTrace();
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
 
-	private String readString(InputStream inputStream) throws IOException
+	private String readString(InputStream inputStream) throws Exception
 	{
-		byte[] buffer = new byte[100];
+		for(int i = 1000; i > 0; i--)
+		{
+			int available = inputStream.available();
+			
+			if(available > 0)
+			{
+				byte[] buffer = new byte[4096];
+				
+				int read = inputStream.read(buffer);
+			
+				return new String(buffer, 0, read);
+			}
+			Thread.sleep(1);
+		}
 		
-		int read = inputStream.read(buffer);
-		
-		return new String(buffer, 0, read);
+		throw new IOException("no data received");
 	}
 
 	public void close() throws Exception
@@ -89,9 +108,9 @@ public class Server implements Runnable, AutoCloseable
 		
 		if(_socket != null) _socket.close();
 		
-		for (Socket agent : get_Agents())
+		for (AgentProxy agent : get_Agents())
 		{
-			if(agent != null) agent.close();
+			if(agent != null) agent.get_Socket().close();
 		}
 	}
 
