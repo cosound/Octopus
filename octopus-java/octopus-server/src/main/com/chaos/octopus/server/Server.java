@@ -1,10 +1,12 @@
 package com.chaos.octopus.server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Server implements Runnable, AutoCloseable
 {
@@ -52,7 +54,7 @@ public class Server implements Runnable, AutoCloseable
 			try
 			{
 				Socket agent = _socket.accept();
-				String result = readString(agent);
+				String result = readString(agent.getInputStream());
 
 				if("ACK".equals(result))
 				{
@@ -72,11 +74,11 @@ public class Server implements Runnable, AutoCloseable
 		}
 	}
 
-	private String readString(Socket agent) throws IOException
+	private String readString(InputStream inputStream) throws IOException
 	{
 		byte[] buffer = new byte[100];
 		
-		int read = agent.getInputStream().read(buffer);
+		int read = inputStream.read(buffer);
 		
 		return new String(buffer, 0, read);
 	}
@@ -91,5 +93,18 @@ public class Server implements Runnable, AutoCloseable
 		{
 			if(agent != null) agent.close();
 		}
+	}
+
+	public List<PluginDefinition> parsePluginList(byte[] data)
+	{
+		String s = new String(data);
+		ArrayList<PluginDefinition> pluginDefinitions = new ArrayList<PluginDefinition>();
+		
+		for (String id : s.split(";"))
+		{
+			pluginDefinitions.add(new PluginDefinition(id));
+		}
+		
+		return pluginDefinitions;
 	}
 }
