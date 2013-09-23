@@ -74,12 +74,12 @@ public class EstablishConnectionTest
 			leader.open();
 			agent.open();
 			
-			for(int i = 10; i > 0 && noOfPlugins != 1; i--)
+			for(int i = 1000; i > 0 && noOfPlugins != 1; i--)
 			{
 				if(leader.get_Agents().size() > 0)
 					noOfPlugins = leader.get_Agents().get(0).get_SupportedPlugins().size();
 				
-				Thread.sleep(100);
+				Thread.sleep(1);
 			}
 		}
 
@@ -105,7 +105,7 @@ public class EstablishConnectionTest
 			agent1.open();
 			agent2.open();
 			
-			for(int i = 10; i > 0 && noOfPluginsFromAgent1 != 1; i--)
+			for(int i = 1000; i > 0 && noOfPluginsFromAgent1 != 1; i--)
 			{
 				if(leader.get_Agents().size() == 2)
 				{
@@ -113,10 +113,11 @@ public class EstablishConnectionTest
 					noOfPluginsFromAgent2 = leader.get_Agents().get(1).get_SupportedPlugins().size();
 				}
 				
-				Thread.sleep(100);
+				Thread.sleep(1);
 			}
 		}
 
 		assertEquals(1,  noOfPluginsFromAgent1);
+		assertEquals(1,  noOfPluginsFromAgent2);
 	}
 }

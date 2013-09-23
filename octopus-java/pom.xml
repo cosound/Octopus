@@ -13,6 +13,7 @@
         <module>octopus-updater</module>
         <module>octopus-server</module>
         <module>octopus-integrationtests</module>
+        <module>octopus-commons</module>
     </modules>
 
 </project>

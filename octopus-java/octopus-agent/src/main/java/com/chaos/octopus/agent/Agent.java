@@ -6,6 +6,8 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.chaos.octopus.commons.util.StreamUtilities;
+
 /**
  * User: Jesper Fyhr Knudsen
  * Date: 16-07-13
@@ -59,7 +61,7 @@ public class Agent implements Runnable, AutoCloseable
 				
 				if(available == 0) continue;
 				
-				String message = readString(_socket.getInputStream());
+				String message = StreamUtilities.ReadString(_socket.getInputStream());
 				
 				switch (message)
 				{
@@ -85,26 +87,6 @@ public class Agent implements Runnable, AutoCloseable
 		}	
 	}
 	
-	private String readString(InputStream inputStream) throws Exception
-	{
-		for(int i = 1000; i > 0; i--)
-		{
-			int available = inputStream.available();
-			
-			if(available > 0)
-			{
-				byte[] buffer = new byte[4096];
-				
-				int read = inputStream.read(buffer);
-			
-				return new String(buffer, 0, read);
-			}
-			Thread.sleep(1);
-		}
-		
-		throw new IOException("no data received");
-	}
-
 	public void close() throws Exception
 	{
 		_isRunning = false;

@@ -8,6 +8,8 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.chaos.octopus.commons.util.StreamUtilities;
+
 public class Leader implements Runnable, AutoCloseable
 {
 	private ArrayList<AgentProxy> _agents; 
@@ -54,7 +56,7 @@ public class Leader implements Runnable, AutoCloseable
 			try
 			{
 				Socket agent = _socket.accept();
-				String result = readString(agent.getInputStream());
+				String result = StreamUtilities.ReadString(agent.getInputStream());
 				
 				if("ACK".equals(result))
 				{
@@ -80,26 +82,6 @@ public class Leader implements Runnable, AutoCloseable
 				e.printStackTrace();
 			}
 		}
-	}
-
-	private String readString(InputStream inputStream) throws Exception
-	{
-		for(int i = 1000; i > 0; i--)
-		{
-			int available = inputStream.available();
-			
-			if(available > 0)
-			{
-				byte[] buffer = new byte[4096];
-				
-				int read = inputStream.read(buffer);
-			
-				return new String(buffer, 0, read);
-			}
-			Thread.sleep(1);
-		}
-		
-		throw new IOException("no data received");
 	}
 
 	public void close() throws Exception

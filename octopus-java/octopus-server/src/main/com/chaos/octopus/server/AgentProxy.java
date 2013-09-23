@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.chaos.octopus.commons.util.StreamUtilities;
+
 public class AgentProxy
 {
 	private Socket _Socket;
@@ -34,7 +36,7 @@ public class AgentProxy
 			{
 				get_Socket().getOutputStream().write("supported-plugin-list".getBytes());
 				
-				String plugins = readString(get_Socket().getInputStream());
+				String plugins = StreamUtilities.ReadString(get_Socket().getInputStream());
 				
 				_SupportedPlugins = new ArrayList<String>();
 				
@@ -56,27 +58,7 @@ public class AgentProxy
 		
 		return _SupportedPlugins;
 	}
-	
-	private String readString(InputStream inputStream) throws Exception
-	{
-		for(int i = 1000; i > 0; i--)
-		{
-			int available = inputStream.available();
-			
-			if(available > 0)
-			{
-				byte[] buffer = new byte[4096];
-				
-				int read = inputStream.read(buffer);
-			
-				return new String(buffer, 0, read);
-			}
-			Thread.sleep(1);
-		}
 		
-		throw new IOException("no data received");
-	}
-	
 	public void set_SupportedPlugins(List<String> supportedPlugins)
 	{
 		this._SupportedPlugins = supportedPlugins;
