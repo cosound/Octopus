@@ -1,7 +1,6 @@
 package com.chaos.octopus.server;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -10,7 +9,7 @@ import java.util.List;
 
 import com.chaos.octopus.commons.util.StreamUtilities;
 
-public class Leader implements Runnable, AutoCloseable
+public class Orchestrator implements Runnable, AutoCloseable
 {
 	private ArrayList<AgentProxy> _agents; 
 	private boolean               _isRunning;
@@ -18,7 +17,7 @@ public class Leader implements Runnable, AutoCloseable
 	private ServerSocket          _socket;
 	private int                   _port;
 	
-	public Leader(int port)
+	public Orchestrator(int port)
 	{
 		_agents    = new ArrayList<AgentProxy>();
 		_port      = port;

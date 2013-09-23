@@ -13,7 +13,7 @@ public class ServerTest
 	@Test
 	public void parsePluginList_GivenListInBinaryFormat_ReturnListOfPlugins() throws Exception
 	{
-		try(Leader leader = new Leader(0); )
+		try(Orchestrator leader = new Orchestrator(0); )
 		{
 			byte[] data = "com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;com.chaos.octopus.agent.unit.TestPlugin, 1.1.0;".getBytes();
 			

@@ -1,11 +1,11 @@
 package com.chaos.octopus.agent;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
 
 /**
@@ -65,7 +65,7 @@ public class Agent implements Runnable, AutoCloseable
 				
 				switch (message)
 				{
-				case "supported-plugin-list":
+				case Commands.LIST_SUPPORTED_PLUGINS:
 					_socket.getOutputStream().write(serializeSupportedPlugins());
 					break;
 				default:

@@ -1,11 +1,11 @@
 package com.chaos.octopus.server;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
 
 public class AgentProxy
@@ -34,7 +34,7 @@ public class AgentProxy
 		{
 			try
 			{
-				get_Socket().getOutputStream().write("supported-plugin-list".getBytes());
+				get_Socket().getOutputStream().write(Commands.LIST_SUPPORTED_PLUGINS.getBytes());
 				
 				String plugins = StreamUtilities.ReadString(get_Socket().getInputStream());
 				
