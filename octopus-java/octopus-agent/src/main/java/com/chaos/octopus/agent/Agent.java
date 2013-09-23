@@ -70,15 +70,10 @@ public class Agent implements Runnable, AutoCloseable
 					break;
 				}
 			}
-			catch (SocketException se)
-			{
-				// if the socket is closed it means the server is turned off, so we can ignore the exception
-				if(!_socket.isClosed()) se.printStackTrace();
-			}
 			catch (IOException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// if the socket is closed it means the server is turned off, so we can ignore the exception
+				if(!_socket.isClosed()) e.printStackTrace();
 			} 
 			catch (Exception e)
 			{
