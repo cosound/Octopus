@@ -2,8 +2,7 @@ package com.chaos.octopus.agent;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
@@ -18,17 +17,19 @@ public class Agent implements Runnable, AutoCloseable
 	private String       _hostname;
     private int          _port;
     private boolean      _isRunning;
-    private List<Plugin> _supportedPlugins;
     private Thread		 _thread;
     private Socket       _socket; 
+    private Map<String, PluginDefinition> _PluginDefinitions;
+    private PriorityQueue<Plugin> _queue;
     
     public Agent(String hostname, int port)
     {
-    	_hostname         = hostname;
-    	_port             = port;
-    	_isRunning        = false;
-    	_supportedPlugins = new ArrayList<Plugin>();
-    	_thread           = new Thread(this);
+    	_hostname  = hostname;
+    	_port      = port;
+    	_isRunning = false;
+    	_thread    = new Thread(this);
+    	_queue     = new PriorityQueue<Plugin>();
+    	_PluginDefinitions        = new HashMap<String, PluginDefinition>();
     }
 
 	public void open() 
@@ -98,21 +99,41 @@ public class Agent implements Runnable, AutoCloseable
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		for (Plugin plugin : get_SupportedPlugins())
+		for (PluginDefinition definition : get_SupportedPlugins())
 		{
-			sb.append(String.format("%s;", plugin.get_Id()));
+			sb.append(String.format("%s;", definition.get_Id()));
 		}
 		
 		return sb.toString().getBytes();
 	}
 
-	public void addPlugin(Plugin plugin)
+	public void addPlugin(PluginDefinition pluginFactory)
 	{
-		_supportedPlugins.add(plugin);		
+		_PluginDefinitions.put(pluginFactory.get_Id(), pluginFactory);	
 	}
 
-	public List<Plugin> get_SupportedPlugins()
+	public List<PluginDefinition> get_SupportedPlugins()
 	{
-		return _supportedPlugins;
+		List<PluginDefinition> list = new ArrayList<PluginDefinition>();
+		
+		for (PluginDefinition definition : _PluginDefinitions.values())
+		{
+			list.add(definition);
+		}
+		
+		return list;
+	}
+
+	public void enqueue(String payload)
+	{
+		String pluginId = payload.split(";")[0];
+		Plugin plugin   = _PluginDefinitions.get(pluginId).create(payload);
+		
+		_queue.add(plugin);
+	}
+
+	public Queue<Plugin> get_queue()
+	{
+		return _queue;
 	}
 }

@@ -7,20 +7,20 @@ import java.util.List;
 import org.junit.Test;
 
 import com.chaos.octopus.agent.Agent;
-import com.chaos.octopus.agent.Plugin;
+import com.chaos.octopus.agent.PluginDefinition;
 
 public class AgentTest
 {
 	@Test
 	public void addPlugin_Default_PluginIsAddedToSupporedPlugins() throws Exception
 	{
-		Plugin plugin = new TestPlugin();
+		PluginDefinition plugin = new TestPlugin();
 		
 		try(Agent agent = new Agent("",0))
 		{
 			agent.addPlugin(plugin);
 			
-			List<Plugin> plugins = agent.get_SupportedPlugins();
+			List<PluginDefinition> plugins = agent.get_SupportedPlugins();
 			assertEquals(1, plugins.size());
 			assertEquals(plugin, plugins.get(0));
 		}
@@ -29,7 +29,7 @@ public class AgentTest
 	@Test
 	public void serializeSupportedPlugins_AgentSupportASinglePlugin_ReturnByteArray() throws Exception
 	{
-		Plugin plugin = new TestPlugin();
+		PluginDefinition plugin = new TestPlugin();
 		
 		try(Agent agent = new Agent("",0))
 		{
@@ -38,6 +38,32 @@ public class AgentTest
 			byte[] result = agent.serializeSupportedPlugins();
 			
 			assertEquals("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;", new String(result));
+		}
+	}
+	
+	@Test
+	public void enqueueTask_GivenATask_ShouldBeAddedToTheQueue() throws Exception
+	{
+		try(Agent agent = new Agent("",0))
+		{
+			agent.addPlugin(new TestPlugin());
+			
+			agent.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+			
+			assertEquals(1,  agent.get_queue().size());
+		}
+	}
+
+	@Test
+	public void executeTask_AgentIsStartedAndTaskQueued_TaskShouldBeExecutedAnd() throws Exception
+	{
+		try(Agent agent = new Agent("",0))
+		{
+			agent.addPlugin(new TestPlugin());
+			
+			agent.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+			
+			assertEquals(1,  agent.get_queue().size());
 		}
 	}
 }
