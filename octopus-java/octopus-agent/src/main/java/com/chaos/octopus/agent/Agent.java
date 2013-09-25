@@ -3,7 +3,6 @@ package com.chaos.octopus.agent;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
-
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
 
@@ -20,16 +19,18 @@ public class Agent implements Runnable, AutoCloseable
     private Thread		 _thread;
     private Socket       _socket; 
     private Map<String, PluginDefinition> _PluginDefinitions;
-    private PriorityQueue<Plugin> _queue;
+    private Queue<Plugin> _queue;
+    private ExecutionHandler _executionHandler;
     
     public Agent(String hostname, int port)
     {
-    	_hostname  = hostname;
-    	_port      = port;
-    	_isRunning = false;
-    	_thread    = new Thread(this);
-    	_queue     = new PriorityQueue<Plugin>();
-    	_PluginDefinitions        = new HashMap<String, PluginDefinition>();
+    	_hostname          = hostname;
+    	_port              = port;
+    	_isRunning         = false;
+    	_thread            = new Thread(this);
+    	_queue             = new LinkedList<Plugin>();
+    	_PluginDefinitions = new HashMap<String, PluginDefinition>();
+    	_executionHandler  = new ExecutionHandler(_queue);
     }
 
 	public void open() 
@@ -66,11 +67,11 @@ public class Agent implements Runnable, AutoCloseable
 				
 				switch (message)
 				{
-				case Commands.LIST_SUPPORTED_PLUGINS:
-					_socket.getOutputStream().write(serializeSupportedPlugins());
-					break;
-				default:
-					break;
+					case Commands.LIST_SUPPORTED_PLUGINS:
+						_socket.getOutputStream().write(serializeSupportedPlugins());
+						break;
+					default:
+						break;
 				}
 			}
 			catch (IOException e)
@@ -124,12 +125,14 @@ public class Agent implements Runnable, AutoCloseable
 		return list;
 	}
 
-	public void enqueue(String payload)
+	public Plugin enqueue(String payload)
 	{
 		String pluginId = payload.split(";")[0];
 		Plugin plugin   = _PluginDefinitions.get(pluginId).create(payload);
 		
 		_queue.add(plugin);
+		
+		return plugin;
 	}
 
 	public Queue<Plugin> get_queue()

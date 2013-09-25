@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.chaos.octopus.agent.Agent;
+import com.chaos.octopus.agent.Plugin;
 import com.chaos.octopus.agent.PluginDefinition;
 
 public class AgentTest
@@ -59,11 +60,19 @@ public class AgentTest
 	{
 		try(Agent agent = new Agent("",0))
 		{
-			agent.addPlugin(new TestPlugin());
+			TestPlugin factory = new TestPlugin();
+			agent.addPlugin(factory);
 			
-			agent.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+			TestPlugin plugin = (TestPlugin) agent.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+
+			assertFalse(plugin.WasExecuted);
 			
-			assertEquals(1,  agent.get_queue().size());
+			for(int i = 1000; i > 0 && !plugin.WasExecuted; i--)
+			{
+				Thread.sleep(1);
+			}
+			
+			assertTrue(plugin.WasExecuted);
 		}
 	}
 }
