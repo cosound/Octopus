@@ -28,7 +28,7 @@ public class ExecutionHandler implements Runnable, AutoCloseable
 		{
 			try
 			{
-				Thread.sleep(100);
+				Thread.sleep(10);
 				
 				int index = getIndexOfEmptySlot();
 				
@@ -36,10 +36,10 @@ public class ExecutionHandler implements Runnable, AutoCloseable
 				{
 					Plugin plugin = _queue.poll();
 					
-					_executionSlots[index] = new ExecutionSlot(this, plugin);
+					set_executionSlot(index, new ExecutionSlot(this, plugin));;
 				}
 			} 
-			catch (InterruptedException e)
+			catch (Exception e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -61,5 +61,24 @@ public class ExecutionHandler implements Runnable, AutoCloseable
 	public void close() throws Exception
 	{
 		_isRunning = false;
+	}
+
+	public ExecutionSlot get_executionSlot(int index)
+	{
+		return _executionSlots[index];
+	}
+	
+	public void set_executionSlot(int index, ExecutionSlot slot)
+	{
+		_executionSlots[index] = slot;
+	}
+
+	public void taskComplete(ExecutionSlot completedTask)
+	{
+		for (int i = 0; i < _executionSlots.length; i++)
+		{
+			if(_executionSlots[i] == completedTask) 
+				_executionSlots[i] = null;
+		}
 	}
 }

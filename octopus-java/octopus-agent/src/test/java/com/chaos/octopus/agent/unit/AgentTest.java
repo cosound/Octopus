@@ -56,7 +56,7 @@ public class AgentTest
 	}
 
 	@Test
-	public void executeTask_AgentIsStartedAndTaskQueued_TaskShouldBeExecutedAnd() throws Exception
+	public void executeTask_AgentIsStartedAndTaskQueued_TaskShouldBeExecuted() throws Exception
 	{
 		try(Agent agent = new Agent("",0))
 		{
@@ -73,6 +73,28 @@ public class AgentTest
 			}
 			
 			assertTrue(plugin.WasExecuted);
+		}
+	}
+	
+	@Test
+	public void executeTask_AgentIsStartedAndTaskQueued_TaskShouldBeRemovedFromTheExecutionSlotWhenDone() throws Exception
+	{
+		try(Agent agent = new Agent("",0))
+		{
+			TestPlugin factory = new TestPlugin();
+			agent.addPlugin(factory);
+			
+			TestPlugin plugin = (TestPlugin) agent.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+
+			assertFalse(plugin.WasExecuted);
+			
+			for(int i = 1000; i > 0 && !plugin.WasExecuted; i--)
+			{
+				Thread.sleep(1);
+			}
+			
+			assertEquals(0, agent.get_queue().size());
+			assertNull(agent.get_executionHandler().get_executionSlot(0));
 		}
 	}
 }

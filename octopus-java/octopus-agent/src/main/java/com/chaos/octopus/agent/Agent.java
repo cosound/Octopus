@@ -30,13 +30,14 @@ public class Agent implements Runnable, AutoCloseable
     	_thread            = new Thread(this);
     	_queue             = new LinkedList<Plugin>();
     	_PluginDefinitions = new HashMap<String, PluginDefinition>();
-    	_executionHandler  = new ExecutionHandler(_queue);
+    	set_executionHandler(new ExecutionHandler(_queue));
     }
 
 	public void open() 
 	{
 		try
 		{
+			// todo extract network logic into a Proxy class that is given via constructor injection.
 			_socket = new Socket(_hostname, _port);
 			_socket.getOutputStream().write("ACK".getBytes());
 			
@@ -138,5 +139,15 @@ public class Agent implements Runnable, AutoCloseable
 	public Queue<Plugin> get_queue()
 	{
 		return _queue;
+	}
+
+	public ExecutionHandler get_executionHandler()
+	{
+		return _executionHandler;
+	}
+
+	private void set_executionHandler(ExecutionHandler executionHandler)
+	{
+		_executionHandler = executionHandler;
 	}
 }
