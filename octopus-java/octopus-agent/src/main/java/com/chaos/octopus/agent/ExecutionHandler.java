@@ -3,7 +3,7 @@ package com.chaos.octopus.agent;
 
 import java.util.Queue;
 
-public class ExecutionHandler implements Runnable, AutoCloseable
+public class ExecutionHandler implements Runnable, AutoCloseable, TaskCompleteListener
 {
 	private Queue<Plugin> _queue;
 	private Thread _thread;
@@ -36,7 +36,10 @@ public class ExecutionHandler implements Runnable, AutoCloseable
 				{
 					Plugin plugin = _queue.poll();
 					
-					set_executionSlot(index, new ExecutionSlot(this, plugin));;
+					ExecutionSlot slot = new ExecutionSlot(plugin);
+					slot.addTaskCompleteListener(this);
+					
+					set_executionSlot(index, slot);;
 				}
 			} 
 			catch (Exception e)
@@ -73,7 +76,8 @@ public class ExecutionHandler implements Runnable, AutoCloseable
 		_executionSlots[index] = slot;
 	}
 
-	public void taskComplete(ExecutionSlot completedTask)
+	@Override
+	public void onTaskComplete(ExecutionSlot completedTask)
 	{
 		for (int i = 0; i < _executionSlots.length; i++)
 		{

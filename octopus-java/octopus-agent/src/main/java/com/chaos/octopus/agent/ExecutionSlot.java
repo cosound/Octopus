@@ -1,16 +1,19 @@
 package com.chaos.octopus.agent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ExecutionSlot implements Runnable
 {
 	private Thread _thread;
 	private Plugin _plugin;
-	private ExecutionHandler _executionHandler;
+	private List<TaskCompleteListener> _taskCompleteListeners;
 	
-	public ExecutionSlot(ExecutionHandler executionHandler, Plugin plugin)
+	public ExecutionSlot(Plugin plugin)
 	{
+		_taskCompleteListeners = new ArrayList<TaskCompleteListener>();
 		_thread = new Thread(this);
 		_plugin = plugin;
-		_executionHandler = executionHandler;
 		
 		_thread.start();
 	}
@@ -18,8 +21,32 @@ public class ExecutionSlot implements Runnable
 	@Override
 	public void run()
 	{
-		_plugin.execute();
-		
-		_executionHandler.taskComplete(this);
+		try
+		{
+			_plugin.execute();
+			
+			_plugin.commit();
+		}
+		catch(Exception e)
+		{
+			_plugin.rollback();
+		}
+		finally
+		{
+			onTaskComplete();
+		}
+	}
+	
+	public void addTaskCompleteListener(TaskCompleteListener callback)
+	{
+		_taskCompleteListeners.add(callback);
+	}
+	
+	private void onTaskComplete()
+	{
+		for (TaskCompleteListener callback : _taskCompleteListeners)
+		{
+			callback.onTaskComplete(this);
+		}
 	}
 }

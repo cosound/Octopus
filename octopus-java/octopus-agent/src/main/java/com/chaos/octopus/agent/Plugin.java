@@ -4,5 +4,7 @@ public interface Plugin
 {
 	String get_Id();
 
-	void execute();
+	void execute() throws Exception;
+	void rollback();
+	void commit();
 }
