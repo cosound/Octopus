@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.chaos.octopus.agent.Agent;
-import com.chaos.octopus.agent.Plugin;
 import com.chaos.octopus.agent.PluginDefinition;
 
 public class AgentTest
@@ -95,6 +94,29 @@ public class AgentTest
 			
 			assertEquals(0, agent.get_queue().size());
 			assertNull(agent.get_executionHandler().get_executionSlot(0));
+		}
+	}
+	
+	@Test
+	public void onTaskComplete_APluginIsExecuted_ShouldNotifyServer() throws Exception
+	{
+		ServerMock mock = new ServerMock();
+		
+		try(Agent agent = new Agent(mock))
+		{
+			TestPlugin factory = new TestPlugin();
+			agent.addPlugin(factory);
+			
+			TestPlugin plugin = (TestPlugin) agent.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+
+			assertFalse(plugin.WasExecuted);
+			
+			for(int i = 1000; i > 0 && !mock.WasOnCompleteCalled; i--)
+			{
+				Thread.sleep(1);
+			}
+			
+			assertTrue(mock.WasOnCompleteCalled);
 		}
 	}
 }

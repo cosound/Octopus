@@ -42,6 +42,11 @@ public class ExecutionSlot implements Runnable
 		_taskCompleteListeners.add(callback);
 	}
 	
+	public Plugin get_Plugin()
+	{
+		return _plugin;
+	}
+	
 	private void onTaskComplete()
 	{
 		for (TaskCompleteListener callback : _taskCompleteListeners)

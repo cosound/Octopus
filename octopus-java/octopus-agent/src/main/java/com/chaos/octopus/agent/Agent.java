@@ -1,10 +1,11 @@
 package com.chaos.octopus.agent;
 
 import java.io.IOException;
-import java.net.*;
 import java.util.*;
+
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
+import com.chaos.octopus.core.Orchestrator;
 
 /**
  * User: Jesper Fyhr Knudsen
@@ -13,45 +14,34 @@ import com.chaos.octopus.commons.util.StreamUtilities;
  */
 public class Agent implements Runnable, AutoCloseable
 {
-	private String       _hostname;
-    private int          _port;
     private boolean      _isRunning;
     private Thread		 _thread;
-    private Socket       _socket; 
     private Map<String, PluginDefinition> _PluginDefinitions;
     private Queue<Plugin> _queue;
     private ExecutionHandler _executionHandler;
+    private Orchestrator _orchestrator;
     
     public Agent(String hostname, int port)
     {
-    	_hostname          = hostname;
-    	_port              = port;
+    	this(new OrchestratorProxy(hostname, port));
+    }
+    
+    public Agent(Orchestrator orchestrator)
+    {
+    	_orchestrator = orchestrator;
+    	
     	_isRunning         = false;
     	_thread            = new Thread(this);
     	_queue             = new LinkedList<Plugin>();
     	_PluginDefinitions = new HashMap<String, PluginDefinition>();
-    	set_executionHandler(new ExecutionHandler(_queue));
+    	set_executionHandler(new ExecutionHandler(this, _queue));
     }
 
 	public void open() 
 	{
-		try
-		{
-			// todo extract network logic into a Proxy class that is given via constructor injection.
-			_socket = new Socket(_hostname, _port);
-			_socket.getOutputStream().write("ACK".getBytes());
-			
-			_isRunning = true;
-			_thread.start();
-		} 
-		catch (UnknownHostException e)
-		{
-			e.printStackTrace();
-		} 
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		_orchestrator.open();
+		_isRunning = true;
+		_thread.start();
 	}
 
 	public void run() 
@@ -60,16 +50,17 @@ public class Agent implements Runnable, AutoCloseable
 		{
 			try
 			{
-				int available = _socket.getInputStream().available();
+				// todo refactor so the implementation doesnt depend on the socket
+				int available = _orchestrator.get_Socket().getInputStream().available();
 				
 				if(available == 0) continue;
 				
-				String message = StreamUtilities.ReadString(_socket.getInputStream());
+				String message = StreamUtilities.ReadString(_orchestrator.get_Socket().getInputStream());
 				
 				switch (message)
 				{
 					case Commands.LIST_SUPPORTED_PLUGINS:
-						_socket.getOutputStream().write(serializeSupportedPlugins());
+						_orchestrator.get_Socket().getOutputStream().write(serializeSupportedPlugins());
 						break;
 					default:
 						break;
@@ -78,7 +69,7 @@ public class Agent implements Runnable, AutoCloseable
 			catch (IOException e)
 			{
 				// if the socket is closed it means the server is turned off, so we can ignore the exception
-				if(!_socket.isClosed()) e.printStackTrace();
+				if(!_orchestrator.get_Socket().isClosed()) e.printStackTrace();
 			} 
 			catch (Exception e)
 			{
@@ -94,7 +85,8 @@ public class Agent implements Runnable, AutoCloseable
 	{
 		_isRunning = false;
 		
-		if(_socket != null) _socket.close();
+		// todo remove direct calls to the socket
+		if(_orchestrator.get_Socket() != null) _orchestrator.get_Socket().close();
 	}
 
 	public byte[] serializeSupportedPlugins()
@@ -132,7 +124,7 @@ public class Agent implements Runnable, AutoCloseable
 		Plugin plugin   = _PluginDefinitions.get(pluginId).create(payload);
 		
 		_queue.add(plugin);
-		
+
 		return plugin;
 	}
 
@@ -149,5 +141,10 @@ public class Agent implements Runnable, AutoCloseable
 	private void set_executionHandler(ExecutionHandler executionHandler)
 	{
 		_executionHandler = executionHandler;
+	}
+
+	public void onTaskComplete(Plugin plugin)
+	{
+		_orchestrator.taskCompleted(null);
 	}
 }

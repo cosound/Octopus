@@ -9,13 +9,15 @@ public class ExecutionHandler implements Runnable, AutoCloseable, TaskCompleteLi
 	private Thread _thread;
 	private ExecutionSlot[] _executionSlots;
 	private boolean _isRunning;
+	private Agent _agent;
 	
-	public ExecutionHandler(Queue<Plugin> queue)
+	public ExecutionHandler(Agent agent, Queue<Plugin> queue)
 	{
 		_isRunning      = true;
 		_executionSlots = new ExecutionSlot[4];
 			
 		_queue = queue;
+		_agent = agent;
 		
 		_thread = new Thread(this);
 		_thread.start();
@@ -83,6 +85,8 @@ public class ExecutionHandler implements Runnable, AutoCloseable, TaskCompleteLi
 		{
 			if(_executionSlots[i] == completedTask) 
 				_executionSlots[i] = null;
+			
+			_agent.onTaskComplete(completedTask.get_Plugin());
 		}
 	}
 }
