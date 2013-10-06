@@ -56,11 +56,15 @@ public class Agent implements Runnable, AutoCloseable
 				if(available == 0) continue;
 				
 				String message = StreamUtilities.ReadString(_orchestrator.get_Socket().getInputStream());
-				
-				switch (message)
+
+				switch (message.split(":")[0])
 				{
 					case Commands.LIST_SUPPORTED_PLUGINS:
 						_orchestrator.get_Socket().getOutputStream().write(serializeSupportedPlugins());
+						break;
+					case Commands.ENQUEUE_TASK:
+						enqueue(message.split(":")[1]);
+						_orchestrator.get_Socket().getOutputStream().write("OK".getBytes());
 						break;
 					default:
 						break;
@@ -86,7 +90,7 @@ public class Agent implements Runnable, AutoCloseable
 		_isRunning = false;
 		
 		// todo remove direct calls to the socket
-		if(_orchestrator.get_Socket() != null) _orchestrator.get_Socket().close();
+	//	if(_orchestrator.get_Socket() != null) _orchestrator.get_Socket().close();
 	}
 
 	public byte[] serializeSupportedPlugins()
@@ -145,6 +149,6 @@ public class Agent implements Runnable, AutoCloseable
 
 	public void onTaskComplete(Plugin plugin)
 	{
-		_orchestrator.taskCompleted(null);
+		_orchestrator.taskCompleted(plugin.get_Id());
 	}
 }

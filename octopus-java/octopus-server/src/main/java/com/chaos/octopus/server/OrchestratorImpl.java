@@ -91,7 +91,7 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 		
 		for (AgentProxy agent : get_Agents())
 		{
-			if(agent != null) agent.get_Socket().close();
+			if(agent != null) agent.close();
 		}
 	}
 
@@ -106,5 +106,10 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 		}
 		
 		return pluginDefinitions;
+	}
+
+	public void enqueue(String task) 
+	{
+		_agents.get(0).enqueue(task);
 	}
 }

@@ -41,14 +41,24 @@ public class OrchestratorProxy implements Orchestrator
 		return _Socket;
 	}
 
-	public void set_Socket(Socket _Socket)
+	public void set_Socket(Socket _socket)
 	{
-		this._Socket = _Socket;
+		_Socket = _socket;
 	}
 	
 	public void taskCompleted(String serialized)
 	{
-		// todo implement
+		
+		try 
+		{
+			_Socket.getOutputStream().write("DONE".getBytes());
+			System.out.println("wrote: DONE");
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

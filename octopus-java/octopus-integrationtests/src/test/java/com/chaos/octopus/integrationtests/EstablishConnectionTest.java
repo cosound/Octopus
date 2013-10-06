@@ -86,8 +86,6 @@ public class EstablishConnectionTest
 		assertEquals(1,  noOfPlugins);
 	}
 	
-
-	
 	@Test
 	public void ServerRequestsPluginList_TwoAgentsConnect_ServerRequestsPluginListFromAgents() throws Exception
 	{
@@ -121,4 +119,30 @@ public class EstablishConnectionTest
 		assertEquals(1,  noOfPluginsFromAgent2);
 	}
 
+	@Test
+	public void NotifyServer_GivenAWorkerCompletesATask_NotifyTheServerThatTheTaskIsDone() throws Exception
+	{
+		int port = 20000;
+		
+		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
+			Agent  agent1 = new Agent("localhost", port);)
+		{
+			agent1.addPlugin(new TestPlugin());
+			leader.open();
+			agent1.open();
+			
+			// make sure the agent have had time to connect with the server
+			for(int i = 1000; i > 0 && leader.get_Agents().size() == 0; i--)
+			{
+				Thread.sleep(1);
+			}
+			
+			leader.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+			
+			for(int i = 1000; i > 0; i--)
+			{
+				Thread.sleep(1);
+			}
+		}
+	}
 }

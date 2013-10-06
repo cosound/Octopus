@@ -84,9 +84,11 @@ public class ExecutionHandler implements Runnable, AutoCloseable, TaskCompleteLi
 		for (int i = 0; i < _executionSlots.length; i++)
 		{
 			if(_executionSlots[i] == completedTask) 
+			{
 				_executionSlots[i] = null;
-			
-			_agent.onTaskComplete(completedTask.get_Plugin());
+				
+				_agent.onTaskComplete(completedTask.get_Plugin());
+			}
 		}
 	}
 }
