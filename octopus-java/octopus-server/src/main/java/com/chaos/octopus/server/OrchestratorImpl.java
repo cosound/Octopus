@@ -9,7 +9,7 @@ import java.util.List;
 
 import com.chaos.octopus.commons.util.StreamUtilities;
 
-public class Orchestrator implements Runnable, AutoCloseable
+public class OrchestratorImpl implements Runnable, AutoCloseable
 {
 	private ArrayList<AgentProxy> _agents; 
 	private boolean               _isRunning;
@@ -17,7 +17,7 @@ public class Orchestrator implements Runnable, AutoCloseable
 	private ServerSocket          _socket;
 	private int                   _port;
 	
-	public Orchestrator(int port)
+	public OrchestratorImpl(int port)
 	{
 		_agents    = new ArrayList<AgentProxy>();
 		_port      = port;

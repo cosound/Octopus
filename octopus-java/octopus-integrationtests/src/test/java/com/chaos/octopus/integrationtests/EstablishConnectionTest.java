@@ -5,8 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.chaos.octopus.agent.Agent;
-import com.chaos.octopus.agent.unit.TestPlugin;
-import com.chaos.octopus.server.Orchestrator;
+import com.chaos.octopus.server.*;
 
 public class EstablishConnectionTest 
 {
@@ -16,7 +15,7 @@ public class EstablishConnectionTest
 		int port       = 20000;
 		int noOfAgents = 0;
 		
-		try(Orchestrator leader = new Orchestrator(port); 
+		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
 			Agent  agent  = new Agent("localhost", port))
 		{
 			agent.addPlugin(new TestPlugin());
@@ -40,7 +39,7 @@ public class EstablishConnectionTest
 		int port       = 20000;
 		int noOfAgents = 0;
 		
-		try(Orchestrator leader = new Orchestrator(port); 
+		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
 			Agent  agent1  = new Agent("localhost", port);
 			Agent  agent2  = new Agent("localhost", port))
 		{
@@ -66,11 +65,12 @@ public class EstablishConnectionTest
 	{
 		int port        = 20000;
 		int noOfPlugins = 0;
-		
-		try(Orchestrator leader = new Orchestrator(port); 
+
+		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
 			Agent  agent  = new Agent("localhost", port))
 		{
-			agent.addPlugin(new TestPlugin());
+			TestPlugin pl = new TestPlugin();
+			agent.addPlugin(pl);
 			leader.open();
 			agent.open();
 			
@@ -95,7 +95,7 @@ public class EstablishConnectionTest
 		int noOfPluginsFromAgent1 = 0;
 		int noOfPluginsFromAgent2 = 0;
 		
-		try(Orchestrator leader = new Orchestrator(port); 
+		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
 			Agent  agent1 = new Agent("localhost", port);
 			Agent  agent2 = new Agent("localhost", port))
 		{

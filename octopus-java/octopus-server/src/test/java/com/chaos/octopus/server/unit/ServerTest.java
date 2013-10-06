@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.chaos.octopus.core.*;
 import com.chaos.octopus.server.*;
 
 public class ServerTest
@@ -13,7 +14,7 @@ public class ServerTest
 	@Test
 	public void parsePluginList_GivenListInBinaryFormat_ReturnListOfPlugins() throws Exception
 	{
-		try(Orchestrator leader = new Orchestrator(0); )
+		try(OrchestratorImpl leader = new OrchestratorImpl(0); )
 		{
 			byte[] data = "com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;com.chaos.octopus.agent.unit.TestPlugin, 1.1.0;".getBytes();
 			
