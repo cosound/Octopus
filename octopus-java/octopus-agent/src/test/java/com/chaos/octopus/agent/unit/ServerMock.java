@@ -27,4 +27,16 @@ public class ServerMock implements Orchestrator
 	{
 		WasOnCompleteCalled = true;
 	}
+
+	@Override
+	public int get_Port() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int get_ListenPort() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

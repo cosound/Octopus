@@ -8,30 +8,19 @@ import java.util.List;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
 
-public class AgentProxy implements Runnable, AutoCloseable
+public class AgentProxy
 {
-	private Socket _Socket;
 	private List<String> _SupportedPlugins;
-	private Thread _Thread;
-	private boolean _IsRunning;
+	private String _Hostname;
+	private int    _Port;
+	private int    _AvailableSlots;
 	
-	public AgentProxy(Socket socket) throws IOException
+	public AgentProxy(String hostname, int port) 
 	{
-		set_Socket(socket);
-		_Thread = new Thread(this);
+		_Hostname = hostname;
+		_Port     = port;
 		
-		_IsRunning = true;
-		_Thread.start();
-	}
-
-	public Socket get_Socket()
-	{
-		return _Socket;
-	}
-
-	public void set_Socket(Socket _Socket)
-	{
-		this._Socket = _Socket;
+		_AvailableSlots = 4;
 	}
 
 	public List<String> get_SupportedPlugins()
@@ -40,15 +29,18 @@ public class AgentProxy implements Runnable, AutoCloseable
 		{
 			try
 			{
-				get_Socket().getOutputStream().write(Commands.LIST_SUPPORTED_PLUGINS.getBytes());
-				
-				String plugins = StreamUtilities.ReadString(get_Socket().getInputStream());
-				
-				_SupportedPlugins = new ArrayList<String>();
-				
-				for (String s : plugins.split(";"))
+				try(Socket socket = new Socket(_Hostname, _Port))
 				{
-					_SupportedPlugins.add(s);					
+					socket.getOutputStream().write(Commands.LIST_SUPPORTED_PLUGINS.getBytes());
+					
+					String plugins = StreamUtilities.ReadString(socket.getInputStream());
+					
+					_SupportedPlugins = new ArrayList<String>();
+					
+					for (String s : plugins.split(";"))
+					{
+						_SupportedPlugins.add(s);					
+					}
 				}
 			} 
 			catch (IOException e)
@@ -70,64 +62,38 @@ public class AgentProxy implements Runnable, AutoCloseable
 		_SupportedPlugins = supportedPlugins;
 	}
 
+	private Object _EnqueueBlock = new Object();
+	
 	public void enqueue(String task) 
 	{
-		try
+		synchronized (_EnqueueBlock) 
 		{
-			get_Socket().getOutputStream().write((Commands.ENQUEUE_TASK + ":" + task).getBytes());
+			_AvailableSlots--;
 			
-			// TODO no data received is thrown when the run() loop catches the data instead, add appropriate synchronization
-			String response = StreamUtilities.ReadString(get_Socket().getInputStream());
-			
-			System.out.println("enqueue: "+response);
-			
-			if(!"OK".equals(response)) throw new IOException("Agent didnt queue task");
-		} 
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void run() 
-	{
-		while(_IsRunning)
-		{
-			try 
+			try
 			{
-				if(get_Socket().getInputStream().available() == 0) continue;
-				
-				String result = StreamUtilities.ReadString(get_Socket().getInputStream());
-				
-				if("DONE".equals(result))
+				try(Socket socket = new Socket(_Hostname, _Port))
 				{
-					// TODO task is complete, do what is necessary with the result
-					System.out.println("Task is done");
+					socket.getOutputStream().write((Commands.ENQUEUE_TASK + ":" + task).getBytes());
+					
+					// TODO no data received is thrown when the run() loop catches the data instead, add appropriate synchronization
+					String response = StreamUtilities.ReadString(socket.getInputStream());
+					
+					System.out.println("enqueue: "+response);
+					
+					if(!"OK".equals(response)) throw new IOException("Agent didnt queue task");
 				}
-				
-				System.out.println("Orchestrator: " + result);
 			} 
-			catch (IOException ioe) 
-			{
-				if(get_Socket().isClosed()) return;
-				
-				ioe.printStackTrace();
-			}
-			catch (InterruptedException e) 
+			catch (Exception e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-
-	@Override
-	public void close() throws Exception 
+	
+	public int get_AvailableSlots() 
 	{
-		_IsRunning = false;
-		
-		get_Socket().close();
+		return _AvailableSlots;
 	}
 }

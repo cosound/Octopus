@@ -16,7 +16,7 @@ public class AgentTest
 	{
 		PluginDefinition plugin = new TestPlugin();
 		
-		try(Agent agent = new Agent("",0))
+		try(Agent agent = new Agent("",0, 0))
 		{
 			agent.addPlugin(plugin);
 			
@@ -31,7 +31,7 @@ public class AgentTest
 	{
 		PluginDefinition plugin = new TestPlugin();
 		
-		try(Agent agent = new Agent("",0))
+		try(Agent agent = new Agent("",0,0))
 		{
 			agent.addPlugin(plugin);
 			
@@ -44,7 +44,7 @@ public class AgentTest
 	@Test
 	public void enqueueTask_GivenATask_ShouldBeAddedToTheQueue() throws Exception
 	{
-		try(Agent agent = new Agent("",0))
+		try(Agent agent = new Agent("",0,0))
 		{
 			agent.addPlugin(new TestPlugin());
 			
@@ -57,7 +57,7 @@ public class AgentTest
 	@Test
 	public void executeTask_AgentIsStartedAndTaskQueued_TaskShouldBeExecuted() throws Exception
 	{
-		try(Agent agent = new Agent("",0))
+		try(Agent agent = new Agent("",0,0))
 		{
 			TestPlugin factory = new TestPlugin();
 			agent.addPlugin(factory);
@@ -78,7 +78,7 @@ public class AgentTest
 	@Test
 	public void executeTask_AgentIsStartedAndTaskQueued_TaskShouldBeRemovedFromTheExecutionSlotWhenDone() throws Exception
 	{
-		try(Agent agent = new Agent("",0))
+		try(Agent agent = new Agent("",0,0))
 		{
 			TestPlugin factory = new TestPlugin();
 			agent.addPlugin(factory);

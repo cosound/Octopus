@@ -1,6 +1,7 @@
 package com.chaos.octopus.core;
 
 import java.net.Socket;
+import java.net.SocketImpl;
 
 public interface Orchestrator
 {
@@ -9,4 +10,8 @@ public interface Orchestrator
 
 	void open();
 	void taskCompleted(String serialized);
+
+	int get_Port();
+
+	int get_ListenPort();
 }

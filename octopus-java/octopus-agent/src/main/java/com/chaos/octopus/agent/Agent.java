@@ -1,6 +1,9 @@
 package com.chaos.octopus.agent;
 
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
 import java.util.*;
 
 import com.chaos.octopus.commons.util.Commands;
@@ -20,10 +23,11 @@ public class Agent implements Runnable, AutoCloseable
     private Queue<Plugin> _queue;
     private ExecutionHandler _executionHandler;
     private Orchestrator _orchestrator;
+    private ServerSocket _Server;
     
-    public Agent(String hostname, int port)
+    public Agent(String hostname, int port, int listenPort)
     {
-    	this(new OrchestratorProxy(hostname, port));
+    	this(new OrchestratorProxy(hostname, port, listenPort));
     }
     
     public Agent(Orchestrator orchestrator)
@@ -37,9 +41,10 @@ public class Agent implements Runnable, AutoCloseable
     	set_executionHandler(new ExecutionHandler(this, _queue));
     }
 
-	public void open() 
+	public void open() throws IOException 
 	{
 		_orchestrator.open();
+		_Server = new ServerSocket(_orchestrator.get_ListenPort());
 		_isRunning = true;
 		_thread.start();
 	}
@@ -51,34 +56,28 @@ public class Agent implements Runnable, AutoCloseable
 			try
 			{
 				// todo refactor so the implementation doesnt depend on the socket
-				int available = _orchestrator.get_Socket().getInputStream().available();
-				
-				if(available == 0) continue;
-				
-				String message = StreamUtilities.ReadString(_orchestrator.get_Socket().getInputStream());
-
-				switch (message.split(":")[0])
+				try(Socket socket = _Server.accept())
 				{
-					case Commands.LIST_SUPPORTED_PLUGINS:
-						_orchestrator.get_Socket().getOutputStream().write(serializeSupportedPlugins());
-						break;
-					case Commands.ENQUEUE_TASK:
-						enqueue(message.split(":")[1]);
-						_orchestrator.get_Socket().getOutputStream().write("OK".getBytes());
-						break;
-					default:
-						break;
+					String message = StreamUtilities.ReadString(socket.getInputStream());
+	
+					switch (message.split(":")[0])
+					{
+						case Commands.LIST_SUPPORTED_PLUGINS:
+							socket.getOutputStream().write(serializeSupportedPlugins());
+							break;
+						case Commands.ENQUEUE_TASK:
+							enqueue(message.split(":")[1]);
+							socket.getOutputStream().write("OK".getBytes());
+							break;
+						default:
+							break;
+					}
 				}
 			}
-			catch (IOException e)
-			{
-				// if the socket is closed it means the server is turned off, so we can ignore the exception
-				if(!_orchestrator.get_Socket().isClosed()) e.printStackTrace();
-			} 
 			catch (Exception e)
 			{
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(!_Server.isClosed()) e.printStackTrace();
 			}
 			
 			
@@ -89,6 +88,7 @@ public class Agent implements Runnable, AutoCloseable
 	{
 		_isRunning = false;
 		
+		_Server.close();
 		// todo remove direct calls to the socket
 	//	if(_orchestrator.get_Socket() != null) _orchestrator.get_Socket().close();
 	}

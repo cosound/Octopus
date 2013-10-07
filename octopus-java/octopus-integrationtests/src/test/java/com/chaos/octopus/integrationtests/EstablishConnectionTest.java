@@ -16,7 +16,7 @@ public class EstablishConnectionTest
 		int noOfAgents = 0;
 		
 		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
-			Agent  agent  = new Agent("localhost", port))
+			Agent  agent  = new Agent("localhost", port, 20001))
 		{
 			agent.addPlugin(new TestPlugin());
 			leader.open();
@@ -40,8 +40,8 @@ public class EstablishConnectionTest
 		int noOfAgents = 0;
 		
 		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
-			Agent  agent1  = new Agent("localhost", port);
-			Agent  agent2  = new Agent("localhost", port))
+			Agent  agent1  = new Agent("localhost", port, 20001);
+			Agent  agent2  = new Agent("localhost", port, 20002))
 		{
 			agent1.addPlugin(new TestPlugin());
 			agent2.addPlugin(new TestPlugin());
@@ -67,7 +67,7 @@ public class EstablishConnectionTest
 		int noOfPlugins = 0;
 
 		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
-			Agent  agent  = new Agent("localhost", port))
+			Agent  agent  = new Agent("localhost", port, 20001))
 		{
 			TestPlugin pl = new TestPlugin();
 			agent.addPlugin(pl);
@@ -94,8 +94,8 @@ public class EstablishConnectionTest
 		int noOfPluginsFromAgent2 = 0;
 		
 		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
-			Agent  agent1 = new Agent("localhost", port);
-			Agent  agent2 = new Agent("localhost", port))
+			Agent  agent1 = new Agent("localhost", port, 20001);
+			Agent  agent2 = new Agent("localhost", port, 20002))
 		{
 			agent1.addPlugin(new TestPlugin());
 			agent2.addPlugin(new TestPlugin());
@@ -115,8 +115,8 @@ public class EstablishConnectionTest
 			}
 		}
 
-		assertEquals(1,  noOfPluginsFromAgent1);
-		assertEquals(1,  noOfPluginsFromAgent2);
+		assertEquals(1, noOfPluginsFromAgent1);
+		assertEquals(1, noOfPluginsFromAgent2);
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class EstablishConnectionTest
 		int port = 20000;
 		
 		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
-			Agent  agent1 = new Agent("localhost", port);)
+			Agent  agent1 = new Agent("localhost", port, 20001);)
 		{
 			agent1.addPlugin(new TestPlugin());
 			leader.open();
@@ -138,11 +138,14 @@ public class EstablishConnectionTest
 			}
 			
 			leader.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+			assertEquals(3, leader.get_Agents().get(0).get_AvailableSlots());
 			
-			for(int i = 1000; i > 0; i--)
+			for(int i = 1000; i > 0 && leader.get_Agents().get(0).get_AvailableSlots() != 4; i--)
 			{
 				Thread.sleep(1);
 			}
+			
+			assertEquals(4, leader.get_Agents().get(0).get_AvailableSlots());
 		}
 	}
 }
