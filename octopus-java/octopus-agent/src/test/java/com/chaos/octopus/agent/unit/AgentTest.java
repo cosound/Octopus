@@ -7,7 +7,8 @@ import java.util.List;
 import org.junit.Test;
 
 import com.chaos.octopus.agent.Agent;
-import com.chaos.octopus.agent.PluginDefinition;
+import com.chaos.octopus.core.PluginDefinition;
+import com.chaos.octopus.core.TestPlugin;
 
 public class AgentTest
 {

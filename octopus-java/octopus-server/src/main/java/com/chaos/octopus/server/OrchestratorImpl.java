@@ -6,12 +6,9 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.chaos.octopus.commons.util.StreamUtilities;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class OrchestratorImpl implements Runnable, AutoCloseable
 {
@@ -106,14 +103,14 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 		if(_socket != null) _socket.close();
 	}
 
-	public List<PluginDefinition> parsePluginList(byte[] data)
+	public List<String> parsePluginList(byte[] data)
 	{
 		String s = new String(data);
-		ArrayList<PluginDefinition> pluginDefinitions = new ArrayList<PluginDefinition>();
+		ArrayList<String> pluginDefinitions = new ArrayList<String>();
 		
 		for (String id : s.split(";"))
 		{
-			pluginDefinitions.add(new PluginDefinition(id));
+			pluginDefinitions.add(id);
 		}
 		
 		return pluginDefinitions;
@@ -123,5 +120,15 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 	{
 		// TODO decision logic for selecting an agent to send a task to
 		_agents.get(0).enqueue(task);
+	}
+
+	public void enqueue(Job job) 
+	{
+		// TODO replace with proper queuing of jobs and task logic
+		for (Step step : job.steps) {
+			for (Task task : step.tasks) {
+				enqueue(task.pluginId);
+			}
+		}
 	}
 }

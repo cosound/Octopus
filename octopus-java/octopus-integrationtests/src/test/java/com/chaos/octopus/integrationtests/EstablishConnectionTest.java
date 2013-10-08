@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.chaos.octopus.agent.Agent;
+import com.chaos.octopus.core.TestPlugin;
 import com.chaos.octopus.server.*;
 
 public class EstablishConnectionTest 

@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.chaos.octopus.agent.unit.TestPlugin;
+import com.chaos.octopus.core.TestPlugin;
 
 public class ExecutionSlotTest
 {

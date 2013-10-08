@@ -3,12 +3,13 @@ package com.chaos.octopus.agent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.*;
 
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
 import com.chaos.octopus.core.Orchestrator;
+import com.chaos.octopus.core.Plugin;
+import com.chaos.octopus.core.PluginDefinition;
 
 /**
  * User: Jesper Fyhr Knudsen

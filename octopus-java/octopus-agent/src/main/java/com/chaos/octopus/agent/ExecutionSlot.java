@@ -3,6 +3,8 @@ package com.chaos.octopus.agent;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.chaos.octopus.core.Plugin;
+
 public class ExecutionSlot implements Runnable
 {
 	private Thread _thread;

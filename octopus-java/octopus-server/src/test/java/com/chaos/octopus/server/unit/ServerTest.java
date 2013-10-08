@@ -18,10 +18,10 @@ public class ServerTest
 		{
 			byte[] data = "com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;com.chaos.octopus.agent.unit.TestPlugin, 1.1.0;".getBytes();
 			
-			List<PluginDefinition> results =  leader.parsePluginList(data);
+			List<String> results =  leader.parsePluginList(data);
 			
 			assertEquals(2, results.size());
-			assertEquals("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0", results.get(0).get_Id());
+			assertEquals("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0", results.get(0));
 		}
 	}
 }

@@ -3,6 +3,7 @@ package com.chaos.octopus;
 import java.io.*;
 
 import com.chaos.octopus.agent.Agent;
+import com.chaos.octopus.core.TestPlugin;
 import com.chaos.octopus.server.*;
 import com.google.gson.*;
 
@@ -16,6 +17,7 @@ public class Program
 		try(OrchestratorImpl leader = new OrchestratorImpl(20000);
 		    Agent agent = new Agent("localhost", 20000, 20001))
 		{
+			agent.addPlugin(new TestPlugin());
 			leader.open();
 			agent.open();
 			
@@ -34,7 +36,7 @@ public class Program
 			    if(split[0].equals("") || split[0].equals("help"))
 			    {
 		    		System.out.println("The following commands are available:");
-			    	System.out.println("\thelp\tDisplay the help menu.");
+			    	System.out.println("\thelp\t\tDisplay the help menu.");
 			    	System.out.println("\tload-job\tLoads a json formattet job file");
 			    	System.out.println("\texit");
 		    	}
@@ -58,14 +60,11 @@ public class Program
 			    	
 			    	try(FileReader fr = new FileReader(filepath))
 			    	{
-			    		String file = readAll(fr);
-			    		
 			    		Gson gson = new Gson();
 			    		
-			    		JsonParser parser = new JsonParser();
-			    		JsonObject  jsonObj  = parser.parse(file).getAsJsonObject();
-			    		Job job = new Job(jsonObj);
+			    		Job job = gson.fromJson(fr, new Job().getClass());
 			    		
+			    		leader.enqueue(job);
 			    		String json = gson.toJson(job);
 						System.out.println(json);
 			    	}
@@ -80,22 +79,5 @@ public class Program
 		}
 		
 		System.out.println("Octopus Shutdown!");
-	}
-
-	private static String readAll(InputStreamReader is) 
-	{
-	    StringBuilder sb = new StringBuilder(512);
-	    try 
-	    {
-	        int c = 0;
-	        while ((c = is.read()) != -1) 
-	        {
-	            sb.append((char) c);
-	        }
-	    } 
-	    catch (IOException e) {
-	        throw new RuntimeException(e);
-	    }
-	    return sb.toString();
 	}
 }

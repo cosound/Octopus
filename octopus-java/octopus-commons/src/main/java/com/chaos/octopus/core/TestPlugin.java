@@ -1,7 +1,4 @@
-package com.chaos.octopus.agent.unit;
-
-import com.chaos.octopus.agent.Plugin;
-import com.chaos.octopus.agent.PluginDefinition;
+package com.chaos.octopus.core;
 
 public class TestPlugin implements Plugin, PluginDefinition
 {

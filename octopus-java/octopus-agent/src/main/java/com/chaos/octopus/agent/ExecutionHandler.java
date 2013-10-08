@@ -3,6 +3,8 @@ package com.chaos.octopus.agent;
 
 import java.util.Queue;
 
+import com.chaos.octopus.core.Plugin;
+
 public class ExecutionHandler implements Runnable, AutoCloseable, TaskCompleteListener
 {
 	private Queue<Plugin> _queue;

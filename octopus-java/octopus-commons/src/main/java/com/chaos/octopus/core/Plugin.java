@@ -1,4 +1,4 @@
-package com.chaos.octopus.agent;
+package com.chaos.octopus.core;
 
 public interface Plugin
 {
