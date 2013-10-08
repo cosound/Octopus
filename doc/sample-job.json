@@ -9,6 +9,18 @@
                         "commandline":"..\\..\\doc\\sample-batch.bat",
 			"commandlined":"../../doc/sample-batch.bat"
                        }
+        },{
+          "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
+	  "properties":{
+                        "commandline":"..\\..\\doc\\sample-batch.bat",
+			"commandlined":"../../doc/sample-batch.bat"
+                       }
+        },{
+          "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
+	  "properties":{
+                        "commandline":"..\\..\\doc\\sample-batch.bat",
+			"commandlined":"../../doc/sample-batch.bat"
+                       }
         }]
     }]
 }

@@ -119,7 +119,10 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 	public void enqueue(String task)
 	{
 		// TODO decision logic for selecting an agent to send a task to
-		_agents.get(0).enqueue(task);
+		for (AgentProxy agent : _agents) 
+		{
+			agent.enqueue(task);
+		}
 	}
 
 	public void enqueue(Job job) 

@@ -65,8 +65,6 @@ public class Program
 			    		Job job = gson.fromJson(fr, new Job().getClass());
 			    		
 			    		leader.enqueue(job);
-			    		String json = gson.toJson(job);
-						System.out.println(json);
 			    	}
 			    }
 			    else if(split[0].equals("exit"))

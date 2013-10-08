@@ -78,9 +78,7 @@ public class AgentProxy
 					
 					// TODO no data received is thrown when the run() loop catches the data instead, add appropriate synchronization
 					String response = StreamUtilities.ReadString(socket.getInputStream());
-					
-					System.out.println("enqueue: "+response);
-					
+
 					if(!"OK".equals(response)) throw new IOException("Agent didnt queue task");
 				}
 			} 
