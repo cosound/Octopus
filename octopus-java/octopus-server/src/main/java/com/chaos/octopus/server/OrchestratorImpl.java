@@ -64,7 +64,6 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 				
 				String result = StreamUtilities.ReadString(agent.getInputStream());
 				
-				System.out.println(result);
 				Message message = gson.fromJson(result, new Message().getClass());
 				
 				if("connect".equals(message.get_Action()))

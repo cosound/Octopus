@@ -12,18 +12,38 @@
     <artifactId>octopus-daemon</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>octopus-agent</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
+	     <dependency>
+	         <groupId>${project.parent.groupId}</groupId>
+	         <artifactId>octopus-agent</artifactId>
+	         <version>${project.parent.version}</version>
+	     </dependency>
+		
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>octopus-server</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>octopus-commons</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		
+		<dependency>
+	     	<groupId>gson</groupId>
+	     	<artifactId>gson</artifactId>
+	     	<version>2.2.4</version>
+	     	<scope>system</scope>
+	     	<systemPath>${basedir}/../lib/gson-2.2.4.jar</systemPath>
+	     </dependency>
+        
     </dependencies>
 
 </project>

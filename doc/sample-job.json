@@ -1,0 +1,11 @@
+{
+  "id":"0123456789",
+  "steps":[
+    {
+      "tasks":[
+        {
+          "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0"
+        }]
+    }]
+}
+

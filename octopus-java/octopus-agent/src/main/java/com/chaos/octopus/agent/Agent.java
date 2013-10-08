@@ -88,9 +88,8 @@ public class Agent implements Runnable, AutoCloseable
 	{
 		_isRunning = false;
 		
-		_Server.close();
-		// todo remove direct calls to the socket
-	//	if(_orchestrator.get_Socket() != null) _orchestrator.get_Socket().close();
+		if(_Server != null)_Server.close();
+		_executionHandler.close();
 	}
 
 	public byte[] serializeSupportedPlugins()
