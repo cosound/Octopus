@@ -132,6 +132,16 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 			for (Task task : step.tasks) {
 				enqueue(task.pluginId);
 			}
+			
+//			if(!step.get_IsComplete())
+//			{
+//				for (Task task : step.tasks) 
+//				{
+//					enqueue(task.pluginId);
+//				}
+//				
+//				break;
+//			}
 		}
 	}
 }
