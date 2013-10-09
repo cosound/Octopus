@@ -21,9 +21,11 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 	private ServerSocket          _socket;
 	private int                   _port;
     private Gson                  _Gson;
+    private ArrayList<Job>        _Jobs;
 	
 	public OrchestratorImpl(int port)
 	{
+        _Jobs      = new ArrayList<Job>();
         _Gson      = new Gson();
 		_agents    = new ArrayList<AgentProxy>();
 		_port      = port;
@@ -133,6 +135,8 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 
 	public void enqueue(Job job) 
 	{
+        _Jobs.add(job);
+
 		// TODO replace with proper queuing of jobs and task logic
 		for (Step step : job.steps) 
 		{

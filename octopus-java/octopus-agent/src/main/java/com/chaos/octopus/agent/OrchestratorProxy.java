@@ -66,6 +66,7 @@ public class OrchestratorProxy implements Orchestrator
             try(Socket socket = new Socket(_Hostname, _Port))
 			{
                 TaskMessage msg = new TaskMessage(Commands.TASK_DONE, task);
+
 				socket.getOutputStream().write(msg.toJson().getBytes());
 			}
 		} 

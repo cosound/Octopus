@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.chaos.octopus.core.Plugin;
+import com.chaos.octopus.core.TaskState;
 
 public class ExecutionSlot implements Runnable
 {
@@ -25,12 +26,18 @@ public class ExecutionSlot implements Runnable
 	{
 		try
 		{
+            _plugin.get_Task().set_State(TaskState.Executing);
 			_plugin.execute();
+            _plugin.get_Task().set_State(TaskState.Executed);
+            _plugin.get_Task().set_State(TaskState.Committing);
 			_plugin.commit();
+            _plugin.get_Task().set_State(TaskState.Committed);
 		}
 		catch(Exception e)
 		{
+            _plugin.get_Task().set_State(TaskState.Rollingback);
 			_plugin.rollback();
+            _plugin.get_Task().set_State(TaskState.Rolledback);
 		}
 		finally
 		{
