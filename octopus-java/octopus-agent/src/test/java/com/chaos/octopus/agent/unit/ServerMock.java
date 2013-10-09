@@ -3,6 +3,7 @@ package com.chaos.octopus.agent.unit;
 import java.net.Socket;
 
 import com.chaos.octopus.core.Orchestrator;
+import com.chaos.octopus.core.Task;
 
 public class ServerMock implements Orchestrator
 {
@@ -23,7 +24,7 @@ public class ServerMock implements Orchestrator
 		
 	}
 
-	public void taskCompleted(String serialized)
+	public void taskCompleted(Task serialized)
 	{
 		WasOnCompleteCalled = true;
 	}

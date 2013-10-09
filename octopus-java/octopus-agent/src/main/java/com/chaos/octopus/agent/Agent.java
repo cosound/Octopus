@@ -7,9 +7,8 @@ import java.util.*;
 
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
-import com.chaos.octopus.core.Orchestrator;
-import com.chaos.octopus.core.Plugin;
-import com.chaos.octopus.core.PluginDefinition;
+import com.chaos.octopus.core.*;
+import com.google.gson.Gson;
 
 /**
  * User: Jesper Fyhr Knudsen
@@ -25,6 +24,7 @@ public class Agent implements Runnable, AutoCloseable
     private ExecutionHandler _executionHandler;
     private Orchestrator _orchestrator;
     private ServerSocket _Server;
+    private Gson         _Gson;
     
     public Agent(String hostname, int port, int listenPort)
     {
@@ -33,6 +33,7 @@ public class Agent implements Runnable, AutoCloseable
     
     public Agent(Orchestrator orchestrator)
     {
+        _Gson         = new Gson();
     	_orchestrator = orchestrator;
     	
     	_isRunning         = false;
@@ -60,15 +61,19 @@ public class Agent implements Runnable, AutoCloseable
 				try(Socket socket = _Server.accept())
 				{
 					String message = StreamUtilities.ReadString(socket.getInputStream());
-	
-					switch (message.split(":")[0])
+
+                    Message msg = _Gson.fromJson(message, Message.class);
+
+					switch (msg.getAction())
 					{
 						case Commands.LIST_SUPPORTED_PLUGINS:
 							socket.getOutputStream().write(serializeSupportedPlugins());
 							break;
 						case Commands.ENQUEUE_TASK:
-							enqueue(message.split(":")[1]);
-							socket.getOutputStream().write("OK".getBytes());
+                            TaskMessage enqueueTask = _Gson.fromJson(message, TaskMessage.class);
+
+							enqueue(enqueueTask.getTask());
+							socket.getOutputStream().write(_Gson.toJson(new Message("OK")).getBytes());
 							break;
 						default:
 							break;
@@ -99,7 +104,7 @@ public class Agent implements Runnable, AutoCloseable
 		
 		for (PluginDefinition definition : get_SupportedPlugins())
 		{
-			sb.append(String.format("%s;", definition.get_Id()));
+			sb.append(String.format("%s;", definition.getId()));
 		}
 		
 		return sb.toString().getBytes();
@@ -107,7 +112,7 @@ public class Agent implements Runnable, AutoCloseable
 
 	public void addPlugin(PluginDefinition pluginFactory)
 	{
-		_PluginDefinitions.put(pluginFactory.get_Id(), pluginFactory);	
+		_PluginDefinitions.put(pluginFactory.getId(), pluginFactory);
 	}
 
 	public List<PluginDefinition> get_SupportedPlugins()
@@ -122,10 +127,9 @@ public class Agent implements Runnable, AutoCloseable
 		return list;
 	}
 
-	public Plugin enqueue(String payload)
+	public Plugin enqueue(Task task)
 	{
-		String pluginId = payload.split(";")[0];
-		Plugin plugin   = _PluginDefinitions.get(pluginId).create(payload);
+		Plugin plugin = _PluginDefinitions.get(task.pluginId).create(task);
 		
 		_queue.add(plugin);
 
@@ -149,6 +153,6 @@ public class Agent implements Runnable, AutoCloseable
 
 	public void onTaskComplete(Plugin plugin)
 	{
-		_orchestrator.taskCompleted(plugin.get_Id());
+		_orchestrator.taskCompleted(plugin.get_Task());
 	}
 }

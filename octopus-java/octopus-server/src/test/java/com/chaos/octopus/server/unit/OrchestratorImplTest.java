@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.chaos.octopus.core.*;
 import com.chaos.octopus.server.*;
 
-public class ServerTest
+public class OrchestratorImplTest
 {
 	@Test
 	public void parsePluginList_GivenListInBinaryFormat_ReturnListOfPlugins() throws Exception

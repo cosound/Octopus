@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.chaos.octopus.commons.util.StreamUtilities;
+import com.chaos.octopus.core.Message;
+import com.chaos.octopus.core.Task;
+import com.chaos.octopus.core.TaskMessage;
 import com.google.gson.Gson;
 
 public class OrchestratorImpl implements Runnable, AutoCloseable
@@ -17,9 +20,11 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 	private Thread                _thread;
 	private ServerSocket          _socket;
 	private int                   _port;
+    private Gson                  _Gson;
 	
 	public OrchestratorImpl(int port)
 	{
+        _Gson      = new Gson();
 		_agents    = new ArrayList<AgentProxy>();
 		_port      = port;
 		_isRunning = false;
@@ -63,17 +68,18 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 				
 				Message message = gson.fromJson(result, new Message().getClass());
 				
-				if("connect".equals(message.get_Action()))
+				if("connect".equals(message.getAction()))
 				{	
 					ConnectMessage connect = gson.fromJson(result, new ConnectMessage().getClass());
 
 					get_Agents().add(new AgentProxy(connect.get_Hostname(), connect.get_Port()));
 				}
-				else if("task-done".equals(message.get_Action()))
+				else if("task-done".equals(message.getAction()))
 				{
-					// TODO task is complete, do what is necessary with the result
-					System.out.println("Task is done");
-				}
+                    TaskMessage msg = _Gson.fromJson(result, TaskMessage.class);
+
+                    notifyAgentsTaskComplete(msg);
+                }
 			} 
 			catch (SocketException se)
 			{
@@ -81,22 +87,22 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 				if(!_socket.isClosed()) se.printStackTrace();
 				
 			}
-			catch (IOException e)
+			catch (IOException | InterruptedException e)
 			{
-				e.printStackTrace();
-			} catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e)
-			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+        }
 	}
 
-	public void close() throws Exception
+    private void notifyAgentsTaskComplete(TaskMessage msg)
+    {
+        for (AgentProxy agent : get_Agents())
+        {
+            agent.taskCompleted(msg.getTask());
+        }
+    }
+
+    public void close() throws Exception
 	{
 		_isRunning = false;
 		
@@ -116,7 +122,7 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 		return pluginDefinitions;
 	}
 
-	public void enqueue(String task)
+	public void enqueue(Task task)
 	{
 		// TODO decision logic for selecting an agent to send a task to
 		for (AgentProxy agent : _agents) 
@@ -128,9 +134,11 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 	public void enqueue(Job job) 
 	{
 		// TODO replace with proper queuing of jobs and task logic
-		for (Step step : job.steps) {
-			for (Task task : step.tasks) {
-				enqueue(task.pluginId);
+		for (Step step : job.steps) 
+		{
+			for (Task task : step.tasks)
+			{
+				enqueue(task);
 			}
 			
 //			if(!step.get_IsComplete())

@@ -2,25 +2,32 @@ package com.chaos.octopus.server;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
+import com.chaos.octopus.core.Message;
+import com.chaos.octopus.core.Task;
+import com.chaos.octopus.core.TaskMessage;
+import com.google.gson.Gson;
 
 public class AgentProxy
 {
+    private Gson         _Gson;
 	private List<String> _SupportedPlugins;
-	private String _Hostname;
-	private int    _Port;
-	private int    _AvailableSlots;
-	
+    private String       _Hostname;
+    private int          _Port;
+    private int _MaxNumberOfSimultaneousTasks;
+    private Map<String, Task> _AllocatedTasks;
+
 	public AgentProxy(String hostname, int port) 
 	{
-		_Hostname = hostname;
-		_Port     = port;
+        _AllocatedTasks = new HashMap<String, Task>();
+        _Gson           = new Gson();
+        _Hostname       = hostname;
+		_Port           = port;
 		
-		_AvailableSlots = 4;
+		_MaxNumberOfSimultaneousTasks = 4;
 	}
 
 	public List<String> get_SupportedPlugins()
@@ -31,7 +38,8 @@ public class AgentProxy
 			{
 				try(Socket socket = new Socket(_Hostname, _Port))
 				{
-					socket.getOutputStream().write(Commands.LIST_SUPPORTED_PLUGINS.getBytes());
+                    String msg = _Gson.toJson(new Message(Commands.LIST_SUPPORTED_PLUGINS));
+                    socket.getOutputStream().write(msg.getBytes());
 					
 					String plugins = StreamUtilities.ReadString(socket.getInputStream());
 					
@@ -64,22 +72,22 @@ public class AgentProxy
 
 	private Object _EnqueueBlock = new Object();
 	
-	public void enqueue(String task) 
+	public void enqueue(Task task)
 	{
 		synchronized (_EnqueueBlock) 
 		{
-			_AvailableSlots--;
-			
 			try
 			{
 				try(Socket socket = new Socket(_Hostname, _Port))
 				{
-					socket.getOutputStream().write((Commands.ENQUEUE_TASK + ":" + task).getBytes());
-					
-					// TODO no data received is thrown when the run() loop catches the data instead, add appropriate synchronization
-					String response = StreamUtilities.ReadString(socket.getInputStream());
+                    String msg = _Gson.toJson(new TaskMessage(Commands.ENQUEUE_TASK, task));
+					socket.getOutputStream().write(msg.getBytes());
 
-					if(!"OK".equals(response)) throw new IOException("Agent didnt queue task");
+                    Message response = _Gson.fromJson(StreamUtilities.ReadString(socket.getInputStream()), Message.class);
+
+					if(!response.getAction().equals("OK")) throw new IOException("Agent didnt queue task");
+
+                    _AllocatedTasks.put(task.taskId, task);
 				}
 			} 
 			catch (Exception e)
@@ -90,8 +98,13 @@ public class AgentProxy
 		}
 	}
 	
-	public int get_AvailableSlots() 
+	public int get_MaxNumberOfSimultaniousTasks()
 	{
-		return _AvailableSlots;
+		return _MaxNumberOfSimultaneousTasks - _AllocatedTasks.size();
 	}
+
+    public void taskCompleted(Task task)
+    {
+        _AllocatedTasks.remove(task.taskId);
+    }
 }

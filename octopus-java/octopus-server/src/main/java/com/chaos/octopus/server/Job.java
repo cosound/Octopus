@@ -1,15 +1,15 @@
 package com.chaos.octopus.server;
 
-import java.util.*;
+import com.chaos.octopus.core.Task;
 
-import com.google.gson.*;
+import java.util.*;
 
 public class Job 
 {
 	public String id;
 	public ArrayList<Step> steps = new ArrayList<Step>();
 	
-	public Task nextAvailableTask() 
+	public Task nextAvailableTask()
 	{
 		for (Step step : steps) 
 		{

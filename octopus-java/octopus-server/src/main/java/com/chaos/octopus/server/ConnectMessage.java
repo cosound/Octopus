@@ -1,6 +1,8 @@
 package com.chaos.octopus.server;
 
-public class ConnectMessage extends Message 
+import com.chaos.octopus.core.Message;
+
+public class ConnectMessage extends Message
 {
 	private String hostname;
 	private String port     = "0";

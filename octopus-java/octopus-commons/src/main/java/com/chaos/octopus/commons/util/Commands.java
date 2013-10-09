@@ -4,4 +4,5 @@ public class Commands
 {
 	public static final String LIST_SUPPORTED_PLUGINS = "supported-plugin-list";
 	public static final String ENQUEUE_TASK           = "enqueue-task";
+    public static final String TASK_DONE              = "task-done";
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import com.chaos.octopus.core.Task;
 import org.junit.Test;
 
 import com.chaos.octopus.agent.Agent;
@@ -16,8 +17,9 @@ public class AgentTest
 	public void addPlugin_Default_PluginIsAddedToSupporedPlugins() throws Exception
 	{
 		PluginDefinition plugin = new TestPlugin();
-		
-		try(Agent agent = new Agent("",0, 0))
+        ServerMock mock = new ServerMock();
+
+        try(Agent agent = new Agent(mock))
 		{
 			agent.addPlugin(plugin);
 			
@@ -31,8 +33,9 @@ public class AgentTest
 	public void serializeSupportedPlugins_AgentSupportASinglePlugin_ReturnByteArray() throws Exception
 	{
 		PluginDefinition plugin = new TestPlugin();
-		
-		try(Agent agent = new Agent("",0,0))
+        ServerMock mock = new ServerMock();
+
+        try(Agent agent = new Agent(mock))
 		{
 			agent.addPlugin(plugin);
 			
@@ -45,11 +48,13 @@ public class AgentTest
 	@Test
 	public void enqueueTask_GivenATask_ShouldBeAddedToTheQueue() throws Exception
 	{
-		try(Agent agent = new Agent("",0,0))
+        ServerMock mock = new ServerMock();
+
+        try(Agent agent = new Agent(mock))
 		{
 			agent.addPlugin(new TestPlugin());
 			
-			agent.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+			agent.enqueue(Make_TestTask());
 			
 			assertEquals(1,  agent.get_queue().size());
 		}
@@ -58,12 +63,14 @@ public class AgentTest
 	@Test
 	public void executeTask_AgentIsStartedAndTaskQueued_TaskShouldBeExecuted() throws Exception
 	{
-		try(Agent agent = new Agent("",0,0))
+        ServerMock mock = new ServerMock();
+
+        try(Agent agent = new Agent(mock))
 		{
 			TestPlugin factory = new TestPlugin();
 			agent.addPlugin(factory);
 			
-			TestPlugin plugin = (TestPlugin) agent.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+			TestPlugin plugin = (TestPlugin) agent.enqueue(Make_TestTask());
 
 			assertFalse(plugin.WasExecuted);
 			
@@ -79,12 +86,14 @@ public class AgentTest
 	@Test
 	public void executeTask_AgentIsStartedAndTaskQueued_TaskShouldBeRemovedFromTheExecutionSlotWhenDone() throws Exception
 	{
-		try(Agent agent = new Agent("",0,0))
+        ServerMock mock = new ServerMock();
+
+		try(Agent agent = new Agent(mock))
 		{
 			TestPlugin factory = new TestPlugin();
 			agent.addPlugin(factory);
 			
-			TestPlugin plugin = (TestPlugin) agent.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+			TestPlugin plugin = (TestPlugin) agent.enqueue(Make_TestTask());
 
 			assertFalse(plugin.WasExecuted);
 			
@@ -108,7 +117,7 @@ public class AgentTest
 			TestPlugin factory = new TestPlugin();
 			agent.addPlugin(factory);
 			
-			TestPlugin plugin = (TestPlugin) agent.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
+			TestPlugin plugin = (TestPlugin) agent.enqueue(Make_TestTask());
 
 			assertFalse(plugin.WasExecuted);
 			
@@ -120,4 +129,12 @@ public class AgentTest
 			assertTrue(mock.WasOnCompleteCalled);
 		}
 	}
+
+    protected Task Make_TestTask()
+    {
+        Task task = new Task();
+        task.pluginId = "com.chaos.octopus.agent.unit.TestPlugin, 1.0.0";
+
+        return task;
+    }
 }

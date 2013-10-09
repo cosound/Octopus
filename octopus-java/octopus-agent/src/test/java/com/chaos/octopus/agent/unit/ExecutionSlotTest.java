@@ -1,7 +1,8 @@
-package com.chaos.octopus.agent;
+package com.chaos.octopus.agent.unit;
 
 import static org.junit.Assert.*;
 
+import com.chaos.octopus.agent.ExecutionSlot;
 import org.junit.Test;
 
 import com.chaos.octopus.core.TestPlugin;

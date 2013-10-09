@@ -1,8 +1,9 @@
 package com.chaos.octopus.server;
 
-import java.util.ArrayList;
+import com.chaos.octopus.core.Task;
+import com.chaos.octopus.core.TaskState;
 
-import com.google.gson.*;
+import java.util.ArrayList;
 
 public class Step 
 {

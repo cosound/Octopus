@@ -2,13 +2,14 @@ package com.chaos.octopus.integrationtests;
 
 import static org.junit.Assert.*;
 
+import com.chaos.octopus.core.Task;
 import org.junit.Test;
 
 import com.chaos.octopus.agent.Agent;
 import com.chaos.octopus.core.TestPlugin;
 import com.chaos.octopus.server.*;
 
-public class EstablishConnectionTest 
+public class EstablishConnectionTest extends TestBase
 {
 	@Test
 	public void ConnectAgentToServer_WhenAnAgentStartsItConnectsToTheServer_ServerAddsAgentConnectionToList() throws Exception 
@@ -124,7 +125,7 @@ public class EstablishConnectionTest
 	public void NotifyServer_GivenAWorkerCompletesATask_NotifyTheServerThatTheTaskIsDone() throws Exception
 	{
 		int port = 20000;
-		
+        Task task = Make_TestTask();
 		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
 			Agent  agent1 = new Agent("localhost", port, 20001);)
 		{
@@ -138,15 +139,15 @@ public class EstablishConnectionTest
 				Thread.sleep(1);
 			}
 			
-			leader.enqueue("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0;");
-			assertEquals(3, leader.get_Agents().get(0).get_AvailableSlots());
+			leader.enqueue(task);
+			assertEquals(3, leader.get_Agents().get(0).get_MaxNumberOfSimultaniousTasks());
 			
-			for(int i = 1000; i > 0 && leader.get_Agents().get(0).get_AvailableSlots() != 4; i--)
+			for(int i = 1000; i > 0 && leader.get_Agents().get(0).get_MaxNumberOfSimultaniousTasks() != 4; i--)
 			{
 				Thread.sleep(1);
 			}
 			
-			assertEquals(4, leader.get_Agents().get(0).get_AvailableSlots());
+			assertEquals(4, leader.get_Agents().get(0).get_MaxNumberOfSimultaniousTasks());
 		}
 	}
 }

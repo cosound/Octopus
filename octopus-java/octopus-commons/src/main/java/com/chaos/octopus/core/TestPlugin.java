@@ -2,7 +2,9 @@ package com.chaos.octopus.core;
 
 public class TestPlugin implements Plugin, PluginDefinition
 {
-	public boolean WasExecuted   = false;
+    private Task _Task;
+
+    public boolean WasExecuted   = false;
 	public boolean WasRolledback = false;
 	public boolean WasCommitted  = false;
 	
@@ -18,21 +20,27 @@ public class TestPlugin implements Plugin, PluginDefinition
 		_shouldFailing = shouldFailing;
 	}
 	
-	public TestPlugin(String data)
+	public TestPlugin(Task task)
 	{
-
+        _Task = task;
 	}
 
 	@Override
-	public String get_Id()
+	public String getId()
 	{
 		return "com.chaos.octopus.agent.unit.TestPlugin, 1.0.0";
 	}
 
-	@Override
-	public Plugin create(String data)
+    @Override
+    public Task get_Task()
+    {
+        return _Task;
+    }
+
+    @Override
+	public Plugin create(Task task)
 	{
-		return new TestPlugin(data);
+		return new TestPlugin(task);
 	}
 
 	@Override
@@ -42,7 +50,7 @@ public class TestPlugin implements Plugin, PluginDefinition
 		
 		WasExecuted = true;
 		
-		System.out.println(get_Id() + " executed");
+		System.out.println(getId() + " executed");
 	}
 
 	@Override
@@ -50,7 +58,7 @@ public class TestPlugin implements Plugin, PluginDefinition
 	{
 		WasRolledback = true;
 		
-		System.out.println(get_Id() + " rolledback");
+		System.out.println(getId() + " rolledback");
 	}
 
 	@Override
@@ -58,7 +66,7 @@ public class TestPlugin implements Plugin, PluginDefinition
 	{
 		WasCommitted = true;
 		
-		System.out.println(get_Id() + " committed");
+		System.out.println(getId() + " committed");
 	}
 
 }

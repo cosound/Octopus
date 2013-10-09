@@ -9,7 +9,7 @@ public interface Orchestrator
 	Socket get_Socket();
 
 	void open();
-	void taskCompleted(String serialized);
+	void taskCompleted(Task serialized);
 
 	int get_Port();
 

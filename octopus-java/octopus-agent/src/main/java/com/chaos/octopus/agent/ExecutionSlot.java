@@ -26,7 +26,6 @@ public class ExecutionSlot implements Runnable
 		try
 		{
 			_plugin.execute();
-			
 			_plugin.commit();
 		}
 		catch(Exception e)

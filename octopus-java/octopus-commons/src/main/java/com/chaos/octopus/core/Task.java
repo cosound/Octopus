@@ -1,4 +1,4 @@
-package com.chaos.octopus.server;
+package com.chaos.octopus.core;
 
 import java.util.HashMap;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package com.chaos.octopus.server;
+package com.chaos.octopus.core;
 
 public enum TaskState 
 {
