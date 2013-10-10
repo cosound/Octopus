@@ -32,7 +32,7 @@ public class TestPlugin implements Plugin, PluginDefinition
 	}
 
     @Override
-    public Task get_Task()
+    public Task getTask()
     {
         return _Task;
     }

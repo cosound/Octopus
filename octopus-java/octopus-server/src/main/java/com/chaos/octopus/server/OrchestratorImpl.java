@@ -7,7 +7,9 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
+import com.chaos.octopus.core.ConnectMessage;
 import com.chaos.octopus.core.Message;
 import com.chaos.octopus.core.Task;
 import com.chaos.octopus.core.TaskMessage;
@@ -69,20 +71,46 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 				String result = StreamUtilities.ReadString(agent.getInputStream());
 				
 				Message message = gson.fromJson(result, new Message().getClass());
-				
-				if("connect".equals(message.getAction()))
-				{	
-					ConnectMessage connect = gson.fromJson(result, new ConnectMessage().getClass());
 
-					get_Agents().add(new AgentProxy(connect.get_Hostname(), connect.get_Port()));
-				}
-				else if("task-done".equals(message.getAction()))
-				{
-                    TaskMessage msg = _Gson.fromJson(result, TaskMessage.class);
+                switch (message.getAction())
+                {
+                    case Commands.CONNECT:
+                    {
+                        ConnectMessage connect = gson.fromJson(result, new ConnectMessage().getClass());
 
-                    notifyAgentsTaskComplete(msg);
+                        get_Agents().add(new AgentProxy(connect.get_Hostname(), connect.get_Port()));
+
+                        break;
+                    }
+                    case Commands.TASK_DONE:
+                    {
+                        TaskMessage msg = _Gson.fromJson(result, TaskMessage.class);
+
+                        notifyAgentsTaskComplete(msg);
+
+                        break;
+                    }
+                    case Commands.TASK_UPDATE:
+                    {
+                        TaskMessage taskMessage = _Gson.fromJson(result, TaskMessage.class);
+
+                        for(Job job : _Jobs)
+                        {
+                            for(Step step : job.steps)
+                            {
+                                for(Task task : step.tasks)
+                                {
+                                    if(task.taskId.equals(taskMessage.getTask().taskId))
+                                        task.set_State(taskMessage.getTask().get_State());
+                                    // TODO change so entire task is updated, instead of just the state
+                                }
+                            }
+                        }
+
+                        break;
+                    }
                 }
-			} 
+			}
 			catch (SocketException se)
 			{
 				// if the socket is closed it means the server is turned off, so we can ignore the exception

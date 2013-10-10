@@ -11,13 +11,6 @@ public class ServerMock implements Orchestrator
 	public boolean WasOnCompleteCalled = false;
 
 	@Override
-	public Socket get_Socket()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
 	public void open()
 	{
 		// TODO Auto-generated method stub
@@ -29,11 +22,10 @@ public class ServerMock implements Orchestrator
 		WasOnCompleteCalled = true;
 	}
 
-	@Override
-	public int get_Port() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public void taskUpdate(Task task) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 
 	@Override
 	public int get_ListenPort() {

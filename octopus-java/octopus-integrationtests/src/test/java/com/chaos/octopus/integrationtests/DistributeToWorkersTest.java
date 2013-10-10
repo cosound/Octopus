@@ -2,9 +2,13 @@ package com.chaos.octopus.integrationtests;
 
 import com.chaos.octopus.agent.Agent;
 import com.chaos.octopus.core.Task;
+import com.chaos.octopus.core.TaskState;
 import com.chaos.octopus.core.TestPlugin;
 import com.chaos.octopus.server.*;
+import junit.framework.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class DistributeToWorkersTest extends TestBase
 {
@@ -36,6 +40,10 @@ public class DistributeToWorkersTest extends TestBase
 
             Thread.sleep(1000);
 
+            assertEquals(TaskState.Committed, task1.get_State());
+            assertEquals(TaskState.Committed, task2.get_State());
+            assertEquals(TaskState.Committed, task3.get_State());
+            assertEquals(TaskState.New, task4.get_State());
             System.out.println(task1.get_State());
             System.out.println(task2.get_State());
             System.out.println(task3.get_State());

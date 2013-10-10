@@ -15,7 +15,7 @@ import com.google.gson.Gson;
  * Date: 16-07-13
  * Time: 14:20
  */
-public class Agent implements Runnable, AutoCloseable
+public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 {
     private boolean      _isRunning;
     private Thread		 _thread;
@@ -151,8 +151,14 @@ public class Agent implements Runnable, AutoCloseable
 		_executionHandler = executionHandler;
 	}
 
-	public void onTaskComplete(Plugin plugin)
+	public void onTaskComplete(Task task)
 	{
-		_orchestrator.taskCompleted(plugin.get_Task());
+		_orchestrator.taskCompleted(task);
 	}
+
+    @Override
+    public void onTaskUpdate(Task task)
+    {
+        _orchestrator.taskUpdate(task);
+    }
 }

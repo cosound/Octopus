@@ -4,6 +4,7 @@ package com.chaos.octopus.agent;
 import java.util.Queue;
 
 import com.chaos.octopus.core.Plugin;
+import com.chaos.octopus.core.Task;
 
 public class ExecutionHandler implements Runnable, AutoCloseable, TaskCompleteListener
 {
@@ -42,6 +43,7 @@ public class ExecutionHandler implements Runnable, AutoCloseable, TaskCompleteLi
 					
 					ExecutionSlot slot = new ExecutionSlot(plugin);
 					slot.addTaskCompleteListener(this);
+                    slot.addTaskUpdateListener(_agent);
 					
 					set_executionSlot(index, slot);;
 				}
@@ -89,7 +91,7 @@ public class ExecutionHandler implements Runnable, AutoCloseable, TaskCompleteLi
 			{
 				_executionSlots[i] = null;
 				
-				_agent.onTaskComplete(completedTask.get_Plugin());
+				_agent.onTaskComplete(completedTask.getPlugin().getTask());
 			}
 		}
 	}

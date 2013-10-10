@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.chaos.octopus.core.Plugin;
+import com.chaos.octopus.core.Task;
 import com.chaos.octopus.core.TaskState;
 
 public class ExecutionSlot implements Runnable
@@ -11,10 +12,12 @@ public class ExecutionSlot implements Runnable
 	private Thread _thread;
 	private Plugin _plugin;
 	private List<TaskCompleteListener> _taskCompleteListeners;
-	
+	private List<TaskUpdatedListener> _taskUpdateListeners;
+
 	public ExecutionSlot(Plugin plugin)
 	{
 		_taskCompleteListeners = new ArrayList<TaskCompleteListener>();
+        _taskUpdateListeners   = new ArrayList<TaskUpdatedListener>();
 		_thread = new Thread(this);
 		_plugin = plugin;
 		
@@ -26,18 +29,24 @@ public class ExecutionSlot implements Runnable
 	{
 		try
 		{
-            _plugin.get_Task().set_State(TaskState.Executing);
+            _plugin.getTask().set_State(TaskState.Executing);
+            onTaskUpdated(_plugin.getTask());
 			_plugin.execute();
-            _plugin.get_Task().set_State(TaskState.Executed);
-            _plugin.get_Task().set_State(TaskState.Committing);
+            _plugin.getTask().set_State(TaskState.Executed);
+            onTaskUpdated(_plugin.getTask());
+            _plugin.getTask().set_State(TaskState.Committing);
+            onTaskUpdated(_plugin.getTask());
 			_plugin.commit();
-            _plugin.get_Task().set_State(TaskState.Committed);
+            _plugin.getTask().set_State(TaskState.Committed);
+            onTaskUpdated(_plugin.getTask());
 		}
 		catch(Exception e)
 		{
-            _plugin.get_Task().set_State(TaskState.Rollingback);
+            _plugin.getTask().set_State(TaskState.Rollingback);
+            onTaskUpdated(_plugin.getTask());
 			_plugin.rollback();
-            _plugin.get_Task().set_State(TaskState.Rolledback);
+            _plugin.getTask().set_State(TaskState.Rolledback);
+            onTaskUpdated(_plugin.getTask());
 		}
 		finally
 		{
@@ -49,8 +58,13 @@ public class ExecutionSlot implements Runnable
 	{
 		_taskCompleteListeners.add(callback);
 	}
+
+    public void addTaskUpdateListener(TaskUpdatedListener listener)
+    {
+        _taskUpdateListeners.add(listener);
+    }
 	
-	public Plugin get_Plugin()
+	public Plugin getPlugin()
 	{
 		return _plugin;
 	}
@@ -62,4 +76,12 @@ public class ExecutionSlot implements Runnable
 			callback.onTaskComplete(this);
 		}
 	}
+
+    private void onTaskUpdated(Task task)
+    {
+        for (TaskUpdatedListener callback : _taskUpdateListeners)
+        {
+            callback.onTaskUpdate(task);
+        }
+    }
 }
