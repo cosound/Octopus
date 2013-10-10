@@ -34,6 +34,7 @@ public class DistributeToWorkersTest extends TestBase
             task1.properties.put("number", "2");
             task2.properties.put("number", "4");
             task3.properties.put("number", "8");
+            task3.properties.put("sleep", "10");
             task4.properties.put("number", "1");
 
             step1.tasks.add(task1);
@@ -45,22 +46,31 @@ public class DistributeToWorkersTest extends TestBase
 
             orchestrator.enqueue(job);
 
-            for(int i = 1000; i > 0 && !step1.isCompleted() && task4.get_State() == TaskState.New; i--)
+            for(int i = 1000; i > 0 && !step1.isCompleted(); i--)
             {
                 Thread.sleep(1);
             }
-
-            System.out.println(task1.get_State());
-            System.out.println(task2.get_State());
-            System.out.println(task3.get_State());
-            System.out.println(task4.get_State());
 
             assertEquals(TaskState.Committed, task1.get_State());
             assertEquals(TaskState.Committed, task2.get_State());
             assertEquals(TaskState.Committed, task3.get_State());
             // number is 14 if second step hasnt run
             assertEquals(14, TestPlugin.getNumber());
+            assertTrue(step1.isCompleted());
             assertFalse(step2.isCompleted());
+
+            for(int i = 1000; i > 0 && !step2.isCompleted(); i--)
+            {
+                Thread.sleep(1);
+            }
+
+            assertEquals(TaskState.Committed, task1.get_State());
+            assertEquals(TaskState.Committed, task2.get_State());
+            assertEquals(TaskState.Committed, task3.get_State());
+            assertEquals(TaskState.Committed, task4.get_State());
+            assertEquals(15, TestPlugin.getNumber());
+            assertTrue(step1.isCompleted());
+            assertTrue(step2.isCompleted());
         }
 	}
 }

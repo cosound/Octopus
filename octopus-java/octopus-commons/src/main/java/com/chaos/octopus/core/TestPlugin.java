@@ -50,7 +50,12 @@ public class TestPlugin implements Plugin, PluginDefinition
 	{
 		if(_shouldFailing) throw new Exception("TestPlugin failed in execute");
 
-        Thread.sleep(10);
+        if(getTask().properties.containsKey("sleep"))
+        {
+            int delay = Integer.parseInt(getTask().properties.get("sleep"));
+
+            Thread.sleep(delay);
+        }
 
         if(getTask().properties.containsKey("number"))
         {
@@ -60,10 +65,12 @@ public class TestPlugin implements Plugin, PluginDefinition
             {
                 number += num;
             }
+
+            System.out.println(num);
         }
 
 		WasExecuted = true;
-		
+
 		System.out.println(getId() + " executed");
 	}
 

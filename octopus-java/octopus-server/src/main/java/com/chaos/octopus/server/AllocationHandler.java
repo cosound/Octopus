@@ -2,6 +2,7 @@ package com.chaos.octopus.server;
 
 import com.chaos.octopus.core.Task;
 import com.chaos.octopus.core.TaskMessage;
+import com.chaos.octopus.core.TaskState;
 
 import java.util.ArrayList;
 
@@ -48,7 +49,7 @@ public class AllocationHandler implements Runnable, AutoCloseable
             _Jobs.add(job);
 
             // TODO replace with proper queuing of jobs and task logic
-            for (Step step : job.steps)
+/*            for (Step step : job.steps)
             {
                 for (Task task : step.tasks)
                 {
@@ -64,7 +65,7 @@ public class AllocationHandler implements Runnable, AutoCloseable
 //
 //				break;
 //			}
-            }
+            }*/
         }
     }
 
@@ -81,7 +82,17 @@ public class AllocationHandler implements Runnable, AutoCloseable
     {
         while(_IsRunning)
         {
-
+            synchronized (_Jobs)
+            {
+                for (Job job : _Jobs)
+                {
+                    for(Task task = job.nextAvailableTask(); task != null; task = job.nextAvailableTask())
+                    {
+                        task.set_State(TaskState.Queued);
+                        enqueue(task);
+                    }
+                }
+            }
         }
     }
 
