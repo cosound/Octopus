@@ -38,6 +38,7 @@ public class AllocationHandler implements Runnable, AutoCloseable
         // TODO decision logic for selecting an agent to send a task to
         for (AgentProxy agent : getAgents())
         {
+            // TODO Make sure a task is only sent to one agent
             agent.enqueue(task);
         }
     }
@@ -47,25 +48,6 @@ public class AllocationHandler implements Runnable, AutoCloseable
         synchronized (_Jobs)
         {
             _Jobs.add(job);
-
-            // TODO replace with proper queuing of jobs and task logic
-/*            for (Step step : job.steps)
-            {
-                for (Task task : step.tasks)
-                {
-                    enqueue(task);
-                }
-
-//			if(!step.get_IsComplete())
-//			{
-//				for (Task task : step.tasks)
-//				{
-//					enqueue(task.pluginId);
-//				}
-//
-//				break;
-//			}
-            }*/
         }
     }
 
@@ -92,6 +74,13 @@ public class AllocationHandler implements Runnable, AutoCloseable
                         enqueue(task);
                     }
                 }
+            }
+
+            // TODO remove busy waiting hack, and only activate when new jobs are added, or tasks finish
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
     }

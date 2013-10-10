@@ -20,11 +20,11 @@ public class Program
 			agent.addPlugin(new TestPlugin());
 			leader.open();
 			agent.open();
-			
+
 			System.out.println("\tOrchestration leader chosen [localhost:20000]");
 			System.out.println("\tAgent connected [localhost:20001]");
 			System.out.println("Octopus initialized");
-			System.out.println(System.getProperty("user.dir"));
+
 			// keyboard input loop
 			while(true)
 			{
@@ -34,17 +34,17 @@ public class Program
 			    String[] split = s.split(" ");
 
 
-			    if(split[0].equals("help") && split[1].equals("load-job"))
-		    	{
-		    		System.out.println("\tload-job [/path/to/local/file]");
-		    	}
-                else if(split[0].equals("") || split[0].equals("help"))
+                if(split[0].equals("") || split[0].equals("help") && split.length == 1)
                 {
                     System.out.println("The following commands are available:");
                     System.out.println("\thelp\t\tDisplay the help menu.");
                     System.out.println("\tload-job\tLoads a json formattet job file");
                     System.out.println("\texit");
                 }
+                else if(split[0].equals("help") && split[1].equals("load-job"))
+		    	{
+		    		System.out.println("\tload-job [/path/to/local/file]");
+		    	}
 			    else if(split[0].equals("load-job"))
 			    {
 			    	// load-job ..\doc\sample-job.json

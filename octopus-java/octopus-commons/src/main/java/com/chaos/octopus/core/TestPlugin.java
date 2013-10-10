@@ -60,7 +60,7 @@ public class TestPlugin implements Plugin, PluginDefinition
                 number += num;
             }
 
-            System.out.println( num + ", sum: " + number);
+            System.out.println( num + ", Started");
         }
 
         if(getTask().properties.containsKey("sleep"))
@@ -70,9 +70,16 @@ public class TestPlugin implements Plugin, PluginDefinition
             Thread.sleep(delay);
         }
 
-		WasExecuted = true;
+        if(getTask().properties.containsKey("number"))
+        {
+            int num = Integer.parseInt(getTask().properties.get("number"));
 
-		System.out.println(getId() + " executed");
+            System.out.println( num + ", Finished");
+        }
+        else
+            System.out.println(getId() + " executed");
+
+		WasExecuted = true;
 	}
 
     public static int getNumber()

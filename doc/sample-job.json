@@ -8,7 +8,7 @@
 	  "properties":{
                         "sleep":"3000",
                         "number":"2",
-			"commandline":"../../doc/sample-batch.bat"
+			"commandline":"../../doc/sample-batch.sh"
                        }
         },{
           "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
@@ -52,6 +52,16 @@
           "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
 	  "properties":{
                         "sleep":"500",
+                        "number":"1024",
+			"commandline":"../../doc/sample-batch2.bat"
+                       }
+        }]
+    },{
+      "tasks":[
+        {
+          "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
+	  "properties":{
+                        "sleep":"50",
                         "number":"1",
 			"commandline":"../../doc/sample-batch2.bat"
                        }
