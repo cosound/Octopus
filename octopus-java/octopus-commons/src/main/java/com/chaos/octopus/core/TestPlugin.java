@@ -19,6 +19,7 @@ public class TestPlugin implements Plugin, PluginDefinition
 	
 	public TestPlugin(boolean shouldFailing)
 	{
+        this(new Task());
 		_shouldFailing = shouldFailing;
 	}
 	
@@ -50,13 +51,6 @@ public class TestPlugin implements Plugin, PluginDefinition
 	{
 		if(_shouldFailing) throw new Exception("TestPlugin failed in execute");
 
-        if(getTask().properties.containsKey("sleep"))
-        {
-            int delay = Integer.parseInt(getTask().properties.get("sleep"));
-
-            Thread.sleep(delay);
-        }
-
         if(getTask().properties.containsKey("number"))
         {
             int num = Integer.parseInt(getTask().properties.get("number"));
@@ -66,7 +60,14 @@ public class TestPlugin implements Plugin, PluginDefinition
                 number += num;
             }
 
-            System.out.println(num);
+            System.out.println( num + ", sum: " + number);
+        }
+
+        if(getTask().properties.containsKey("sleep"))
+        {
+            int delay = Integer.parseInt(getTask().properties.get("sleep"));
+
+            Thread.sleep(delay);
         }
 
 		WasExecuted = true;
@@ -83,16 +84,12 @@ public class TestPlugin implements Plugin, PluginDefinition
 	public void rollback()
 	{
 		WasRolledback = true;
-		
-		System.out.println(getId() + " rolledback");
 	}
 
 	@Override
 	public void commit()
 	{
 		WasCommitted = true;
-		
-		System.out.println(getId() + " committed");
 	}
 
 }

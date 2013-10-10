@@ -33,20 +33,21 @@ public class Program
 				
 			    String[] split = s.split(" ");
 
-			    if(split[0].equals("") || split[0].equals("help"))
-			    {
-		    		System.out.println("The following commands are available:");
-			    	System.out.println("\thelp\t\tDisplay the help menu.");
-			    	System.out.println("\tload-job\tLoads a json formattet job file");
-			    	System.out.println("\texit");
-		    	}
-			    else if(split[0].equals("help") && split[1].equals("load-job"))
+
+			    if(split[0].equals("help") && split[1].equals("load-job"))
 		    	{
 		    		System.out.println("\tload-job [/path/to/local/file]");
 		    	}
+                else if(split[0].equals("") || split[0].equals("help"))
+                {
+                    System.out.println("The following commands are available:");
+                    System.out.println("\thelp\t\tDisplay the help menu.");
+                    System.out.println("\tload-job\tLoads a json formattet job file");
+                    System.out.println("\texit");
+                }
 			    else if(split[0].equals("load-job"))
 			    {
-			    	// load-job ..\..\doc\sample-job.json
+			    	// load-job ..\doc\sample-job.json
 			    	
 			    	String filepath = split[1];
 			    	

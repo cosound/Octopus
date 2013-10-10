@@ -6,20 +6,54 @@
         {
           "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
 	  "properties":{
-                        "commandline":"..\\..\\doc\\sample-batch.bat",
-			"commandlined":"../../doc/sample-batch.bat"
+                        "sleep":"3000",
+                        "number":"2",
+			"commandline":"../../doc/sample-batch.bat"
                        }
         },{
           "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
 	  "properties":{
-                        "commandline":"..\\..\\doc\\sample-batch.bat",
-			"commandlined":"../../doc/sample-batch.bat"
+                        "sleep":"100",
+                        "number":"4",
+			"commandline":"../../doc/sample-batch.bat"
                        }
         },{
           "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
 	  "properties":{
-                        "commandline":"..\\..\\doc\\sample-batch.bat",
-			"commandlined":"../../doc/sample-batch.bat"
+                        "sleep":"500",
+                        "number":"8",
+			"commandline":"../../doc/sample-batch.bat"
+                       }
+        },{
+          "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
+	  "properties":{
+                        "sleep":"500",
+                        "number":"16",
+			"commandline":"../../doc/sample-batch.bat"
+                       }
+        },{
+          "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
+	  "properties":{
+                        "sleep":"500",
+                        "number":"32",
+			"commandline":"../../doc/sample-batch.bat"
+                       }
+        },{
+          "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
+	  "properties":{
+                        "sleep":"500",
+                        "number":"64",
+			"commandline":"../../doc/sample-batch.bat"
+                       }
+        }]
+    },{
+      "tasks":[
+        {
+          "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
+	  "properties":{
+                        "sleep":"500",
+                        "number":"1",
+			"commandline":"../../doc/sample-batch2.bat"
                        }
         }]
     }]
