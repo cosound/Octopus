@@ -26,7 +26,7 @@ public class EstablishConnectionTest extends TestBase
 			
 			for(int i = 1000; i > 0 && noOfAgents != 1; i--)
 			{
-				noOfAgents = leader.get_Agents().size();
+				noOfAgents = leader.getAgents().size();
 				
 				Thread.sleep(1);
 			}
@@ -53,7 +53,7 @@ public class EstablishConnectionTest extends TestBase
 			
 			for(int i = 1000; i > 0 && noOfAgents != 2; i--)
 			{
-				noOfAgents = leader.get_Agents().size();
+				noOfAgents = leader.getAgents().size();
 				
 				Thread.sleep(1);
 			}
@@ -78,8 +78,8 @@ public class EstablishConnectionTest extends TestBase
 			
 			for(int i = 1000; i > 0 && noOfPlugins != 1; i--)
 			{
-				if(leader.get_Agents().size() > 0)
-					noOfPlugins = leader.get_Agents().get(0).get_SupportedPlugins().size();
+				if(leader.getAgents().size() > 0)
+					noOfPlugins = leader.getAgents().get(0).get_SupportedPlugins().size();
 				
 				Thread.sleep(1);
 			}
@@ -107,10 +107,10 @@ public class EstablishConnectionTest extends TestBase
 			
 			for(int i = 1000; i > 0 && noOfPluginsFromAgent1 != 1; i--)
 			{
-				if(leader.get_Agents().size() == 2)
+				if(leader.getAgents().size() == 2)
 				{
-					noOfPluginsFromAgent1 = leader.get_Agents().get(0).get_SupportedPlugins().size();
-					noOfPluginsFromAgent2 = leader.get_Agents().get(1).get_SupportedPlugins().size();
+					noOfPluginsFromAgent1 = leader.getAgents().get(0).get_SupportedPlugins().size();
+					noOfPluginsFromAgent2 = leader.getAgents().get(1).get_SupportedPlugins().size();
 				}
 				
 				Thread.sleep(1);
@@ -125,7 +125,11 @@ public class EstablishConnectionTest extends TestBase
 	public void NotifyServer_GivenAWorkerCompletesATask_NotifyTheServerThatTheTaskIsDone() throws Exception
 	{
 		int port = 20000;
-        Task task = Make_TestTask();
+        Job job = new Job();
+        Step step = new Step();
+        step.tasks.add(Make_TestTask());
+        job.steps.add(step);
+
 		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
 			Agent  agent1 = new Agent("localhost", port, 20001);)
 		{
@@ -134,20 +138,20 @@ public class EstablishConnectionTest extends TestBase
 			agent1.open();
 			
 			// make sure the agent have had time to connect with the server
-			for(int i = 1000; i > 0 && leader.get_Agents().size() == 0; i--)
+			for(int i = 1000; i > 0 && leader.getAgents().size() == 0; i--)
 			{
 				Thread.sleep(1);
 			}
 			
-			leader.enqueue(task);
-			assertEquals(3, leader.get_Agents().get(0).get_MaxNumberOfSimultaniousTasks());
+			leader.enqueue(job);
+			assertEquals(3, leader.getAgents().get(0).get_MaxNumberOfSimultaniousTasks());
 			
-			for(int i = 1000; i > 0 && leader.get_Agents().get(0).get_MaxNumberOfSimultaniousTasks() != 4; i--)
+			for(int i = 1000; i > 0 && leader.getAgents().get(0).get_MaxNumberOfSimultaniousTasks() != 4; i--)
 			{
 				Thread.sleep(1);
 			}
 			
-			assertEquals(4, leader.get_Agents().get(0).get_MaxNumberOfSimultaniousTasks());
+			assertEquals(4, leader.getAgents().get(0).get_MaxNumberOfSimultaniousTasks());
 		}
 	}
 }

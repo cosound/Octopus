@@ -17,29 +17,25 @@ import com.google.gson.Gson;
 
 public class OrchestratorImpl implements Runnable, AutoCloseable
 {
-	private ArrayList<AgentProxy> _agents; 
 	private boolean               _isRunning;
 	private Thread                _thread;
 	private ServerSocket          _socket;
 	private int                   _port;
     private Gson                  _Gson;
-    private ArrayList<Job>        _Jobs;
+    private AllocationHandler     _AllocationHandler;
 	
 	public OrchestratorImpl(int port)
 	{
-        _Jobs      = new ArrayList<Job>();
+        _AllocationHandler = new AllocationHandler();
+
         _Gson      = new Gson();
-		_agents    = new ArrayList<AgentProxy>();
 		_port      = port;
 		_isRunning = false;
 	}
 
-	public ArrayList<AgentProxy> get_Agents() 
+	public ArrayList<AgentProxy> getAgents()
 	{
-		synchronized (_agents)
-		{
-			return _agents;
-		}
+        return _AllocationHandler.getAgents();
 	}
 
 	public void open() 
@@ -77,8 +73,9 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
                     case Commands.CONNECT:
                     {
                         ConnectMessage connect = gson.fromJson(result, new ConnectMessage().getClass());
+                        AgentProxy     ap      = new AgentProxy(connect.get_Hostname(), connect.get_Port());
 
-                        get_Agents().add(new AgentProxy(connect.get_Hostname(), connect.get_Port()));
+                        _AllocationHandler.addAgent(ap);
 
                         break;
                     }
@@ -86,7 +83,7 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
                     {
                         TaskMessage msg = _Gson.fromJson(result, TaskMessage.class);
 
-                        notifyAgentsTaskComplete(msg);
+                        _AllocationHandler.taskComplete(msg.getTask());
 
                         break;
                     }
@@ -94,18 +91,7 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
                     {
                         TaskMessage taskMessage = _Gson.fromJson(result, TaskMessage.class);
 
-                        for(Job job : _Jobs)
-                        {
-                            for(Step step : job.steps)
-                            {
-                                for(Task task : step.tasks)
-                                {
-                                    if(task.taskId.equals(taskMessage.getTask().taskId))
-                                        task.set_State(taskMessage.getTask().get_State());
-                                    // TODO change so entire task is updated, instead of just the state
-                                }
-                            }
-                        }
+                        _AllocationHandler.taskUpdate(taskMessage.getTask());
 
                         break;
                     }
@@ -124,19 +110,12 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
         }
 	}
 
-    private void notifyAgentsTaskComplete(TaskMessage msg)
-    {
-        for (AgentProxy agent : get_Agents())
-        {
-            agent.taskCompleted(msg.getTask());
-        }
-    }
-
     public void close() throws Exception
 	{
 		_isRunning = false;
 		
 		if(_socket != null) _socket.close();
+        if(_AllocationHandler != null) _AllocationHandler.close();
 	}
 
 	public List<String> parsePluginList(byte[] data)
@@ -152,36 +131,8 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 		return pluginDefinitions;
 	}
 
-	public void enqueue(Task task)
-	{
-		// TODO decision logic for selecting an agent to send a task to
-		for (AgentProxy agent : _agents) 
-		{
-			agent.enqueue(task);
-		}
-	}
-
 	public void enqueue(Job job) 
 	{
-        _Jobs.add(job);
-
-		// TODO replace with proper queuing of jobs and task logic
-		for (Step step : job.steps) 
-		{
-			for (Task task : step.tasks)
-			{
-				enqueue(task);
-			}
-			
-//			if(!step.get_IsComplete())
-//			{
-//				for (Task task : step.tasks) 
-//				{
-//					enqueue(task.pluginId);
-//				}
-//				
-//				break;
-//			}
-		}
+        _AllocationHandler.enqueue(job);
 	}
 }

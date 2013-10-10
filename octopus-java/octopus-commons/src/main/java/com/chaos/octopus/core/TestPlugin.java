@@ -3,6 +3,8 @@ package com.chaos.octopus.core;
 public class TestPlugin implements Plugin, PluginDefinition
 {
     private Task _Task;
+    private static int number = 0;
+    private static Object numberLock = new Object();
 
     public boolean WasExecuted   = false;
 	public boolean WasRolledback = false;
@@ -47,11 +49,28 @@ public class TestPlugin implements Plugin, PluginDefinition
 	public void execute() throws Exception
 	{
 		if(_shouldFailing) throw new Exception("TestPlugin failed in execute");
-		
+
+        Thread.sleep(10);
+
+        if(getTask().properties.containsKey("number"))
+        {
+            int num = Integer.parseInt(getTask().properties.get("number"));
+
+            synchronized (numberLock)
+            {
+                number += num;
+            }
+        }
+
 		WasExecuted = true;
 		
 		System.out.println(getId() + " executed");
 	}
+
+    public static int getNumber()
+    {
+        return number;
+    }
 
 	@Override
 	public void rollback()
