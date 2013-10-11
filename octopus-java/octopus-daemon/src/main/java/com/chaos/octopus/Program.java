@@ -9,7 +9,6 @@ import com.google.gson.*;
 
 public class Program 
 {
-
 	public static void main(String[] args) throws Exception 
 	{
 		System.out.println("Initializing Octopus...");
