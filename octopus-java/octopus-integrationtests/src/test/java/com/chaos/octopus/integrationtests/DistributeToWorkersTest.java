@@ -5,7 +5,6 @@ import com.chaos.octopus.core.Task;
 import com.chaos.octopus.core.TaskState;
 import com.chaos.octopus.core.TestPlugin;
 import com.chaos.octopus.server.*;
-import junit.framework.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
