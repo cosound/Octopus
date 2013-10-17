@@ -1,4 +1,4 @@
-package com.chaos.octopus.core;
+package com.chaos.octopus.commons.core;
 
 public class TestPlugin implements Plugin, PluginDefinition
 {

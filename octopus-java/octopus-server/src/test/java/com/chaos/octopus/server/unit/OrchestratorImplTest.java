@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.chaos.octopus.core.*;
 import com.chaos.octopus.server.*;
 
 public class OrchestratorImplTest

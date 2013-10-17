@@ -6,9 +6,9 @@ import java.util.*;
 
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
-import com.chaos.octopus.core.Message;
-import com.chaos.octopus.core.Task;
-import com.chaos.octopus.core.TaskMessage;
+import com.chaos.octopus.commons.core.Message;
+import com.chaos.octopus.commons.core.Task;
+import com.chaos.octopus.commons.core.TaskMessage;
 import com.google.gson.Gson;
 
 public class AgentProxy

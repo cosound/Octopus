@@ -1,4 +1,4 @@
-package com.chaos.octopus.core;
+package com.chaos.octopus.commons.core;
 
 /**
  * User: Jesper Fyhr Knudsen

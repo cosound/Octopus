@@ -1,6 +1,6 @@
 package com.chaos.octopus.server.unit;
 
-import com.chaos.octopus.core.Task;
+import com.chaos.octopus.commons.core.Task;
 
 public class TestBase {
 

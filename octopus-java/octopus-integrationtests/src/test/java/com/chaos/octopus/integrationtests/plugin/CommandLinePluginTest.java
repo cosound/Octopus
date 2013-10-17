@@ -1,9 +1,9 @@
 package com.chaos.octopus.integrationtests.plugin;
 
 import com.chaos.octopus.agent.plugin.CommandLinePlugin;
-import com.chaos.octopus.core.Plugin;
-import com.chaos.octopus.core.PluginDefinition;
-import com.chaos.octopus.core.Task;
+import com.chaos.octopus.commons.core.Plugin;
+import com.chaos.octopus.commons.core.PluginDefinition;
+import com.chaos.octopus.commons.core.Task;
 import org.junit.Test;
 
 import java.io.File;
@@ -51,16 +51,15 @@ public class CommandLinePluginTest
     }
 
     @Test
-    public void execute_TaskThatCreatesFolderViaCommandLine_FolderIsCreated() throws Exception
+    public void execute_ExecuteScriptWithProgress_ProgressShouldBeUpdated() throws Exception
     {
-        new File("wascalled").delete();
         Task task     = makeTask();
-        task.properties.put("commandline", "mkdir wascalled");
+        task.properties.put("commandline", "..\\doc\\sample-batch.bat");
         Plugin plugin = makeCommandLinePluginFactory().create(task);
 
         plugin.execute();
 
-        assertTrue(new File("wascalled").exists());
+        assertEquals((int)1.0, (int)task.progress);
     }
 
     private Task makeTask()

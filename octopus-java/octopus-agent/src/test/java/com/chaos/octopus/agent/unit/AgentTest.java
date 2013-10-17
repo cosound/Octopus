@@ -4,12 +4,12 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import com.chaos.octopus.core.Task;
+import com.chaos.octopus.commons.core.Task;
 import org.junit.Test;
 
 import com.chaos.octopus.agent.Agent;
-import com.chaos.octopus.core.PluginDefinition;
-import com.chaos.octopus.core.TestPlugin;
+import com.chaos.octopus.commons.core.PluginDefinition;
+import com.chaos.octopus.commons.core.TestPlugin;
 
 public class AgentTest
 {

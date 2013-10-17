@@ -2,8 +2,8 @@ package com.chaos.octopus.server.unit;
 
 import static org.junit.Assert.*;
 
-import com.chaos.octopus.core.Task;
-import com.chaos.octopus.core.TaskState;
+import com.chaos.octopus.commons.core.Task;
+import com.chaos.octopus.commons.core.TaskState;
 import org.junit.Test;
 
 import com.chaos.octopus.server.*;

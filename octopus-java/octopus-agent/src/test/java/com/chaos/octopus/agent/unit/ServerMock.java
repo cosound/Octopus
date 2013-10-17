@@ -1,9 +1,7 @@
 package com.chaos.octopus.agent.unit;
 
-import java.net.Socket;
-
-import com.chaos.octopus.core.Orchestrator;
-import com.chaos.octopus.core.Task;
+import com.chaos.octopus.commons.core.Orchestrator;
+import com.chaos.octopus.commons.core.Task;
 
 public class ServerMock implements Orchestrator
 {

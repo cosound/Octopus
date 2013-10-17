@@ -3,7 +3,8 @@ package com.chaos.octopus;
 import java.io.*;
 
 import com.chaos.octopus.agent.Agent;
-import com.chaos.octopus.core.TestPlugin;
+import com.chaos.octopus.agent.plugin.CommandLinePlugin;
+import com.chaos.octopus.commons.core.TestPlugin;
 import com.chaos.octopus.server.*;
 import com.google.gson.*;
 
@@ -17,6 +18,7 @@ public class Program
 		    Agent agent = new Agent("localhost", 20000, 20001))
 		{
 			agent.addPlugin(new TestPlugin());
+            agent.addPlugin(new CommandLinePlugin());
 			leader.open();
 			agent.open();
 

@@ -3,9 +3,9 @@ package com.chaos.octopus.agent;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.chaos.octopus.core.Plugin;
-import com.chaos.octopus.core.Task;
-import com.chaos.octopus.core.TaskState;
+import com.chaos.octopus.commons.core.Plugin;
+import com.chaos.octopus.commons.core.Task;
+import com.chaos.octopus.commons.core.TaskState;
 
 public class ExecutionSlot implements Runnable
 {

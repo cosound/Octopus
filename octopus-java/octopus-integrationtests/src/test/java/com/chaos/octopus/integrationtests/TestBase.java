@@ -1,6 +1,6 @@
 package com.chaos.octopus.integrationtests;
 
-import com.chaos.octopus.core.Task;
+import com.chaos.octopus.commons.core.Task;
 
 /**
  * User: Jesper Fyhr Knudsen

@@ -2,10 +2,9 @@ package com.chaos.octopus.agent;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
+import com.chaos.octopus.commons.core.*;
 import com.chaos.octopus.commons.util.Commands;
-import com.chaos.octopus.core.*;
 import com.google.gson.Gson;
 
 public class OrchestratorProxy implements Orchestrator

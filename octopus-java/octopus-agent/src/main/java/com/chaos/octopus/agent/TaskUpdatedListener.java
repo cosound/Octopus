@@ -1,6 +1,6 @@
 package com.chaos.octopus.agent;
 
-import com.chaos.octopus.core.Task;
+import com.chaos.octopus.commons.core.Task;
 
 public interface TaskUpdatedListener
 {

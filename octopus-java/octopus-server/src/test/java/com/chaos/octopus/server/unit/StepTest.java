@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.chaos.octopus.server.Step;
-import com.chaos.octopus.core.Task;
-import com.chaos.octopus.core.TaskState;
+import com.chaos.octopus.commons.core.Task;
+import com.chaos.octopus.commons.core.TaskState;
 
 public class StepTest extends TestBase
 {

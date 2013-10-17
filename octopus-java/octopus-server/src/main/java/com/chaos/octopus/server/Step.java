@@ -1,7 +1,7 @@
 package com.chaos.octopus.server;
 
-import com.chaos.octopus.core.Task;
-import com.chaos.octopus.core.TaskState;
+import com.chaos.octopus.commons.core.Task;
+import com.chaos.octopus.commons.core.TaskState;
 
 import java.util.ArrayList;
 

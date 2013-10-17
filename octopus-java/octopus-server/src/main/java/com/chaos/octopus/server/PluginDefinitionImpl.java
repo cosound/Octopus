@@ -1,8 +1,8 @@
 package com.chaos.octopus.server;
 
-import com.chaos.octopus.core.Plugin;
-import com.chaos.octopus.core.PluginDefinition;
-import com.chaos.octopus.core.Task;
+import com.chaos.octopus.commons.core.Plugin;
+import com.chaos.octopus.commons.core.PluginDefinition;
+import com.chaos.octopus.commons.core.Task;
 
 public class PluginDefinitionImpl implements PluginDefinition {
 
