@@ -65,8 +65,11 @@ public class Program
 			    		Gson gson = new Gson();
 			    		
 			    		Job job = gson.fromJson(fr, new Job().getClass());
-			    		
-			    		leader.enqueue(job);
+
+                        if(job.validate())
+                            leader.enqueue(job);
+                        else
+                            System.out.println("The job file is invalid");
 			    	}
 			    }
 			    else if(split[0].equals("exit"))

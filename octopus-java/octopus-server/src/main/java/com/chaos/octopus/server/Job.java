@@ -1,6 +1,7 @@
 package com.chaos.octopus.server;
 
 import com.chaos.octopus.commons.core.Task;
+import com.chaos.octopus.server.exception.JobMalformedException;
 
 import java.util.*;
 
@@ -19,5 +20,20 @@ public class Job
 		}
 		
 		return null;
-	}		
+	}
+
+    /**
+     * Validates the job
+     *
+     * @return True is returned if the job is well formed, otherwise false
+     */
+    public boolean validate()
+    {
+        for (Step step : steps)
+        {
+            if(!step.validate()) return false;
+        }
+
+        return true;
+    }
 }

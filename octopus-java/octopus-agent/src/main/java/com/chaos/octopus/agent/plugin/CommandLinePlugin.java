@@ -96,8 +96,6 @@ public class CommandLinePlugin implements Plugin, PluginDefinition
                 {
                     System.out.println ("exception: " + m.group(1));
                 }
-
-                System.out.println ("stdout: " +line);
             }
         }
 

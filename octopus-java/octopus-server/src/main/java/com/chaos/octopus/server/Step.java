@@ -40,4 +40,13 @@ public class Step
 		return null;
 	}
 
+    /**
+     * Validates the Step for correctness
+     *
+     * @return True is returned if all the Step is Valid otherwise false
+     */
+    public boolean validate()
+    {
+        return !tasks.isEmpty();
+    }
 }
