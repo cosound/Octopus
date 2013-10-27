@@ -34,4 +34,40 @@ public class ChaosPluginTest
 
         assertEquals(task, result);
     }
+
+    @Test
+    public void getAction_GivenObjectCreate_ReturnObjectCreate()
+    {
+        Task task          = new Task();
+        ChaosPlugin plugin = new ChaosPlugin(task);
+        task.properties.put("action", "object.create");
+
+        String result = plugin.getAction();
+
+        assertEquals("object.create", result);
+    }
+
+    @Test
+    public void getInputXml_GivenObjectCreate_ReturnObjectCreate()
+    {
+        Task task          = new Task();
+        ChaosPlugin plugin = new ChaosPlugin(task);
+        task.properties.put("input-xmlfilepath", "./somefile.xml");
+
+        String result = plugin.getInputXml();
+
+        assertEquals("./somefile.xml", result);
+    }
+
+    @Test
+    public void getChaosLocation_GivenObjectCreate_ReturnObjectCreate()
+    {
+        Task task          = new Task();
+        ChaosPlugin plugin = new ChaosPlugin(task);
+        task.properties.put("chaos-location", "https://api.chaos-systems.com");
+
+        String result = plugin.getChaosLocation();
+
+        assertEquals("https://api.chaos-systems.com", result);
+    }
 }

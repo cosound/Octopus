@@ -12,18 +12,25 @@ public class Program
 {
 	public static void main(String[] args) throws Exception 
 	{
+        int port = 20000;
+
+        if(args.length == 1)
+        {
+            port = Integer.parseInt(args[0]);
+        }
+
 		System.out.println("Initializing Octopus...");
 		
-		try(OrchestratorImpl leader = new OrchestratorImpl(20000);
-		    Agent agent = new Agent("localhost", 20000, 20001))
+		try(OrchestratorImpl leader = new OrchestratorImpl(port);
+		    Agent agent = new Agent("localhost", port, port +1))
 		{
 			agent.addPlugin(new TestPlugin());
             agent.addPlugin(new CommandLinePlugin());
 			leader.open();
 			agent.open();
 
-			System.out.println("\tOrchestration leader chosen [localhost:20000]");
-			System.out.println("\tAgent connected [localhost:20001]");
+			System.out.println("\tOrchestration leader chosen [localhost:" + port + "]");
+			System.out.println("\tAgent connected [localhost:" + (port +1) + "]");
 			System.out.println("Octopus initialized");
 
 			// keyboard input loop
@@ -64,7 +71,7 @@ public class Program
 			    	{
 			    		Gson gson = new Gson();
 			    		
-			    		Job job = gson.fromJson(fr, new Job().getClass());
+			    		Job job = gson.fromJson(fr, Job.class);
 
                         if(job.validate())
                             leader.enqueue(job);
