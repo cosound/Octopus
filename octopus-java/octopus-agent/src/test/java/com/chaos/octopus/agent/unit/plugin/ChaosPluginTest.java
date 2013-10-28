@@ -70,4 +70,52 @@ public class ChaosPluginTest
 
         assertEquals("https://api.chaos-systems.com", result);
     }
+
+    @Test
+    public void getApiKey_GivenObjectCreate_ReturnApiKey()
+    {
+        Task task          = new Task();
+        ChaosPlugin plugin = new ChaosPlugin(task);
+        task.properties.put("chaos-apikey", "b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270");
+
+        String result = plugin.getApiKey();
+
+        assertEquals("b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270", result);
+    }
+
+    @Test
+    public void getObjectTypeId_GivenObjectCreate_ReturnObjectTypeId()
+    {
+        Task task          = new Task();
+        ChaosPlugin plugin = new ChaosPlugin(task);
+        task.properties.put("chaos-objecttypeid", "1");
+
+        int result = plugin.getObjectTypeId();
+
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void getFolderId_GivenObjectCreate_ReturnFolderId()
+    {
+        Task task          = new Task();
+        ChaosPlugin plugin = new ChaosPlugin(task);
+        task.properties.put("chaos-folderid", "1");
+
+        int result = plugin.getFolderId();
+
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void getMetadataSchemaId_GivenObjectCreate_ReturnMetadataSchemaId()
+    {
+        Task task          = new Task();
+        ChaosPlugin plugin = new ChaosPlugin(task);
+        task.properties.put("chaos-metadataschemaid", "30393865-6330-3632-2D33-6664662D3131");
+
+        String result = plugin.getMetadataSchemaId();
+
+        assertEquals("30393865-6330-3632-2D33-6664662D3131", result);
+    }
 }

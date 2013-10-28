@@ -3,9 +3,6 @@ package com.chaos.sdk.test;
 import com.chaos.sdk.ChaosGateway;
 import com.chaos.sdk.v6.dto.PortalResponse;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 
 /**
  * User: Jesper Fyhr Knudsen
@@ -26,9 +23,9 @@ public class MockGateway implements ChaosGateway
     }
 
     @Override
-    public PortalResponse call(String address)
+    public PortalResponse call(String method, String path, String query)
     {
-        if(url.equals(address))
+        if(url.equals(path + "?" + query))
             return gson.fromJson(result, PortalResponse.class);
 
         return null;

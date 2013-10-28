@@ -3,6 +3,7 @@ package com.chaos.octopus;
 import java.io.*;
 
 import com.chaos.octopus.agent.Agent;
+import com.chaos.octopus.agent.plugin.ChaosPlugin;
 import com.chaos.octopus.agent.plugin.CommandLinePlugin;
 import com.chaos.octopus.commons.core.TestPlugin;
 import com.chaos.octopus.server.*;
@@ -26,6 +27,7 @@ public class Program
 		{
 			agent.addPlugin(new TestPlugin());
             agent.addPlugin(new CommandLinePlugin());
+            agent.addPlugin(new ChaosPlugin());
 			leader.open();
 			agent.open();
 

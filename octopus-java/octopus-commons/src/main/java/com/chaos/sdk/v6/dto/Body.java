@@ -12,14 +12,14 @@ public class Body
 {
     private int Count;
     private int TotalCount;
-    private ArrayList<HashMap<String, String>> Results;
+    private ArrayList<HashMap<String, Object>> Results;
 
     public Body()
     {
-        Results = new ArrayList<HashMap<String, String>>();
+        Results = new ArrayList<>();
     }
 
-    public ArrayList<HashMap<String, String>> getResults()
+    public ArrayList<HashMap<String, Object>> getResults()
     {
         return Results;
     }

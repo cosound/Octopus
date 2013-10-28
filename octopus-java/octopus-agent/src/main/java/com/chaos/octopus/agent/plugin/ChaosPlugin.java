@@ -1,16 +1,21 @@
 package com.chaos.octopus.agent.plugin;
 
 import com.chaos.octopus.commons.core.Plugin;
+import com.chaos.octopus.commons.core.PluginDefinition;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.sdk.Chaos;
+import com.chaos.sdk.model.McmObject;
 import com.chaos.sdk.model.Session;
+import com.google.gson.Gson;
+
+import java.io.*;
 
 /**
  * User: Jesper Fyhr Knudsen
  * Date: 23-10-13
  * Time: 17:06
  */
-public class ChaosPlugin implements Plugin
+public class ChaosPlugin implements Plugin, PluginDefinition
 {
     private Task _Task;
 
@@ -20,10 +25,19 @@ public class ChaosPlugin implements Plugin
         return "com.chaos.octopus.plugins.ChaosPlugin, 1.0.0";
     }
 
+    public ChaosPlugin(){    }
+
     public ChaosPlugin(Task task)
     {
         setTask(task);
     }
+
+    @Override
+    public Plugin create(Task data)
+    {
+        return new ChaosPlugin(data);
+    }
+
 
     @Override
     public Task getTask()
@@ -40,33 +54,41 @@ public class ChaosPlugin implements Plugin
     public void execute() throws Exception
     {
         // TODO once more actions are implemented, replace with Strategy pattern
-        if(getAction() == "object.create")
+        if("object.create".equals(getAction()))
         {
+            String metadata = getInoutXmlContent();
+
             Chaos api = new Chaos(getChaosLocation());
 
-            Session session = api.authenticate("b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270");
-
-            System.out.println(session.getId());
-            //String sessionGuid = CreateSession();
-            //String guid = CreateObject(sessionGuid);
-            //SetMetadata(sessionGuid, guid);
+            Session session = api.authenticate(getApiKey());
+            getTask().progress = 0.3;
+            McmObject obj = api.objectCreate(session.getId(), null, getObjectTypeId(), getFolderId());
+            getTask().progress = 0.6;
+            int result = api.metadataSet(session.getId(), obj.getId(), getMetadataSchemaId(), "en", "0", metadata);
+            System.out.println(result);
+            getTask().progress = 1.0;
         }
     }
 
-    private void SetMetadata()
+    private String getInoutXmlContent() throws IllegalAccessException, IOException
     {
-        // TODO Add Metadata to Object
-    }
+        File         f      = new File(getInputXml());
+        StringBuffer result = new StringBuffer();
 
-    private void CreateObject()
-    {
-        // TODO Create Object
-    }
+        if(!f.exists()) throw new IllegalAccessException("xml path is incorrect");
 
-    private void CreateSession()
-    {
-        // TODO Get a session
-        // TODO Authenticate session
+        try(FileReader fr = new FileReader(getInputXml()))
+        {
+            try(BufferedReader in = new BufferedReader(fr))
+            {
+                String inputLine;
+
+                while ((inputLine = in.readLine()) != null)
+                    result.append(inputLine);
+            }
+        }
+
+        return result.toString();
     }
 
     @Override
@@ -92,5 +114,25 @@ public class ChaosPlugin implements Plugin
     public String getChaosLocation()
     {
         return getTask().properties.get("chaos-location");
+    }
+
+    public String getApiKey()
+    {
+        return getTask().properties.get("chaos-apikey");
+    }
+
+    public int getObjectTypeId()
+    {
+        return Integer.parseInt(getTask().properties.get("chaos-objecttypeid"));
+    }
+
+    public int getFolderId()
+    {
+        return Integer.parseInt(getTask().properties.get("chaos-folderid"));
+    }
+
+    public String getMetadataSchemaId()
+    {
+        return getTask().properties.get("chaos-metadataschemaid");
     }
 }

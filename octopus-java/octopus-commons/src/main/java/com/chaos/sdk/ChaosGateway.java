@@ -12,5 +12,5 @@ import java.net.MalformedURLException;
  */
 public interface ChaosGateway
 {
-    PortalResponse call(String address) throws IOException;
+    PortalResponse call(String method, String path, String query) throws IOException;
 }
