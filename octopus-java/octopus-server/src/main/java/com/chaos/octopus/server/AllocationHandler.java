@@ -67,6 +67,7 @@ public class AllocationHandler implements Runnable, AutoCloseable
             {
                 for (Job job : _Jobs)
                 {
+
                     for(Task task = job.nextAvailableTask(); task != null; task = job.nextAvailableTask())
                     {
                         task.set_State(TaskState.Queued);

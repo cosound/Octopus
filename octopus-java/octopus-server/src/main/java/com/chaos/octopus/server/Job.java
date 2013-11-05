@@ -8,7 +8,7 @@ import java.util.*;
 public class Job 
 {
 	public String id;
-	public ArrayList<Step> steps = new ArrayList<Step>();
+	public ArrayList<Step> steps = new ArrayList<>();
 	
 	public Task nextAvailableTask()
 	{
@@ -22,11 +22,6 @@ public class Job
 		return null;
 	}
 
-    /**
-     * Validates the job
-     *
-     * @return True is returned if the job is well formed, otherwise false
-     */
     public boolean validate()
     {
         for (Step step : steps)
@@ -35,5 +30,16 @@ public class Job
         }
 
         return true;
+    }
+
+    public Iterable<Task> getTasks()
+    {
+        for(Step step : steps)
+        {
+            if(!step.isCompleted())
+                return step.getTasks();
+        }
+
+        return new ArrayList<>();
     }
 }

@@ -4,10 +4,11 @@ import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Step 
 {
-	public ArrayList<Task> tasks = new ArrayList<Task>();
+	public Collection<Task> tasks = new ArrayList<>();
 
 	public boolean hasAvailableTasks() 
 	{
@@ -23,8 +24,10 @@ public class Step
 	{
 		for(Task task : tasks)
 		{
-			if(task.get_State() != TaskState.Committed && 
-			   task.get_State() != TaskState.Rolledback) return false;
+			if (task.get_State() != TaskState.Committed &&
+			    task.get_State() != TaskState.Rolledback &&
+                task.get_State() != TaskState.Executed)
+                return false;
 		}
 		
 		return true;
@@ -40,13 +43,26 @@ public class Step
 		return null;
 	}
 
-    /**
-     * Validates the Step for correctness
-     *
-     * @return True is returned if all the Step is Valid otherwise false
-     */
     public boolean validate()
     {
         return !tasks.isEmpty();
+    }
+
+    public Iterable<Task> getTasks()
+    {
+        return getAvailableTasks();
+    }
+
+    private Collection<Task> getAvailableTasks()
+    {
+        ArrayList<Task> list = new ArrayList<>();
+
+        for (Task task : tasks)
+        {
+            if(TaskState.New.equals(task.get_State()))
+                list.add(task);
+        }
+
+        return list;
     }
 }

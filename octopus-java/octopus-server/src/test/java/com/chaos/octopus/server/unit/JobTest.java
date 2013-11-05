@@ -9,8 +9,68 @@ import org.junit.Test;
 
 import com.chaos.octopus.server.*;
 
+import java.util.Iterator;
+
 public class JobTest extends TestBase
 {
+    @Test
+    public void getTasks_OneStepWithTwoTasks_ReturnAllTasks()
+    {
+        Job job = new Job();
+        Step step = new Step();
+        Task task1 = make_Task();
+        Task task2 = make_Task();
+        job.steps.add(step);
+        step.tasks.add(task1);
+        step.tasks.add(task2);
+
+        Iterator<Task> results = job.getTasks().iterator();
+
+        assertEquals(task1, results.next());
+        assertEquals(task2, results.next());
+    }
+
+    @Test
+    public void getTasks_OneStepWithTwoTasksWithOneTaskQueued_ReturnTheTaskThatIsntQueued()
+    {
+        Job job = new Job();
+        Step step = new Step();
+        Task task1 = make_Task();
+        Task task2 = make_Task();
+        job.steps.add(step);
+        step.tasks.add(task1);
+        step.tasks.add(task2);
+        task1.set_State(TaskState.Queued);
+
+        Iterator<Task> results = job.getTasks().iterator();
+
+        assertEquals(task2, results.next());
+        assertFalse(results.hasNext());
+    }
+
+    @Test
+    public void getTasks_TwoStepsFirstIsCompleteSecondHasOneNewTask_ReturnTheTask()
+    {
+        Job job = new Job();
+        Step step1 = new Step();
+        Step step2 = new Step();
+        Task task1 = make_Task();
+        Task task2 = make_Task();
+        Task task3 = make_Task();
+        job.steps.add(step1);
+        job.steps.add(step2);
+        step1.tasks.add(task1);
+        step1.tasks.add(task2);
+        step2.tasks.add(task3);
+        task1.set_State(TaskState.Executed);
+        task2.set_State(TaskState.Executed);
+
+        Iterator<Task> results = job.getTasks().iterator();
+
+        assertEquals(task3, results.next());
+        assertFalse(results.hasNext());
+    }
+
 	@Test
 	public void nextAvailableTask_GivenOneStep_ReturnTheNextTask() 
 	{
