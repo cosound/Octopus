@@ -8,11 +8,12 @@ import com.chaos.octopus.server.Step;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
 
+import java.util.Iterator;
+
 public class StepTest extends TestBase
 {
-
 	@Test
-	public void nextAvailableTask_GivenAStepWithMultipleTasks_ReturnTheFirstTaskThatHasntStarted() 
+	public void getTasks_GivenAStepWithMultipleNewTasks_ReturnThemAll()
 	{
 		Step step  = new Step();
 		Task task1 = make_Task();
@@ -20,13 +21,15 @@ public class StepTest extends TestBase
 		step.tasks.add(task1);
 		step.tasks.add(task2);
 		
-		Task result = step.nextAvailableTask();
+		Iterator<Task> results = step.getTasks().iterator();
 		
-		assertEquals(task1.taskId, result.taskId);
+		assertEquals(task1, results.next());
+        assertEquals(task2, results.next());
+        assertFalse(results.hasNext());
 	}
 	
 	@Test
-	public void nextAvailableTask_GivenAStepWithMultipleTasks_ReturnTheFirstTaskThatHasntStarted2() 
+	public void getTasks_GivenAStepWithMultipleOneFinishedAndOneNewTask_ReturnTheNewTask()
 	{
 		Step step = new Step();
 		Task task1 = make_Task();
@@ -34,10 +37,11 @@ public class StepTest extends TestBase
 		step.tasks.add(task1);
 		step.tasks.add(task2);
 		task1.set_State(TaskState.Committed);
-		
-		Task result = step.nextAvailableTask();
-		
-		assertEquals(task2.taskId, result.taskId);
+
+        Iterator<Task> results = step.getTasks().iterator();
+
+        assertEquals(task2, results.next());
+        assertFalse(results.hasNext());
 	}
 	
 	@Test

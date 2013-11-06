@@ -9,16 +9,6 @@ import java.util.Collection;
 public class Step 
 {
 	public Collection<Task> tasks = new ArrayList<>();
-
-	public boolean hasAvailableTasks() 
-	{
-		for(Task task : tasks)
-		{
-			if(task.get_State() == TaskState.New) return false;
-		}
-		
-		return true;
-	}
 	
 	public boolean isCompleted() 
 	{
@@ -33,36 +23,21 @@ public class Step
 		return true;
 	}
 
-	public Task nextAvailableTask() 
-	{
-		for(Task task : tasks)
-		{
-			if(task.get_State() == TaskState.New) return task;
-		}
-		
-		return null;
-	}
-
     public boolean validate()
     {
         return !tasks.isEmpty();
     }
 
     public Iterable<Task> getTasks()
-    {
-        return getAvailableTasks();
-    }
-
-    private Collection<Task> getAvailableTasks()
-    {
-        ArrayList<Task> list = new ArrayList<>();
-
-        for (Task task : tasks)
         {
-            if(TaskState.New.equals(task.get_State()))
-                list.add(task);
-        }
+            ArrayList<Task> list = new ArrayList<>();
 
-        return list;
+            for (Task task : tasks)
+            {
+                if(TaskState.New.equals(task.get_State()))
+                    list.add(task);
+            }
+
+            return list;
     }
 }
