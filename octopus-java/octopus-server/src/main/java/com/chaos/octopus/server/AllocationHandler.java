@@ -38,6 +38,7 @@ public class AllocationHandler implements Runnable, AutoCloseable
         for (AgentProxy agent : getAgents())
         {
             // TODO Make sure a task is only sent to one agent
+            task.set_State(TaskState.Queued);
             agent.enqueue(task);
         }
     }
@@ -67,10 +68,9 @@ public class AllocationHandler implements Runnable, AutoCloseable
             {
                 for (Job job : _Jobs)
                 {
-
                     for(Task task : job.getTasks())
                     {
-                        task.set_State(TaskState.Queued);
+                        // TODO only enqueue if there are available ressources
                         enqueue(task);
                     }
                 }
