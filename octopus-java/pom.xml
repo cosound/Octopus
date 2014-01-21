@@ -26,6 +26,7 @@
     <modules>
         <module>octopus-agent</module>
         <module>octopus-daemon</module>
+        <module>octopus-cli</module>
         <module>octopus-updater</module>
         <module>octopus-server</module>
         <module>octopus-integrationtests</module>

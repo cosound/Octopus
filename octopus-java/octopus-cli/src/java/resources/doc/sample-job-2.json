@@ -1,0 +1,35 @@
+{
+  "id":"0123456789",
+  "steps":[
+    {
+      "tasks":[{
+          "pluginId":"com.chaos.octopus.CommandLinePlugin, 1.0.0",
+	  "properties":{
+                        "commandline":"doc/sample-batch.bat"
+                       }
+        }]
+    },{
+      "tasks":[
+        {
+          "pluginId":"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0",
+	  "properties":{
+                        "sleep":"500",
+                        "number":"1024"
+                       }
+        }]
+    },{
+      "tasks":[
+        {
+          "pluginId":"com.chaos.octopus.plugins.ChaosPlugin, 1.0.0",
+	  "properties":{
+                        "action":"object.create",
+			"input-xmlfilepath":"doc/output.xml",
+                        "chaos-location":"http://api.cosound.chaos-systems.com",
+                        "chaos-apikey":"b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270",
+                        "chaos-objecttypeid":"4",
+                        "chaos-folderid":"7",
+                        "chaos-metadataschemaid":"30393865-6330-3632-2D33-6664662D3131"
+                       }
+        }]
+    }]
+}

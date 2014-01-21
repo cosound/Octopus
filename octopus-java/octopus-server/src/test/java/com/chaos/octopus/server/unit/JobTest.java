@@ -137,4 +137,64 @@ public class JobTest extends TestBase
         assertFalse(result);
     }
 
+
+    @Test
+    public void isComplete_AllStepsAreComplete_ReturnTrue()
+    {
+        Job  job   = new Job();
+        Step step1 = new Step();
+        Step step2 = new Step();
+        Task task1 = make_Task();
+        Task task2 = make_Task();
+        job.steps.add(step1);
+        job.steps.add(step2);
+        step1.tasks.add(task1);
+        step1.tasks.add(task2);
+        task1.set_State(TaskState.Committed);
+        task2.set_State(TaskState.Committed);
+
+        boolean result = job.isComplete();
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void isComplete_AllStepsHaveRolledback_ReturnTrue()
+    {
+        Job  job   = new Job();
+        Step step1 = new Step();
+        Step step2 = new Step();
+        Task task1 = make_Task();
+        Task task2 = make_Task();
+        job.steps.add(step1);
+        job.steps.add(step2);
+        step1.tasks.add(task1);
+        step1.tasks.add(task2);
+        task1.set_State(TaskState.Rolledback);
+        task2.set_State(TaskState.Rolledback);
+
+        boolean result = job.isComplete();
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void isComplete_AllStepsAreIncomplete_ReturnFalse()
+    {
+        Job  job   = new Job();
+        Step step1 = new Step();
+        Step step2 = new Step();
+        Task task1 = make_Task();
+        Task task2 = make_Task();
+        job.steps.add(step1);
+        job.steps.add(step2);
+        step1.tasks.add(task1);
+        step1.tasks.add(task2);
+        task1.set_State(TaskState.Committed);
+        task2.set_State(TaskState.Executing);
+
+        boolean result = job.isComplete();
+
+        assertFalse(result);
+    }
 }

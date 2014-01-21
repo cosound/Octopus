@@ -1,0 +1,48 @@
+octopus-cli.jar is used to test out workflows and plugins locally.
+
+
+
+Requirements:
+ - Java 7 JRE or newer
+ - gson 2.2.4
+ - apache commons-cli 1.0
+ - octopus dependencies (agent, commons & server) 2.0
+
+
+
+How to use:
+Open a terminal / command prompt and navigate to the folder.
+
+java -jar octopus-cli.jar doc/sample-job-1.json
+
+Will run the workflow example "doc/sample-job-1.json".
+If everything has run correctly the command will end after 3 seconds without any output.
+
+In order to get debug output, use the "-d, --debug" option.
+
+java -jar octopus-cli.jar -d doc/sample-job-1.json
+java -jar octopus-cli.jar --debug doc/sample-job-1.json
+
+should print out the stdout from the test plugin.
+
+If your workflow outputs a lot to stdout, you can use the normal commands to direct the output to a file.
+
+java -jar octopus-cli.jar -d doc/sample-job-1.json > debug.txt
+
+This will output the stdout to a file named "debug.txt" rather than print it in the terminal.
+
+
+
+Progress:
+It's possible to specify the plugins progress by outputting "<PROGRESS>0.0</PROGRESS>" to stdout, where the value is a float between 0.0 and 1.0.
+
+Status:
+A general status message can be set by outputting "<STATUS>SUCCESS</STATUS>" where the value is any string.
+
+Warning:
+A warning can be set by outputting "<WARNING>warning!</WARNING>" where the value is any string.
+
+Exception:
+An Exception can be set by outputting "<EXCEPTION>EXCEPTION</EXCEPTION>" where the value is any string.
+
+Using the octopus-cli.jar these values will be written to stdout when the debug option is enabled. In the production environment these values will be synchronized CHAOS, and can be read as part of the job status.

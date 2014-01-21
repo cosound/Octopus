@@ -30,4 +30,14 @@ public class Job
 
         return new ArrayList<>();
     }
+
+    public boolean isComplete()
+    {
+        for(Step step : steps)
+        {
+            if(!step.isCompleted()) return false;
+        }
+
+        return true;
+    }
 }

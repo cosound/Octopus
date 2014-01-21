@@ -38,7 +38,6 @@ public class ChaosPlugin implements Plugin, PluginDefinition
         return new ChaosPlugin(data);
     }
 
-
     @Override
     public Task getTask()
     {
