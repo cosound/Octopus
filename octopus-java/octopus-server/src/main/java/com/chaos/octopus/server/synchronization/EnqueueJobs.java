@@ -4,7 +4,7 @@ import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.commons.core.Orchestrator;
 import com.chaos.sdk.Chaos;
 
-public class EnqueueJobs implements SynchronizationAction
+public class EnqueueJobs implements SynchronizationTask
 {
     private Orchestrator orchestrator;
     private Chaos chaos;

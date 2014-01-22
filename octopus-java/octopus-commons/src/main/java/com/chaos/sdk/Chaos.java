@@ -6,6 +6,7 @@ import com.chaos.sdk.model.Session;
 import com.chaos.sdk.v6.dto.PortalResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * User: Jesper Fyhr Knudsen
@@ -51,5 +52,9 @@ public class Chaos
     public Iterable<Job> jobGet()
     {
         return null;
+    }
+
+    public void jobSet(List<Job> jobs)
+    {
     }
 }
