@@ -4,7 +4,7 @@ import com.chaos.octopus.agent.Agent;
 import com.chaos.octopus.agent.plugin.ChaosPlugin;
 import com.chaos.octopus.agent.plugin.CommandLinePlugin;
 import com.chaos.octopus.commons.core.TestPlugin;
-import com.chaos.octopus.server.Job;
+import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.server.OrchestratorImpl;
 import com.google.gson.Gson;
 import org.apache.commons.cli.*;

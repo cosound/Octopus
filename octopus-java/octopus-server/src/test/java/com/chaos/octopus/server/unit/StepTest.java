@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.chaos.octopus.server.Step;
+import com.chaos.octopus.commons.core.Step;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
 

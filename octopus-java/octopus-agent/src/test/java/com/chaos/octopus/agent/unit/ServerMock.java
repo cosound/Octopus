@@ -1,5 +1,6 @@
 package com.chaos.octopus.agent.unit;
 
+import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.commons.core.Orchestrator;
 import com.chaos.octopus.commons.core.Task;
 
@@ -30,4 +31,16 @@ public class ServerMock implements Orchestrator
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+    @Override
+    public void enqueue(Job job)
+    {
+
+    }
+
+    @Override
+    public void close() throws Exception
+    {
+
+    }
 }

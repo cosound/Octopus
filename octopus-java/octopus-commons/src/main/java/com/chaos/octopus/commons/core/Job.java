@@ -1,7 +1,4 @@
-package com.chaos.octopus.server;
-
-import com.chaos.octopus.commons.core.Task;
-import com.chaos.octopus.server.exception.JobMalformedException;
+package com.chaos.octopus.commons.core;
 
 import java.util.*;
 

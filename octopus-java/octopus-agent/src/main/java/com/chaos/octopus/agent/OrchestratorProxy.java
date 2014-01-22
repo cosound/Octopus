@@ -64,5 +64,16 @@ public class OrchestratorProxy implements Orchestrator
 	{
 		return _ListenPort;
 	}
-	
+
+    @Override
+    public void enqueue(Job job)
+    {
+
+    }
+
+    @Override
+    public void close() throws Exception
+    {
+
+    }
 }

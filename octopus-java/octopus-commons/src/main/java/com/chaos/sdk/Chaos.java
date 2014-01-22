@@ -1,5 +1,6 @@
 package com.chaos.sdk;
 
+import com.chaos.octopus.commons.core.Job;
 import com.chaos.sdk.model.McmObject;
 import com.chaos.sdk.model.Session;
 import com.chaos.sdk.v6.dto.PortalResponse;
@@ -45,5 +46,10 @@ public class Chaos
 
         Double value = Double.parseDouble(response.Body.getResults().get(0).get("Value").toString());
         return value.intValue();
+    }
+
+    public Iterable<Job> jobGet()
+    {
+        return null;
     }
 }

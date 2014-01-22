@@ -2,12 +2,11 @@ package com.chaos.octopus.server.unit;
 
 import static org.junit.Assert.*;
 
+import com.chaos.octopus.commons.core.Job;
+import com.chaos.octopus.commons.core.Step;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
-import com.chaos.octopus.server.exception.JobMalformedException;
 import org.junit.Test;
-
-import com.chaos.octopus.server.*;
 
 import java.util.Iterator;
 

@@ -7,14 +7,12 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.chaos.octopus.commons.core.*;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
-import com.chaos.octopus.commons.core.ConnectMessage;
-import com.chaos.octopus.commons.core.Message;
-import com.chaos.octopus.commons.core.TaskMessage;
 import com.google.gson.Gson;
 
-public class OrchestratorImpl implements Runnable, AutoCloseable
+public class OrchestratorImpl implements Orchestrator, Runnable
 {
 	private boolean               _isRunning;
 	private Thread                _thread;
@@ -53,7 +51,7 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 		}
 	}
 
-	public void run()
+    public void run()
 	{
 		Gson gson = new Gson();
 		
@@ -82,7 +80,7 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
                     {
                         TaskMessage msg = _Gson.fromJson(result, TaskMessage.class);
 
-                        _AllocationHandler.taskComplete(msg.getTask());
+                        taskCompleted(msg.getTask());
 
                         break;
                     }
@@ -90,7 +88,7 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
                     {
                         TaskMessage taskMessage = _Gson.fromJson(result, TaskMessage.class);
 
-                        _AllocationHandler.taskUpdate(taskMessage.getTask());
+                        taskUpdate(taskMessage.getTask());
 
                         break;
                     }
@@ -108,6 +106,30 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 			}
         }
 	}
+
+    @Override
+    public void taskCompleted(Task task)
+    {
+        _AllocationHandler.taskComplete(task);
+    }
+
+    @Override
+    public void taskUpdate(Task task)
+    {
+        _AllocationHandler.taskUpdate(task);
+    }
+
+    @Override
+    public int get_ListenPort()
+    {
+        return _port;
+    }
+
+    @Override
+    public void enqueue(Job job)
+    {
+        _AllocationHandler.enqueue(job);
+    }
 
     public void close() throws Exception
 	{
@@ -130,8 +152,5 @@ public class OrchestratorImpl implements Runnable, AutoCloseable
 		return pluginDefinitions;
 	}
 
-	public void enqueue(Job job) 
-	{
-        _AllocationHandler.enqueue(job);
-	}
+
 }

@@ -1,5 +1,7 @@
 package com.chaos.octopus.server;
 
+import com.chaos.octopus.commons.core.Job;
+import com.chaos.octopus.commons.core.Step;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
 

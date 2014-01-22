@@ -1,4 +1,4 @@
-package com.chaos.octopus.server;
+package com.chaos.octopus.commons.core;
 
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
