@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import com.chaos.octopus.server.synchronization.EnqueueJobs;
+import com.chaos.octopus.server.synchronization.Synchronization;
 import org.junit.Test;
 
 import com.chaos.octopus.server.*;
@@ -23,4 +25,14 @@ public class OrchestratorImplTest
 			assertEquals("com.chaos.octopus.agent.unit.TestPlugin, 1.0.0", results.get(0));
 		}
 	}
+
+    @Test
+    public void constructor_Default_SynchronizationShouldBeSet()
+    {
+        OrchestratorImpl leader = new OrchestratorImpl(0);
+
+        Synchronization synch = leader.get_synchronization();
+
+        assertNotNull(synch);
+    }
 }

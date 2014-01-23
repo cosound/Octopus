@@ -10,24 +10,34 @@ import java.util.List;
 import com.chaos.octopus.commons.core.*;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
+import com.chaos.octopus.server.synchronization.EnqueueJobs;
+import com.chaos.octopus.server.synchronization.Synchronization;
+import com.chaos.octopus.server.synchronization.UpdateJob;
+import com.chaos.sdk.Chaos;
 import com.google.gson.Gson;
 
 public class OrchestratorImpl implements Orchestrator, Runnable
 {
-	private boolean               _isRunning;
-	private Thread                _thread;
-	private ServerSocket          _socket;
-	private int                   _port;
-    private Gson                  _Gson;
-    private AllocationHandler     _AllocationHandler;
-	
-	public OrchestratorImpl(int port)
+    private final Chaos _chaos;
+    private final List<Job> _jobsWithUpdates;
+    private boolean           _isRunning;
+	private Thread            _thread;
+	private ServerSocket      _socket;
+	private int               _port;
+    private Gson              _Gson;
+    private AllocationHandler _AllocationHandler;
+    private Synchronization   _synchronization;
+
+    public OrchestratorImpl(int port)
 	{
         _AllocationHandler = new AllocationHandler();
-
-        _Gson      = new Gson();
-		_port      = port;
+        _Gson  = new Gson();
+		_port = port;
 		_isRunning = false;
+        _chaos = new Chaos("http://api.cosound.chaos-systems.com");  // TODO move to config file
+        _jobsWithUpdates = new ArrayList<>(); // todo encapsulate job updates in a class
+        _synchronization = new Synchronization(new EnqueueJobs(this, _chaos), new UpdateJob(_jobsWithUpdates, _chaos));
+        _synchronization.synchronize(60 *1000); // synchronize every 60 seconds
 	}
 
 	public ArrayList<AgentProxy> getAgents()
@@ -153,4 +163,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 	}
 
 
+    public Synchronization get_synchronization()
+    {
+        return _synchronization;
+    }
 }
