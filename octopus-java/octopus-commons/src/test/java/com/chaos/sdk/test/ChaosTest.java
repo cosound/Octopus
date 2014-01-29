@@ -3,11 +3,14 @@ package com.chaos.sdk.test;
 import com.chaos.sdk.Chaos;
 import com.chaos.sdk.model.McmObject;
 import com.chaos.sdk.model.Session;
+import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
 import org.junit.Test;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * User: Jesper Fyhr Knudsen
@@ -17,15 +20,15 @@ import static org.junit.Assert.assertEquals;
 public class ChaosTest
 {
     @Test
-    public void authenticate_GivenValidKey_ReturnAuthenticatedSession() throws IOException
+    public void authenticate_GivenValidKey_ReturnAuthenticatedClient() throws IOException
     {
         String      key     = "somekey";
         MockGateway gateway = new MockGateway("v6/SiteAccess/Auth?apiKey=" + key, "{\"Header\": {\"Duration\": 177.4577},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"Guid\": \"d01755b9-e019-4d7c-98d2-ca4583196a4f\",\"UserGuid\": \"33333633-3136-3433-2d33-3633382d3633\",\"DateCreated\": 1382903500,\"DateModified\": 1382903500,\"FullName\": \"Chaos.Mcm.Data.Dto.Object\"}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}");
         Chaos       api     = new Chaos(gateway);
 
-        Session result = api.authenticate(key);
+        AuthenticatedChaosClient result = api.authenticate(key);
 
-        assertEquals("d01755b9-e019-4d7c-98d2-ca4583196a4f", result.getId());
+        assertNotNull(result);
     }
 
     @Test
@@ -58,4 +61,6 @@ public class ChaosTest
 
         assertEquals(1, result);
     }
+
+
 }

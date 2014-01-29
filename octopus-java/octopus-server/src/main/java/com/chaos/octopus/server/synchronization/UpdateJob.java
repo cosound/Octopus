@@ -1,37 +1,31 @@
 package com.chaos.octopus.server.synchronization;
 
-import com.chaos.octopus.commons.core.Job;
-import com.chaos.sdk.Chaos;
+import com.chaos.octopus.server.ConcurrentJobBuffer;
+import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 public class UpdateJob implements SynchronizationTask
 {
-    private List<Job> jobs;
-    private Chaos chaos;
+    private ConcurrentJobBuffer jobs;
+    private AuthenticatedChaosClient client;
 
-    public UpdateJob(List<Job> jobs, Chaos chaos)
+    public UpdateJob(ConcurrentJobBuffer jobs, AuthenticatedChaosClient client)
     {
         this.jobs = jobs;
-        this.chaos = chaos;
+        this.client = client;
     }
 
     @Override
     public void action()
     {
-        ArrayList<Job> toUpdate = new ArrayList<>();
-
-        synchronized (jobs)
+        try
         {
-            while(jobs.size() != 0)
-            {
-                Job job = jobs.get(0);
-                toUpdate.add(job);
-                jobs.remove(0);
-            }
+            client.jobSet(jobs.popAll());
         }
-
-        chaos.jobSet(toUpdate);
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

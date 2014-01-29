@@ -2,25 +2,34 @@ package com.chaos.octopus.server.synchronization;
 
 import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.commons.core.Orchestrator;
-import com.chaos.sdk.Chaos;
+import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
+
+import java.io.IOException;
 
 public class EnqueueJobs implements SynchronizationTask
 {
     private Orchestrator orchestrator;
-    private Chaos chaos;
+    private AuthenticatedChaosClient client;
 
-    public EnqueueJobs(Orchestrator orchestrator, Chaos chaos)
+    public EnqueueJobs(Orchestrator orchestrator, AuthenticatedChaosClient client)
     {
         this.orchestrator = orchestrator;
-        this.chaos = chaos;
+        this.client = client;
     }
 
     @Override
     public void action()
     {
-        for(Job job : chaos.jobGet())
+        try
         {
-            orchestrator.enqueue(job);
+            for(Job job : client.jobGet())
+            {
+                orchestrator.enqueue(job);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 }

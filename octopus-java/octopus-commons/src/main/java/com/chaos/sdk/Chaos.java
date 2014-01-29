@@ -2,11 +2,11 @@ package com.chaos.sdk;
 
 import com.chaos.octopus.commons.core.Job;
 import com.chaos.sdk.model.McmObject;
-import com.chaos.sdk.model.Session;
+import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
 import com.chaos.sdk.v6.dto.PortalResponse;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * User: Jesper Fyhr Knudsen
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Chaos
 {
-    private ChaosGateway _Gateway;
+    private ChaosGateway gateway;
 
     public Chaos(String chaosLocation)
     {
@@ -24,37 +24,29 @@ public class Chaos
 
     public Chaos(ChaosGateway gateway)
     {
-        _Gateway = gateway;
+        this.gateway = gateway;
     }
 
-    public Session authenticate(String key) throws IOException
+    public AuthenticatedChaosClient authenticate(String key) throws IOException
     {
-        PortalResponse session = _Gateway.call("GET", "v6/SiteAccess/Auth","apiKey=" + key);
+        PortalResponse session = gateway.call("GET", "v6/SiteAccess/Auth","apiKey=" + key);
+        String sessionId = session.Body.getResults().get(0).get("Guid").toString();
 
-        return new Session(session.Body.getResults().get(0).get("Guid").toString());
+        return createAuthenticatedClient(sessionId);
+    }
+
+    private AuthenticatedChaosClient createAuthenticatedClient(String sessionId) throws IOException
+    {
+        return new AuthenticatedChaosClient(gateway, sessionId);
     }
 
     public McmObject objectCreate(String sessionId, String guid, int objectTypeId, int folderId) throws IOException
     {
-        PortalResponse session = _Gateway.call("GET", "v6/Object/Create", "sessionGUID="+sessionId+"&objectTypeID="+objectTypeId+"&folderID=" + folderId);
-
-        return new McmObject(session.Body.getResults().get(0).get("Guid").toString());
+        return createAuthenticatedClient(sessionId).objectCreate(guid, objectTypeId, folderId);
     }
 
     public int metadataSet(String sessionId, String objectGuid, String metadataSchemaGuid, String languageCode, String revisionID, String metadataXml) throws IOException
     {
-        PortalResponse response = _Gateway.call("POST", "v6/Metadata/Set", "sessionGUID=" +sessionId+ "&objectGuid=" + objectGuid + "&metadataSchemaGuid=" + metadataSchemaGuid + "&languageCode=" + languageCode + "&revisionID=" + revisionID + "&metadataXml=" + metadataXml);
-
-        Double value = Double.parseDouble(response.Body.getResults().get(0).get("Value").toString());
-        return value.intValue();
-    }
-
-    public Iterable<Job> jobGet()
-    {
-        return null;
-    }
-
-    public void jobSet(List<Job> jobs)
-    {
+        return createAuthenticatedClient(sessionId).metadataSet(objectGuid, metadataSchemaGuid, languageCode, revisionID, metadataXml);
     }
 }

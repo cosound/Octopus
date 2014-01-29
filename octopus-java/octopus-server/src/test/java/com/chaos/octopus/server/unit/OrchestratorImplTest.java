@@ -27,12 +27,14 @@ public class OrchestratorImplTest
 	}
 
     @Test
-    public void constructor_Default_SynchronizationShouldBeSet()
+    public void constructor_Default_SynchronizationShouldBeSet() throws Exception
     {
-        OrchestratorImpl leader = new OrchestratorImpl(0);
+        try(OrchestratorImpl leader = new OrchestratorImpl(0))
+        {
+            leader.open();
+            Synchronization synch = leader.get_synchronization();
 
-        Synchronization synch = leader.get_synchronization();
-
-        assertNotNull(synch);
+            assertNotNull(synch);
+        }
     }
 }

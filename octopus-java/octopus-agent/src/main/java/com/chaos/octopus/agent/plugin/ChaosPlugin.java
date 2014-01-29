@@ -6,6 +6,7 @@ import com.chaos.octopus.commons.core.Task;
 import com.chaos.sdk.Chaos;
 import com.chaos.sdk.model.McmObject;
 import com.chaos.sdk.model.Session;
+import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -58,12 +59,12 @@ public class ChaosPlugin implements Plugin, PluginDefinition
             String metadata = getInoutXmlContent();
 
             Chaos api = new Chaos(getChaosLocation());
+            AuthenticatedChaosClient client = api.authenticate(getApiKey());
 
-            Session session = api.authenticate(getApiKey());
             getTask().progress = 0.3;
-            McmObject obj = api.objectCreate(session.getId(), null, getObjectTypeId(), getFolderId());
+            McmObject obj = client.objectCreate(null, getObjectTypeId(), getFolderId());
             getTask().progress = 0.6;
-            int result = api.metadataSet(session.getId(), obj.getId(), getMetadataSchemaId(), "en", "0", metadata);
+            int result = client.metadataSet(obj.getId(), getMetadataSchemaId(), "en", "0", metadata);
             System.out.println(result);
             getTask().progress = 1.0;
         }

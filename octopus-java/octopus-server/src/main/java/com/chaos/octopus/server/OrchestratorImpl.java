@@ -14,12 +14,13 @@ import com.chaos.octopus.server.synchronization.EnqueueJobs;
 import com.chaos.octopus.server.synchronization.Synchronization;
 import com.chaos.octopus.server.synchronization.UpdateJob;
 import com.chaos.sdk.Chaos;
+import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
 import com.google.gson.Gson;
 
 public class OrchestratorImpl implements Orchestrator, Runnable
 {
     private final Chaos _chaos;
-    private final List<Job> _jobsWithUpdates;
+    private final ConcurrentJobBuffer _jobsWithUpdates;
     private boolean           _isRunning;
 	private Thread            _thread;
 	private ServerSocket      _socket;
@@ -35,25 +36,29 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 		_port = port;
 		_isRunning = false;
         _chaos = new Chaos("http://api.cosound.chaos-systems.com");  // TODO move to config file
-        _jobsWithUpdates = new ArrayList<>(); // todo encapsulate job updates in a class
-        _synchronization = new Synchronization(new EnqueueJobs(this, _chaos), new UpdateJob(_jobsWithUpdates, _chaos));
-        _synchronization.synchronize(60 *1000); // synchronize every 60 seconds
-	}
+
+        _jobsWithUpdates = new ConcurrentJobBuffer();
+
+    }
 
 	public ArrayList<AgentProxy> getAgents()
 	{
         return _AllocationHandler.getAgents();
 	}
 
-	public void open() 
+	public void open()
 	{
 		try
 		{
+
 			_isRunning = true;
 			_socket = new ServerSocket(_port);
 			
 			_thread = new Thread(this);
 			_thread.start();
+            AuthenticatedChaosClient client = _chaos.authenticate("b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270");
+            _synchronization = new Synchronization(new EnqueueJobs(this, client), new UpdateJob(_jobsWithUpdates, client));
+            _synchronization.synchronize(60 *1000); // synchronize every 60 seconds
 		} 
 		catch (IOException e)
 		{
@@ -73,13 +78,13 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 				
 				String result = StreamUtilities.ReadString(agent.getInputStream());
 				
-				Message message = gson.fromJson(result, new Message().getClass());
+				Message message = gson.fromJson(result, Message.class);
 
                 switch (message.getAction())
                 {
                     case Commands.CONNECT:
                     {
-                        ConnectMessage connect = gson.fromJson(result, new ConnectMessage().getClass());
+                        ConnectMessage connect = gson.fromJson(result, ConnectMessage.class);
                         AgentProxy     ap      = new AgentProxy(connect.get_Hostname(), connect.get_Port());
 
                         _AllocationHandler.addAgent(ap);
