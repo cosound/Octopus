@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class AuthenticatedChaosClient
 {
@@ -47,7 +48,6 @@ public class AuthenticatedChaosClient
 
             jobs.add(gson.fromJson(data, Job.class));
         }
-
 
         return jobs;
     }

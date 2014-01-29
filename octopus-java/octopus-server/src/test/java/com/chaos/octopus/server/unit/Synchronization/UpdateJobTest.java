@@ -7,6 +7,7 @@ import com.chaos.sdk.Chaos;
 import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.*;
 public class UpdateJobTest
 {
     @Test
-    public void action_SendUpdatedJobsToChaos_CallChaosWithJobList()
+    public void action_SendUpdatedJobsToChaos_CallChaosWithJobList() throws IOException
     {
         ConcurrentJobBuffer jobs = make_JobList();
         AuthenticatedChaosClient chaos = mock(AuthenticatedChaosClient.class);
