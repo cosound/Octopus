@@ -2,10 +2,8 @@ package com.chaos.sdk.test;
 
 import com.chaos.octopus.commons.core.Job;
 import com.chaos.sdk.Chaos;
-import com.chaos.sdk.ChaosGateway;
 import com.chaos.sdk.model.McmObject;
-import com.chaos.sdk.model.Session;
-import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
+import com.chaos.sdk.AuthenticatedChaosClient;
 import org.junit.Test;
 
 import java.io.IOException;

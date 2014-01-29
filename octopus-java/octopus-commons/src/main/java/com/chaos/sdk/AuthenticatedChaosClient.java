@@ -1,8 +1,9 @@
-package com.chaos.sdk.v6.dto;
+package com.chaos.sdk;
 
 import com.chaos.octopus.commons.core.Job;
 import com.chaos.sdk.ChaosGateway;
 import com.chaos.sdk.model.McmObject;
+import com.chaos.sdk.v6.dto.PortalResponse;
 import com.google.gson.Gson;
 
 import java.io.IOException;

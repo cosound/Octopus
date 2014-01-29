@@ -5,9 +5,7 @@ import com.chaos.octopus.commons.core.PluginDefinition;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.sdk.Chaos;
 import com.chaos.sdk.model.McmObject;
-import com.chaos.sdk.model.Session;
-import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
-import com.google.gson.Gson;
+import com.chaos.sdk.AuthenticatedChaosClient;
 
 import java.io.*;
 

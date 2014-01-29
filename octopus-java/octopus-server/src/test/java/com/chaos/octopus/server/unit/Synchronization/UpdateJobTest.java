@@ -3,8 +3,7 @@ package com.chaos.octopus.server.unit.Synchronization;
 import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.server.ConcurrentJobBuffer;
 import com.chaos.octopus.server.synchronization.UpdateJob;
-import com.chaos.sdk.Chaos;
-import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
+import com.chaos.sdk.AuthenticatedChaosClient;
 import org.junit.Test;
 
 import java.io.IOException;
