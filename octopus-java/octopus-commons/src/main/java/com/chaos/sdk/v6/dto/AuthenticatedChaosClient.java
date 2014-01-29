@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AuthenticatedChaosClient
 {
@@ -37,10 +38,18 @@ public class AuthenticatedChaosClient
     public Iterable<Job> jobGet() throws IOException
     {
         PortalResponse response = gateway.call("GET", "v6/Job/Get", "sessionGUID=" + sessionId + "&status=incomplete");
+        ArrayList<Job> jobs = new ArrayList<>();
+        Gson gson = new Gson();
 
-        System.out.println("jobGet call not implemented");
+        for(HashMap<String, Object> job : response.Body.getResults())
+        {
+            String data = job.get("Data").toString();
 
-        return new ArrayList<Job>();
+            jobs.add(gson.fromJson(data, Job.class));
+        }
+
+
+        return jobs;
     }
 
     public void jobSet(Iterable<Job> jobs) throws IOException
@@ -52,8 +61,5 @@ public class AuthenticatedChaosClient
             String data = gson.toJson(job);
             PortalResponse response = gateway.call("POST", "v6/Job/Set", "sessionGUID=" + sessionId + "&data=" + data);
         }
-
-
-        System.out.println("jobSet call not implemented");
     }
 }

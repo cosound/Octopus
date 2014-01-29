@@ -1,6 +1,8 @@
 package com.chaos.sdk.test;
 
+import com.chaos.octopus.commons.core.Job;
 import com.chaos.sdk.Chaos;
+import com.chaos.sdk.ChaosGateway;
 import com.chaos.sdk.model.McmObject;
 import com.chaos.sdk.model.Session;
 import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
@@ -8,9 +10,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * User: Jesper Fyhr Knudsen
@@ -54,7 +55,8 @@ public class ChaosTest
         String revisionID         = "somerevisionID";
         String metadataXml        = "somemetadataXml";
         String sessionGuid        = "someguid";
-        MockGateway gateway = new MockGateway("v6/Metadata/Set?sessionGUID=" +sessionGuid+ "&objectGuid=someobjectGuid&metadataSchemaGuid=somemetadataSchemaGuid&languageCode=somelanguageCode&revisionID=somerevisionID&metadataXml=somemetadataXml", "{\"Header\": {\"Duration\": 177.4577},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"Value\": \"1\",\"FullName\": \"Chaos.Mcm.Data.Dto.ScalarResult\"}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}");
+        String response = "{\"Header\": {\"Duration\": 177.4577},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"Value\": \"1\",\"FullName\": \"Chaos.Mcm.Data.Dto.ScalarResult\"}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}";
+        MockGateway gateway = new MockGateway("v6/Metadata/Set?sessionGUID=" +sessionGuid+ "&objectGuid=someobjectGuid&metadataSchemaGuid=somemetadataSchemaGuid&languageCode=somelanguageCode&revisionID=somerevisionID&metadataXml=somemetadataXml", response);
         Chaos       api     = new Chaos(gateway);
 
         int result = api.metadataSet(sessionGuid, objectGuid, metadataSchemaGuid, languageCode, revisionID, metadataXml);
@@ -62,5 +64,17 @@ public class ChaosTest
         assertEquals(1, result);
     }
 
+    @Test
+    public void jobGet_GivenStatusNew_ReturnListOfJobs() throws IOException
+    {
+        String sessionId = "someguid";
+        String response = "{\"Header\": {\"Duration\": 26.8528},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"Id\": \"1\",\"Status\": \"new\",\"Data\": \"{\\\"id\\\":\\\"0123456789\\\",\\\"steps\\\":[{\\\"tasks\\\":[{\\\"pluginId\\\":\\\"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0\\\",\\\"properties\\\":{\\\"sleep\\\":\\\"3000\\\",\\\"number\\\":\\\"2\\\"}}]}]}\",\"DateCreated\": 1391004000,\"FullName\": \"Chaos.Octopus.Module.Extension.Dto.Job\"}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}";
+        MockGateway gateway = new MockGateway("v6/Job/Get?sessionGUID=" + sessionId + "&status=incomplete", response);
+        AuthenticatedChaosClient client = new AuthenticatedChaosClient(gateway, sessionId);
 
+        Iterable<Job> results = client.jobGet();
+        assertTrue(results.iterator().hasNext());
+        Job result = results.iterator().next();
+        assertEquals("0123456789", result.id);
+    }
 }
