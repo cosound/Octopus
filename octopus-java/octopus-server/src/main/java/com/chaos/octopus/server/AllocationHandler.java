@@ -12,26 +12,51 @@ import java.util.ArrayList;
  * Date: 10.10.13
  * Time: 15:33
  */
-public class AllocationHandler implements Runnable, AutoCloseable
+public class AllocationHandler implements AutoCloseable
 {
     private ArrayList<AgentProxy> _agents;
     private ArrayList<Job>        _Jobs;
-    private Thread                _Thread;
     private boolean               _IsRunning;
 
     public AllocationHandler()
     {
         _agents    = new ArrayList<AgentProxy>();
         _Jobs      = new ArrayList<Job>();
-        _Thread    = new Thread(this);
-        _IsRunning = true;
-
-        _Thread.start();
     }
 
     public void addAgent(AgentProxy agent)
     {
         _agents.add(agent);
+    }
+
+    public void enqueue(Job job)
+    {
+        synchronized (_Jobs)
+        {
+            _Jobs.add(job);
+
+            enqueueNextTaskOnAgent();
+        }
+    }
+
+    public ArrayList<AgentProxy> getAgents()
+    {
+        synchronized (_agents)
+        {
+            return _agents;
+        }
+    }
+
+    private void enqueueNextTaskOnAgent()
+    {
+        for (Job job : _Jobs)
+        {
+            for(Task task : job.getTasks())
+            {
+                // TODO only enqueue if there are available ressources
+                enqueue(task);
+            }
+        }
     }
 
     public void enqueue(Task task)
@@ -45,72 +70,27 @@ public class AllocationHandler implements Runnable, AutoCloseable
         }
     }
 
-    public void enqueue(Job job)
-    {
-        synchronized (_Jobs)
-        {
-            _Jobs.add(job);
-        }
-    }
-
-    public ArrayList<AgentProxy> getAgents()
-    {
-        synchronized (_agents)
-        {
-            return _agents;
-        }
-    }
-
-    @Override
-    public void run()
-    {
-        while(_IsRunning)
-        {
-            synchronized (_Jobs)
-            {
-                for (Job job : _Jobs)
-                {
-                    for(Task task : job.getTasks())
-                    {
-                        // TODO only enqueue if there are available ressources
-                        enqueue(task);
-                    }
-                }
-            }
-
-            // TODO remove busy waiting hack, and only activate when new jobs are added, or tasks finish
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-    }
-
     public void taskUpdate(Task task)
     {
-        // TODO Review: replace with a lookup in a map, assuming tasks are retrieved more often than inserted
         for(Job job : _Jobs)
         {
-            for(Step step : job.steps)
+            if(job.containsTask(task.taskId))
             {
-                for(Task t : step.tasks)
-                {
-                    if(t.taskId.equals(task.taskId))
-                        t.set_State(task.get_State());
-                    // TODO change so entire task is updated, instead of just the state
-                }
+                job.replaceTask(task);
+
+                break;
             }
         }
     }
 
     public void taskComplete(Task task)
     {
-        // TODO Review: replace with a lookup in a map, assuming tasks are retrieved more often than inserted
         for (AgentProxy agent : getAgents())
         {
             agent.taskCompleted(task);
         }
+
+        enqueueNextTaskOnAgent();
     }
 
     @Override

@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 public class OrchestratorImpl implements Orchestrator, Runnable
 {
     private final Chaos _chaos;
-    private final ConcurrentJobBuffer _jobsWithUpdates;
+    private final ConcurrentJobQueue _jobsWithUpdates;
     private boolean           _isRunning;
 	private Thread            _thread;
 	private ServerSocket      _socket;
@@ -37,7 +37,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 		_isRunning = false;
         _chaos = new Chaos("http://api.cosound.chaos-systems.com");  // TODO move to config file
 
-        _jobsWithUpdates = new ConcurrentJobBuffer();
+        _jobsWithUpdates = new ConcurrentJobQueue();
 
     }
 

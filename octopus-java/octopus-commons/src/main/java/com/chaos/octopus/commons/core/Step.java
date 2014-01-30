@@ -8,7 +8,7 @@ import java.util.Collection;
 
 public class Step 
 {
-	public Collection<Task> tasks = new ArrayList<>();
+	public ArrayList<Task> tasks = new ArrayList<>();
 	
 	public boolean isCompleted() 
 	{
@@ -39,5 +39,27 @@ public class Step
             }
 
             return list;
+    }
+
+    public boolean containsTask(String taskId)
+    {
+        for(Task task : tasks)
+        {
+            if(task.taskId.equals(taskId))
+                return true;
+        }
+
+        return false;
+    }
+
+    public void replaceTask(String taskId, Task replace)
+    {
+        for(int i = 0; i < tasks.size(); i++)
+        {
+            Task task = tasks.get(i);
+
+            if(task.taskId.equals(taskId))
+                tasks.set(i, replace);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.chaos.octopus.server.unit;
+package com.chaos.octopus.commons.core.test;
 
 import static org.junit.Assert.*;
 
@@ -195,5 +195,69 @@ public class JobTest extends TestBase
         boolean result = job.isComplete();
 
         assertFalse(result);
+    }
+
+    @Test
+    public void containsTask_JobHasOneStepAndContainTask_True()
+    {
+        Job  job   = new Job();
+        Step step1 = new Step();
+        Task task1 = make_Task();
+        job.steps.add(step1);
+        step1.tasks.add(task1);
+        task1.taskId = "unique taskId";
+
+        Boolean result = job.containsTask(task1.taskId);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void containsTask_JobDoesntContainTask_False()
+    {
+        Job  job   = new Job();
+        Step step1 = new Step();
+        job.steps.add(step1);
+
+        Boolean result = job.containsTask("doesnt exist");
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void containsTask_JobHasTwoStepAndContainTask_True()
+    {
+        Job  job   = new Job();
+        Step step1 = new Step();
+        Step step2 = new Step();
+        Task task1 = make_Task();
+        Task task2 = make_Task();
+        job.steps.add(step1);
+        step1.tasks.add(task1);
+        step2.tasks.add(task2);
+        task2.taskId = "unique taskId";
+
+        Boolean result = job.containsTask(task1.taskId);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void replaceTask_JobHasOneStepAndContainTask_TaskIsReplaced()
+    {
+        Job  job   = new Job();
+        Step step1 = new Step();
+        Task task1 = make_Task();
+        Task task2 = make_Task();
+        job.steps.add(step1);
+        step1.tasks.add(task1);
+        task1.taskId = "unique taskId";
+        task2.taskId = "unique taskId";
+        task2.set_State(TaskState.Executing);
+
+        job.replaceTask(task2);
+
+        Task actual = step1.tasks.iterator().next();
+        assertSame(task2, actual);
     }
 }

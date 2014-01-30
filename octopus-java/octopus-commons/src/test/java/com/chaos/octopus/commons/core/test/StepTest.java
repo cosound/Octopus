@@ -1,4 +1,4 @@
-package com.chaos.octopus.server.unit;
+package com.chaos.octopus.commons.core.test;
 
 import static org.junit.Assert.*;
 

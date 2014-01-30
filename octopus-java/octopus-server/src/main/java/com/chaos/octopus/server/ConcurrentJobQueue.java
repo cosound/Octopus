@@ -5,11 +5,11 @@ import com.chaos.octopus.commons.core.Job;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConcurrentJobBuffer
+public class ConcurrentJobQueue
 {
     private List<Job> _jobs;
 
-    public ConcurrentJobBuffer()
+    public ConcurrentJobQueue()
     {
         _jobs = new ArrayList<>();
     }

@@ -1,4 +1,4 @@
-package com.chaos.octopus.server.unit;
+package com.chaos.octopus.commons.core.test;
 
 import com.chaos.octopus.commons.core.Task;
 
