@@ -1,12 +1,9 @@
 package com.chaos.sdk;
 
-import com.chaos.octopus.commons.core.Job;
 import com.chaos.sdk.model.McmObject;
-import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
 import com.chaos.sdk.v6.dto.PortalResponse;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * User: Jesper Fyhr Knudsen

@@ -14,7 +14,7 @@ import com.chaos.octopus.server.synchronization.EnqueueJobs;
 import com.chaos.octopus.server.synchronization.Synchronization;
 import com.chaos.octopus.server.synchronization.UpdateJob;
 import com.chaos.sdk.Chaos;
-import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
+import com.chaos.sdk.AuthenticatedChaosClient;
 import com.google.gson.Gson;
 
 public class OrchestratorImpl implements Orchestrator, Runnable

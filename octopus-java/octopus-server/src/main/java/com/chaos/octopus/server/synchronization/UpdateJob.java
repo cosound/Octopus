@@ -1,7 +1,8 @@
 package com.chaos.octopus.server.synchronization;
 
 import com.chaos.octopus.server.ConcurrentJobQueue;
-import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
+import com.chaos.sdk.AuthenticatedChaosClient;
+
 
 import java.io.IOException;
 
