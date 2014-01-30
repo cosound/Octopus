@@ -3,13 +3,12 @@ package com.chaos.octopus.server.unit.Synchronization;
 import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.server.ConcurrentJobQueue;
 import com.chaos.octopus.server.synchronization.UpdateJob;
-import com.chaos.sdk.v6.dto.AuthenticatedChaosClient;
+import com.chaos.sdk.AuthenticatedChaosClient;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 
