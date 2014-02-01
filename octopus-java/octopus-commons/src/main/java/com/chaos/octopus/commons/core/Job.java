@@ -40,10 +40,13 @@ public class Job
 
     public Boolean containsTask(String taskId)
     {
-        for(Task task : getTasks())
+        for(Step step : steps)
         {
-            if(task.taskId.equals(taskId))
-                return true;
+            for(Task task : step.tasks)
+            {
+                if(task.taskId.equals(taskId))
+                    return true;
+            }
         }
 
         return false;

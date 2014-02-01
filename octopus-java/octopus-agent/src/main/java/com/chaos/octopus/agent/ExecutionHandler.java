@@ -12,7 +12,8 @@ public class ExecutionHandler implements Runnable, AutoCloseable, TaskCompleteLi
 	private ExecutionSlot[] _executionSlots;
 	private boolean _isRunning;
 	private Agent _agent;
-	
+
+
 	public ExecutionHandler(Agent agent, Queue<Plugin> queue)
 	{
 		_isRunning      = true;

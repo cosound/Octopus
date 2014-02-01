@@ -72,15 +72,10 @@ public class AllocationHandler implements AutoCloseable
 
     public void taskUpdate(Task task)
     {
-        for(Job job : _Jobs)
-        {
-            if(job.containsTask(task.taskId))
-            {
-                job.replaceTask(task);
+        Job job = getJob(task);
 
-                break;
-            }
-        }
+        job.replaceTask(task);
+
     }
 
     public void taskComplete(Task task)
@@ -97,5 +92,16 @@ public class AllocationHandler implements AutoCloseable
     public void close() throws Exception
     {
         _IsRunning = false;
+    }
+
+    public Job getJob(Task task) throws ArrayIndexOutOfBoundsException
+    {
+        for(Job job : _Jobs)
+        {
+            if(job.containsTask(task.taskId))
+                return job;
+        }
+
+        throw new ArrayIndexOutOfBoundsException("Job containing given task not found");
     }
 }
