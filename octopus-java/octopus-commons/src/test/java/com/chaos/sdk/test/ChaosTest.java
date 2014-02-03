@@ -66,8 +66,8 @@ public class ChaosTest
     public void jobGet_GivenStatusNew_ReturnListOfJobs() throws IOException
     {
         String sessionId = "someguid";
-        String response = "{\"Header\": {\"Duration\": 26.8528},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"Id\": \"1\",\"Status\": \"new\",\"Data\": \"{\\\"id\\\":\\\"0123456789\\\",\\\"steps\\\":[{\\\"tasks\\\":[{\\\"pluginId\\\":\\\"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0\\\",\\\"properties\\\":{\\\"sleep\\\":\\\"3000\\\",\\\"number\\\":\\\"2\\\"}}]}]}\",\"DateCreated\": 1391004000,\"FullName\": \"Chaos.Octopus.Module.Extension.Dto.Job\"}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}";
-        MockGateway gateway = new MockGateway("v6/Job/Get?sessionGUID=" + sessionId + "&status=incomplete", response);
+        String response = "{\"Header\": {\"Duration\": 26.8528},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"id\": \"0123456789\",\"status\": \"new\",\"data\": \"{\\\"id\\\":\\\"0123456789\\\",\\\"steps\\\":[{\\\"tasks\\\":[{\\\"pluginId\\\":\\\"com.chaos.octopus.agent.unit.TestPlugin, 1.0.0\\\",\\\"properties\\\":{\\\"sleep\\\":\\\"3000\\\",\\\"number\\\":\\\"2\\\"}}]}]}\",\"datecreated\": 1391004000,\"FullName\": \"Chaos.Octopus.Module.Extension.Dto.Job\"}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}";
+        MockGateway gateway = new MockGateway("v6/Job/GetIncomplete?sessionGUID=" + sessionId, response);
         AuthenticatedChaosClient client = new AuthenticatedChaosClient(gateway, sessionId);
 
         Iterable<Job> results = client.jobGet();

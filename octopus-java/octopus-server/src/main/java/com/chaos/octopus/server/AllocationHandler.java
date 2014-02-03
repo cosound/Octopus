@@ -33,6 +33,11 @@ public class AllocationHandler implements AutoCloseable
     {
         synchronized (_Jobs)
         {
+            for(Job j : _Jobs)
+            {
+                if(j.id.equals(job.id)) return;
+            }
+
             _Jobs.add(job);
 
             enqueueNextTaskOnAgent();
@@ -96,11 +101,19 @@ public class AllocationHandler implements AutoCloseable
 
     public Job getJob(Task task) throws ArrayIndexOutOfBoundsException
     {
-        for(Job job : _Jobs)
+        Job result = null;
+
+        synchronized (_Jobs)
         {
-            if(job.containsTask(task.taskId))
-                return job;
+            for(Job job : _Jobs)
+            {
+                if(job.containsTask(task.taskId))
+                    result = job;
+            }
         }
+
+        if(result != null)
+            return result;
 
         throw new ArrayIndexOutOfBoundsException("Job containing given task not found");
     }

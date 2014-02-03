@@ -39,15 +39,21 @@ public class AuthenticatedChaosClient
 
     public Iterable<Job> jobGet() throws IOException
     {
-        PortalResponse response = gateway.call("GET", "v6/Job/Get", "sessionGUID=" + sessionId + "&status=incomplete");
+        PortalResponse response = gateway.call("GET", "v6/Job/GetIncomplete", "sessionGUID=" + sessionId);
         ArrayList<Job> jobs = new ArrayList<>();
         Gson gson = new Gson();
 
         for(HashMap<String, Object> job : response.Body.getResults())
         {
-            String data = job.get("Data").toString();
+            String id = job.get("id").toString();
+            String status = job.get("status").toString();
+            String data = job.get("data").toString();
 
-            jobs.add(gson.fromJson(data, Job.class));
+            Job res = gson.fromJson(data, Job.class);
+            res.id = id;
+            res.status = status;
+
+            jobs.add(res);
         }
 
         return jobs;
@@ -59,6 +65,8 @@ public class AuthenticatedChaosClient
 
         for(Job job : jobs)
         {
+            job.status = job.isComplete() ? "complete" : "inprogress";
+
             String data = gson.toJson(job);
             PortalResponse response = gateway.call("POST", "v6/Job/Set", "sessionGUID=" + sessionId + "&data=" + data);
         }

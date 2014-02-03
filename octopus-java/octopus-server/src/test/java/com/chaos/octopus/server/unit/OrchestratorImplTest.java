@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import com.chaos.octopus.server.synchronization.EnqueueJobs;
 import com.chaos.octopus.server.synchronization.Synchronization;
 import org.junit.Test;
 

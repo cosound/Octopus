@@ -18,6 +18,17 @@ public class ConcurrentJobQueue
     {
         synchronized (_jobs)
         {
+            for(int i = 0; i < _jobs.size(); i++)
+            {
+                Job j = _jobs.get(i);
+
+                if(j.id.equals(job.id))
+                {
+                    _jobs.set(i, job);
+                    return;
+                }
+            }
+
             _jobs.add(job);
         }
     }

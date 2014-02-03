@@ -6,6 +6,12 @@ public class Job
 {
 	public String id;
 	public ArrayList<Step> steps = new ArrayList<>();
+    public String status;
+
+    public Job()
+    {
+        id = "";
+    }
 
     public boolean validate()
     {
