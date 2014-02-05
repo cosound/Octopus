@@ -9,7 +9,6 @@ import com.chaos.octopus.commons.core.TaskState;
 
 public class ExecutionSlot implements Runnable
 {
-	private Thread _thread;
 	private Plugin _plugin;
 	private List<TaskCompleteListener> _taskCompleteListeners;
 	private List<TaskUpdatedListener> _taskUpdateListeners;
@@ -18,7 +17,6 @@ public class ExecutionSlot implements Runnable
 	{
 		_taskCompleteListeners = new ArrayList<>();
         _taskUpdateListeners   = new ArrayList<>();
-		_thread = new Thread(this);
 		_plugin = plugin;
 	}
 
