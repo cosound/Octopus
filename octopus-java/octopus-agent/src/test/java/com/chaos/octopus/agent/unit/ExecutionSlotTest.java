@@ -14,7 +14,9 @@ public class ExecutionSlotTest
 	{
 		TestPlugin plugin = new TestPlugin();
 		ExecutionSlot slot = new ExecutionSlot(plugin);
-		
+
+        slot.run();
+
 		for(int i = 1000; i > 0 && !plugin.WasCommitted; i--)
 		{
 			Thread.sleep(1);
@@ -28,7 +30,9 @@ public class ExecutionSlotTest
 	{
 		TestPlugin plugin  = new TestPlugin(true);
 		ExecutionSlot slot = new ExecutionSlot(plugin);
-		
+
+        slot.run();
+
 		for(int i = 1000; i > 0 && !plugin.WasRolledback; i--)
 		{
 			Thread.sleep(1);
