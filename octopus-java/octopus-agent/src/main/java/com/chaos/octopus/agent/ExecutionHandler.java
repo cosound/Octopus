@@ -1,98 +1,40 @@
 
 package com.chaos.octopus.agent;
 
-import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.chaos.octopus.commons.core.Plugin;
 
-public class ExecutionHandler implements Runnable, AutoCloseable, TaskCompleteListener
+public class ExecutionHandler implements AutoCloseable, TaskCompleteListener
 {
-	private Queue<Plugin> _queue;
-	private Thread _thread;
-	private ExecutionSlot[] _executionSlots;
-	private boolean _isRunning;
 	private Agent _agent;
+    private ExecutorService _pool;
 
-
-	public ExecutionHandler(Agent agent, Queue<Plugin> queue)
+	public ExecutionHandler(Agent agent)
 	{
-		_isRunning      = true;
-		_executionSlots = new ExecutionSlot[4];
-			
-		_queue = queue;
+        _pool = Executors.newFixedThreadPool(4);
 		_agent = agent;
-		
-		_thread = new Thread(this);
-		_thread.start();
-	}
-
-	@Override
-	public void run()
-	{
-		while(_isRunning)
-		{
-			try
-			{
-				Thread.sleep(10);
-				
-				int index = getIndexOfEmptySlot();
-				
-				if(index != -1 && !_queue.isEmpty())
-				{
-					Plugin plugin = _queue.poll();
-					
-					ExecutionSlot slot = new ExecutionSlot(plugin);
-					slot.addTaskCompleteListener(this);
-                    slot.addTaskUpdateListener(_agent);
-					
-					set_executionSlot(index, slot);;
-				}
-			} 
-			catch (Exception e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private int getIndexOfEmptySlot()
-	{
-		for (int i = 0; i < _executionSlots.length; i++)
-		{
-			if(_executionSlots[i] == null) return i;
-		}
-		
-		return -1;
-	}
-	
-	@Override
-	public void close() throws Exception
-	{
-		_isRunning = false;
-	}
-
-	public ExecutionSlot get_executionSlot(int index)
-	{
-		return _executionSlots[index];
-	}
-	
-	public void set_executionSlot(int index, ExecutionSlot slot)
-	{
-		_executionSlots[index] = slot;
 	}
 
 	@Override
 	public void onTaskComplete(ExecutionSlot completedTask)
 	{
-		for (int i = 0; i < _executionSlots.length; i++)
-		{
-			if(_executionSlots[i] == completedTask) 
-			{
-				_executionSlots[i] = null;
-				
-				_agent.onTaskComplete(completedTask.getPlugin().getTask());
-			}
-		}
+        _agent.onTaskComplete(completedTask.getPlugin().getTask());
 	}
+
+    public void enqueue(Plugin plugin)
+    {
+        ExecutionSlot slot = new ExecutionSlot(plugin);
+        slot.addTaskCompleteListener(this);
+        slot.addTaskUpdateListener(_agent);
+
+        _pool.execute(slot);
+    }
+
+    @Override
+    public void close() throws Exception
+    {
+        _pool.shutdown();
+    }
 }

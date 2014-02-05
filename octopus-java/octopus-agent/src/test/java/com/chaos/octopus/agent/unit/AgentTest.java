@@ -52,11 +52,11 @@ public class AgentTest
 
         try(Agent agent = new Agent(mock))
 		{
-			agent.addPlugin(new TestPlugin());
+            agent.addPlugin(new TestPlugin());
 			
-			agent.enqueue(Make_TestTask());
-			
-			assertEquals(1,  agent.get_queue().size());
+			agent.enqueue(Make_TestTaskThatTake10msToExecute());
+
+			assertEquals(1, agent.getQueueSize());
 		}
 	}
 
@@ -70,7 +70,7 @@ public class AgentTest
 			TestPlugin factory = new TestPlugin();
 			agent.addPlugin(factory);
 			
-			TestPlugin plugin = (TestPlugin) agent.enqueue(Make_TestTask());
+			TestPlugin plugin = (TestPlugin) agent.enqueue(Make_TestTaskThatTake10msToExecute());
 
 			assertFalse(plugin.WasExecuted);
 			
@@ -82,31 +82,7 @@ public class AgentTest
 			assertTrue(plugin.WasExecuted);
 		}
 	}
-	
-	@Test
-	public void executeTask_AgentIsStartedAndTaskQueued_TaskShouldBeRemovedFromTheExecutionSlotWhenDone() throws Exception
-	{
-        ServerMock mock = new ServerMock();
 
-		try(Agent agent = new Agent(mock))
-		{
-			TestPlugin factory = new TestPlugin();
-			agent.addPlugin(factory);
-			
-			TestPlugin plugin = (TestPlugin) agent.enqueue(Make_TestTask());
-
-			assertFalse(plugin.WasExecuted);
-			
-			for(int i = 1000; i > 0 && !plugin.WasExecuted; i--)
-			{
-				Thread.sleep(1);
-			}
-			
-			assertEquals(0, agent.get_queue().size());
-			assertNull(agent.get_executionHandler().get_executionSlot(0));
-		}
-	}
-	
 	@Test
 	public void onTaskComplete_APluginIsExecuted_ShouldNotifyServer() throws Exception
 	{
@@ -117,7 +93,7 @@ public class AgentTest
 			TestPlugin factory = new TestPlugin();
 			agent.addPlugin(factory);
 			
-			TestPlugin plugin = (TestPlugin) agent.enqueue(Make_TestTask());
+			TestPlugin plugin = (TestPlugin) agent.enqueue(Make_TestTaskThatTake10msToExecute());
 
 			assertFalse(plugin.WasExecuted);
 			
@@ -130,10 +106,11 @@ public class AgentTest
 		}
 	}
 
-    protected Task Make_TestTask()
+    protected Task Make_TestTaskThatTake10msToExecute()
     {
         Task task = new Task();
         task.pluginId = "com.chaos.octopus.agent.unit.TestPlugin, 1.0.0";
+        task.properties.put("sleep", "10");
 
         return task;
     }

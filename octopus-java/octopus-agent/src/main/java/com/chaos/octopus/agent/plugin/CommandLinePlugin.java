@@ -86,7 +86,7 @@ public class CommandLinePlugin implements Plugin, PluginDefinition
 
                 if(m.find())
                 {
-                    System.out.println ("warning: " + m.group(1));
+                    System.err.println ("warning: " + m.group(1));
                 }
 
                 r = Pattern.compile("<EXCEPTION>(.*?)</EXCEPTION>", Pattern.CASE_INSENSITIVE);
@@ -94,7 +94,7 @@ public class CommandLinePlugin implements Plugin, PluginDefinition
 
                 if(m.find())
                 {
-                    System.out.println ("exception: " + m.group(1));
+                    System.err.println ("exception: " + m.group(1));
                 }
             }
         }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.chaos.octopus.commons.core.*;
 import com.chaos.octopus.commons.util.Commands;
@@ -17,10 +18,10 @@ import com.google.gson.Gson;
  */
 public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 {
+    private AtomicInteger _currentQueueSize;
     private boolean      _isRunning;
     private Thread		 _thread;
     private Map<String, PluginDefinition> _PluginDefinitions;
-    private Queue<Plugin> _queue;
     private ExecutionHandler _executionHandler;
     private Orchestrator _orchestrator;
     private ServerSocket _Server;
@@ -35,12 +36,11 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
     {
         _Gson         = new Gson();
     	_orchestrator = orchestrator;
-    	
+        _currentQueueSize = new AtomicInteger(0);
     	_isRunning         = false;
     	_thread            = new Thread(this);
-    	_queue             = new LinkedList<Plugin>();
-    	_PluginDefinitions = new HashMap<String, PluginDefinition>();
-    	set_executionHandler(new ExecutionHandler(this, _queue));
+    	_PluginDefinitions = new HashMap<>();
+    	_executionHandler = new ExecutionHandler(this);
     }
 
 	public void open() throws IOException 
@@ -95,7 +95,7 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 		_isRunning = false;
 		
 		if(_Server != null)_Server.close();
-		_executionHandler.close();
+        if(_executionHandler != null) _executionHandler.close();
 	}
 
 	public byte[] serializeSupportedPlugins()
@@ -117,7 +117,7 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 
 	public List<PluginDefinition> get_SupportedPlugins()
 	{
-		List<PluginDefinition> list = new ArrayList<PluginDefinition>();
+		List<PluginDefinition> list = new ArrayList<>();
 		
 		for (PluginDefinition definition : _PluginDefinitions.values())
 		{
@@ -130,35 +130,27 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 	public Plugin enqueue(Task task)
 	{
 		Plugin plugin = _PluginDefinitions.get(task.pluginId).create(task);
-		
-		_queue.add(plugin);
+
+        _executionHandler.enqueue(plugin);
+        _currentQueueSize.incrementAndGet();
 
 		return plugin;
 	}
 
-	public Queue<Plugin> get_queue()
-	{
-		return _queue;
-	}
-
-	public ExecutionHandler get_executionHandler()
-	{
-		return _executionHandler;
-	}
-
-	private void set_executionHandler(ExecutionHandler executionHandler)
-	{
-		_executionHandler = executionHandler;
-	}
-
 	public void onTaskComplete(Task task)
 	{
-		_orchestrator.taskCompleted(task);
+        _currentQueueSize.decrementAndGet();
+        _orchestrator.taskCompleted(task);
 	}
 
     @Override
     public void onTaskUpdate(Task task)
     {
         _orchestrator.taskUpdate(task);
+    }
+
+    public int getQueueSize()
+    {
+        return _currentQueueSize.get();
     }
 }

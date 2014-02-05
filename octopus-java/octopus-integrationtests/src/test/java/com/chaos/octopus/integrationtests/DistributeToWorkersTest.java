@@ -22,10 +22,10 @@ public class DistributeToWorkersTest extends TestBase
 //            Job  job = new Job();
 //            Step step1 = new Step();
 //            Step step2 = new Step();
-//            Task task1 = Make_TestTask();
-//            Task task2 = Make_TestTask();
-//            Task task3 = Make_TestTask();
-//            Task task4 = Make_TestTask();
+//            Task task1 = Make_TestTaskThatTake10msToExecute();
+//            Task task2 = Make_TestTaskThatTake10msToExecute();
+//            Task task3 = Make_TestTaskThatTake10msToExecute();
+//            Task task4 = Make_TestTaskThatTake10msToExecute();
 //            task1.properties.put("number", "2");
 //            task2.properties.put("number", "4");
 //            task3.properties.put("number", "8");

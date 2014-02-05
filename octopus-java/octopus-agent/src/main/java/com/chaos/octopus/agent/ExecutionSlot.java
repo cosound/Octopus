@@ -16,12 +16,10 @@ public class ExecutionSlot implements Runnable
 
 	public ExecutionSlot(Plugin plugin)
 	{
-		_taskCompleteListeners = new ArrayList<TaskCompleteListener>();
-        _taskUpdateListeners   = new ArrayList<TaskUpdatedListener>();
+		_taskCompleteListeners = new ArrayList<>();
+        _taskUpdateListeners   = new ArrayList<>();
 		_thread = new Thread(this);
 		_plugin = plugin;
-		
-		_thread.start();
 	}
 
 	@Override
@@ -30,11 +28,9 @@ public class ExecutionSlot implements Runnable
 		try
 		{
             _plugin.getTask().set_State(TaskState.Executing);
-            System.out.println(_plugin.getTask().taskId + " " + _plugin.getTask().get_State());
             onTaskUpdated(_plugin.getTask());
 			_plugin.execute();
             _plugin.getTask().set_State(TaskState.Executed);
-            System.out.println(_plugin.getTask().taskId + " " + _plugin.getTask().get_State());
             onTaskUpdated(_plugin.getTask());
             _plugin.getTask().set_State(TaskState.Committing);
             onTaskUpdated(_plugin.getTask());
@@ -45,11 +41,9 @@ public class ExecutionSlot implements Runnable
 		catch(Exception e)
 		{
             _plugin.getTask().set_State(TaskState.Rollingback);
-            System.out.println(_plugin.getTask().taskId + " " + _plugin.getTask().get_State());
             onTaskUpdated(_plugin.getTask());
 			_plugin.rollback();
             _plugin.getTask().set_State(TaskState.Rolledback);
-            System.out.println(_plugin.getTask().taskId + " " + _plugin.getTask().get_State());
             onTaskUpdated(_plugin.getTask());
 		}
 		finally
