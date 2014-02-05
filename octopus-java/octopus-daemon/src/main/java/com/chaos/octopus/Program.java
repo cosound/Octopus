@@ -44,7 +44,6 @@ public class Program
 				
 			    String[] split = s.split(" ");
 
-
                 if(split[0].equals("") || split[0].equals("help") && split.length == 1)
                 {
                     System.out.println("The following commands are available:");

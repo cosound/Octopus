@@ -19,13 +19,13 @@ import com.google.gson.Gson;
 public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 {
     private AtomicInteger _currentQueueSize;
-    private boolean      _isRunning;
-    private Thread		 _thread;
+    private boolean _isRunning;
+    private Thread _thread;
     private Map<String, PluginDefinition> _PluginDefinitions;
     private ExecutionHandler _executionHandler;
     private Orchestrator _orchestrator;
     private ServerSocket _Server;
-    private Gson         _Gson;
+    private Gson _Gson;
     
     public Agent(String hostname, int port, int listenPort)
     {
@@ -57,7 +57,7 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 		{
 			try
 			{
-				// todo refactor so the implementation doesnt depend on the socket
+				// todo refactor so the implementation doesn't depend on the socket
 				try(Socket socket = _Server.accept())
 				{
 					String message = StreamUtilities.ReadString(socket.getInputStream());
@@ -82,12 +82,9 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 			}
 			catch (Exception e)
 			{
-				// TODO Auto-generated catch block
 				if(!_Server.isClosed()) e.printStackTrace();
 			}
-			
-			
-		}	
+		}
 	}
 	
 	public void close() throws Exception

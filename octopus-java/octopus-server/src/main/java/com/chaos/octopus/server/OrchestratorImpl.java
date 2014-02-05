@@ -36,7 +36,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 		_port = port;
 		_isRunning = false;
         _chaos = new Chaos("http://api.cosound.chaos-systems.com");  // TODO move to config file
-
+        new OctopusConfiguration();
         _jobsWithUpdates = new ConcurrentJobQueue();
 
     }
