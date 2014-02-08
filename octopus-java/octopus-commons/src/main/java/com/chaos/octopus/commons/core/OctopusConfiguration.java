@@ -18,16 +18,17 @@ public class OctopusConfiguration
     {
         try
         {
-            Configuration config = new PropertiesConfiguration("octopus.properties");
-            port = config.getInt("port");
+            String wd = System.getProperty("user.dir");
+            Configuration config = new PropertiesConfiguration(wd + "\\octopus.properties");
+            port = config.getInt("listening.port");
             orchestratorIp = config.getString("orchestrator.ip");
             orchestratorPort = config.getInt("orchestrator.port");
+
         }
         catch (ConfigurationException e)
         {
             e.printStackTrace();
         }
-
     }
 
     public int getPort()
