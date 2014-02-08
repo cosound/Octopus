@@ -1,8 +1,10 @@
 package com.chaos.octopus.commons.core.test;
 
 import com.chaos.octopus.commons.core.OctopusConfiguration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 
 public class OctopusConfigurationTest
@@ -12,8 +14,18 @@ public class OctopusConfigurationTest
     {
         OctopusConfiguration result = new OctopusConfiguration();
 
-        assertEquals(26000, result.getPort());
+        assertEquals(26000, result.getListeningPort());
         assertEquals("127.0.0.1", result.getOrchestratorIp());
         assertEquals(25000, result.getOrchestratorPort());
+    }
+
+    @Test
+    public void getIsAgent_IpAndPortSet_ReturnTrue() throws ConfigurationException
+    {
+        OctopusConfiguration config = new OctopusConfiguration();
+
+        Boolean result = config.getIsAgent();
+
+        assertTrue(result);
     }
 }

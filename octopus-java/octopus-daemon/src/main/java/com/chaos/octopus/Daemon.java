@@ -13,7 +13,7 @@ public class Daemon implements org.apache.commons.daemon.Daemon
 {
     private OrchestratorImpl leader;
     private Agent agent;
-    private OctopusConfiguration config = new OctopusConfiguration();
+    private OctopusConfiguration config;
 
     @Override
     public void init(DaemonContext daemonContext) throws DaemonInitException, Exception
@@ -23,21 +23,31 @@ public class Daemon implements org.apache.commons.daemon.Daemon
     @Override
     public void start() throws Exception
     {
-        leader = new OrchestratorImpl(config.getOrchestratorPort());
-        agent = new Agent(config.getOrchestratorIp(), config.getOrchestratorPort(), config.getPort());
+        config = new OctopusConfiguration();
 
-        agent.addPlugin(new TestPlugin());
-        agent.addPlugin(new CommandLinePlugin());
-        agent.addPlugin(new ChaosPlugin());
-        leader.open();
-        agent.open();
+        if(config.getIsAgent())
+        {
+            agent = new Agent(config.getOrchestratorIp(), config.getOrchestratorPort(), config.getListeningPort());
+            agent.addPlugin(new TestPlugin());
+            agent.addPlugin(new CommandLinePlugin());
+            agent.addPlugin(new ChaosPlugin());
+
+            agent.open();
+        }
+        else
+        {
+            leader = new OrchestratorImpl(config.getListeningPort());
+            leader.open();
+        }
     }
 
     @Override
     public void stop() throws Exception
     {
-        agent.close();
-        leader.close();
+        if(config.getIsAgent())
+            agent.close();
+        else
+            leader.close();
     }
 
     @Override

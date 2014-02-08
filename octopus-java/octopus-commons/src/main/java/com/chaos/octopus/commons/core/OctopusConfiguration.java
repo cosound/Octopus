@@ -14,24 +14,16 @@ public class OctopusConfiguration
     private String orchestratorIp;
     private int orchestratorPort;
 
-    public OctopusConfiguration()
+    public OctopusConfiguration() throws ConfigurationException
     {
-        try
-        {
-            String wd = System.getProperty("user.dir");
-            Configuration config = new PropertiesConfiguration(wd + "\\octopus.properties");
-            port = config.getInt("listening.port");
-            orchestratorIp = config.getString("orchestrator.ip");
-            orchestratorPort = config.getInt("orchestrator.port");
-
-        }
-        catch (ConfigurationException e)
-        {
-            e.printStackTrace();
-        }
+        String wd = System.getProperty("user.dir");
+        Configuration config = new PropertiesConfiguration(wd + "\\octopus.properties");
+        port = config.getInt("listening.port");
+        orchestratorIp = config.getString("orchestrator.ip");
+        orchestratorPort = config.getInt("orchestrator.port");
     }
 
-    public int getPort()
+    public int getListeningPort()
     {
         return port;
     }
@@ -44,5 +36,10 @@ public class OctopusConfiguration
     public int getOrchestratorPort()
     {
         return orchestratorPort;
+    }
+
+    public Boolean getIsAgent()
+    {
+        return getOrchestratorIp() != null && getOrchestratorPort() != 0;
     }
 }
