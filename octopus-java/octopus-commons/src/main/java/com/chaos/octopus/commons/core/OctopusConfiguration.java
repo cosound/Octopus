@@ -4,6 +4,8 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
+import java.nio.file.Paths;
+
 /**
  * Created by JesperFyhr on 05-02-14.
  */
@@ -11,16 +13,24 @@ public class OctopusConfiguration
 {
     private int port;
 
-    private String orchestratorIp;
-    private int orchestratorPort;
+    private String orchestratorIp = null;
+    private int orchestratorPort  = 0;
 
     public OctopusConfiguration() throws ConfigurationException
     {
+        System.out.println("OctopusConfiguration");
         String wd = System.getProperty("user.dir");
-        Configuration config = new PropertiesConfiguration(wd + "\\octopus.properties");
+        System.out.println(wd);
+        String path = Paths.get(wd, "octopus.properties").toString();
+        System.out.println(path);
+        Configuration config = new PropertiesConfiguration(path);
         port = config.getInt("listening.port");
-        orchestratorIp = config.getString("orchestrator.ip");
-        orchestratorPort = config.getInt("orchestrator.port");
+
+        if(config.containsKey("orchestrator.ip"))
+            orchestratorIp = config.getString("orchestrator.ip");
+
+        if(config.containsKey("orchestrator.port"))
+            orchestratorPort = config.getInt("orchestrator.port");
     }
 
     public int getListeningPort()
