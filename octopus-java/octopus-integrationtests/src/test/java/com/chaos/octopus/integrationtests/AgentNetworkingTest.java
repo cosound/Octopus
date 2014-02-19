@@ -5,8 +5,11 @@ import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.commons.core.Step;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TestPlugin;
+import com.chaos.octopus.server.AgentProxy;
 import com.chaos.octopus.server.OrchestratorImpl;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,10 +28,14 @@ public class AgentNetworkingTest
             orchestrator.open();
             agent.open();
 
-            for(int i = 0; i < 1000 && orchestrator.getAgents().size() == 0; i++)
-            {
-                Thread.sleep(1);
-            }
+            final ArrayList<AgentProxy> agents = orchestrator.getAgents();
+
+            waitUntil(new Check() {
+                @Override
+                public Boolean isTrue() {
+                    return agents.size() == 0;
+                }
+            });
 
             agent.close();
 
@@ -40,7 +47,20 @@ public class AgentNetworkingTest
             job.steps.add(step);
             orchestrator.enqueue(job);
 
-            assertEquals("Agent should be removed from list after disconnect", orchestrator.getAgents().size(), 0);
+            assertEquals("Agent should be removed from list after disconnect", agents.size(), 0);
         }
     }
+
+    private void waitUntil(Check check) throws InterruptedException
+    {
+        for(int i = 0; i < 5000 && check.isTrue(); i++)
+        {
+            Thread.sleep(1);
+        }
+    }
+}
+
+interface Check
+{
+    Boolean isTrue();
 }
