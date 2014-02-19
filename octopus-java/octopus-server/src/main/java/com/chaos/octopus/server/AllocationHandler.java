@@ -4,6 +4,7 @@ import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.commons.core.Step;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
+import com.chaos.octopus.server.exception.DisconnectedException;
 
 import java.util.ArrayList;
 
@@ -44,14 +45,6 @@ public class AllocationHandler implements AutoCloseable
         }
     }
 
-    public ArrayList<AgentProxy> getAgents()
-    {
-        synchronized (_agents)
-        {
-            return _agents;
-        }
-    }
-
     private void enqueueNextTaskOnAgent()
     {
         for (Job job : _Jobs)
@@ -67,11 +60,30 @@ public class AllocationHandler implements AutoCloseable
     public void enqueue(Task task)
     {
         // TODO decision logic for selecting an agent to send a task to
-        for (AgentProxy agent : getAgents())
+        for(int i = 0; i < _agents.size(); i++)
         {
+            AgentProxy agent = _agents.get(i);
+
             // TODO Make sure a task is only sent to one agent
             task.set_State(TaskState.Queued);
-            agent.enqueue(task);
+            try
+            {
+                agent.enqueue(task);
+            }
+            catch (DisconnectedException e)
+            {
+                _agents.remove(i);
+            }
+
+            return;
+        }
+    }
+
+    public ArrayList<AgentProxy> getAgents()
+    {
+        synchronized (_agents)
+        {
+            return _agents;
         }
     }
 

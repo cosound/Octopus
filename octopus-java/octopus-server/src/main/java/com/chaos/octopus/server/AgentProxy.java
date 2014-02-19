@@ -1,6 +1,7 @@
 package com.chaos.octopus.server;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.*;
 
@@ -9,6 +10,7 @@ import com.chaos.octopus.commons.util.StreamUtilities;
 import com.chaos.octopus.commons.core.Message;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskMessage;
+import com.chaos.octopus.server.exception.DisconnectedException;
 import com.google.gson.Gson;
 
 public class AgentProxy
@@ -72,8 +74,8 @@ public class AgentProxy
 
 	private Object _EnqueueBlock = new Object();
 	
-	public void enqueue(Task task)
-	{
+	public void enqueue(Task task) throws DisconnectedException
+    {
 		synchronized (_EnqueueBlock) 
 		{
 			try
@@ -90,7 +92,11 @@ public class AgentProxy
                     _AllocatedTasks.put(task.taskId, task);
 				}
 			} 
-			catch (Exception e)
+			catch (ConnectException e)
+			{
+                throw new DisconnectedException("Agent Disconnected", e);
+			}
+            catch (Exception e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();

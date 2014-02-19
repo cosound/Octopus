@@ -44,7 +44,8 @@ public class OrchestratorProxy implements Orchestrator
         SendMessage(msg);
     }
 
-    private void SendMessage(Message msg) {
+    private void SendMessage(Message msg)
+    {
         try
         {
             try(Socket socket = new Socket(_Hostname, _Port))

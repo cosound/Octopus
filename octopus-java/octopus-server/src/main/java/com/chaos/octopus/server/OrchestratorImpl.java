@@ -87,7 +87,6 @@ public class OrchestratorImpl implements Orchestrator, Runnable
                         AgentProxy     ap      = new AgentProxy(connect.get_Hostname(), connect.get_Port());
 
                         _AllocationHandler.addAgent(ap);
-
                         break;
                     }
                     case Commands.TASK_DONE:
