@@ -6,7 +6,7 @@ import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
 import com.chaos.octopus.server.AgentProxy;
 import com.chaos.octopus.server.AllocationHandler;
-import com.chaos.octopus.server.exception.DisconnectedException;
+import com.chaos.octopus.commons.exception.DisconnectException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertSame;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 public class AllocationHandlerTest
 {
     @Test
-    public void enqueue_JobWithOneStep_CallEnqueueWithTask() throws DisconnectedException {
+    public void enqueue_JobWithOneStep_CallEnqueueWithTask() throws DisconnectException {
         AllocationHandler ah = new AllocationHandler();
         Job job = make_JobWithOneStep();
         Task task = job.getTasks().iterator().next();
@@ -34,7 +34,7 @@ public class AllocationHandlerTest
     }
 
     @Test
-    public void taskComplete_JobWithTwoStepsWhenFirstStepFinishes_CallEnqueueWithSecondTask() throws DisconnectedException {
+    public void taskComplete_JobWithTwoStepsWhenFirstStepFinishes_CallEnqueueWithSecondTask() throws DisconnectException {
         AllocationHandler ah = new AllocationHandler();
         Job job = new Job();
         Step step1 = new Step();

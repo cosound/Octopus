@@ -7,6 +7,7 @@ import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TestPlugin;
 import com.chaos.octopus.server.AgentProxy;
 import com.chaos.octopus.server.OrchestratorImpl;
+import com.chaos.octopus.commons.exception.ConnectException;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -48,6 +49,15 @@ public class AgentNetworkingTest
             orchestrator.enqueue(job);
 
             assertEquals("Agent should be removed from list after disconnect", agents.size(), 0);
+        }
+    }
+
+    @Test(expected = ConnectException.class)
+    public void agentConnectFailed_OrchestratorNotStarted_ThrowException() throws Exception
+    {
+        try(Agent agent = new Agent("localhost", 2000, 2001))
+        {
+            agent.open();
         }
     }
 

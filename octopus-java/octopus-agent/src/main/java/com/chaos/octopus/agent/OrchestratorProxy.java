@@ -1,10 +1,12 @@
 package com.chaos.octopus.agent;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 
 import com.chaos.octopus.commons.core.*;
 import com.chaos.octopus.commons.util.Commands;
+import com.chaos.sdk.Chaos;
 import com.google.gson.Gson;
 
 public class OrchestratorProxy implements Orchestrator
@@ -52,6 +54,10 @@ public class OrchestratorProxy implements Orchestrator
             {
                 socket.getOutputStream().write(msg.toJson().getBytes());
             }
+        }
+        catch(ConnectException e)
+        {
+            throw new com.chaos.octopus.commons.exception.ConnectException("Connection to Orchestrator could not be established, check hostname and port", e);
         }
         catch (IOException e)
         {

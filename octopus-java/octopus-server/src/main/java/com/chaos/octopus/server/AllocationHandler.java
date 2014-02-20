@@ -1,10 +1,9 @@
 package com.chaos.octopus.server;
 
 import com.chaos.octopus.commons.core.Job;
-import com.chaos.octopus.commons.core.Step;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
-import com.chaos.octopus.server.exception.DisconnectedException;
+import com.chaos.octopus.commons.exception.DisconnectException;
 
 import java.util.ArrayList;
 
@@ -70,7 +69,7 @@ public class AllocationHandler implements AutoCloseable
             {
                 agent.enqueue(task);
             }
-            catch (DisconnectedException e)
+            catch (DisconnectException e)
             {
                 _agents.remove(i);
             }
