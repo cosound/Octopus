@@ -19,7 +19,7 @@ public class AgentTest
 		PluginDefinition plugin = new TestPlugin();
         ServerMock mock = new ServerMock();
 
-        try(Agent agent = new Agent(mock))
+        try(Agent agent = new Agent(mock, 1))
 		{
 			agent.addPlugin(plugin);
 			
@@ -35,7 +35,7 @@ public class AgentTest
 		PluginDefinition plugin = new TestPlugin();
         ServerMock mock = new ServerMock();
 
-        try(Agent agent = new Agent(mock))
+        try(Agent agent = new Agent(mock, 1))
 		{
 			agent.addPlugin(plugin);
 			
@@ -50,7 +50,7 @@ public class AgentTest
 	{
         ServerMock mock = new ServerMock();
 
-        try(Agent agent = new Agent(mock))
+        try(Agent agent = new Agent(mock, 1))
 		{
             agent.addPlugin(new TestPlugin());
 			
@@ -65,7 +65,7 @@ public class AgentTest
 	{
         ServerMock mock = new ServerMock();
 
-        try(Agent agent = new Agent(mock))
+        try(Agent agent = new Agent(mock, 1))
 		{
 			TestPlugin factory = new TestPlugin();
 			agent.addPlugin(factory);
@@ -88,7 +88,7 @@ public class AgentTest
 	{
 		ServerMock mock = new ServerMock();
 		
-		try(Agent agent = new Agent(mock))
+		try(Agent agent = new Agent(mock, 1))
 		{
 			TestPlugin factory = new TestPlugin();
 			agent.addPlugin(factory);

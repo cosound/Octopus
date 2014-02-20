@@ -50,7 +50,6 @@ public class AllocationHandler implements AutoCloseable
         {
             for(Task task : job.getTasks())
             {
-                // TODO only enqueue if there are available ressources
                 enqueue(task);
             }
         }
@@ -58,12 +57,13 @@ public class AllocationHandler implements AutoCloseable
 
     public void enqueue(Task task)
     {
-        // TODO decision logic for selecting an agent to send a task to
         for(int i = 0; i < _agents.size(); i++)
         {
             AgentProxy agent = _agents.get(i);
 
-            // TODO Make sure a task is only sent to one agent
+            if(agent.isQueueFull())
+                continue;
+
             task.set_State(TaskState.Queued);
             try
             {

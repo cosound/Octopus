@@ -31,25 +31,32 @@ public class AgentNetworkingTest
 
             final ArrayList<AgentProxy> agents = orchestrator.getAgents();
 
-            waitUntil(new Check() {
-                @Override
-                public Boolean isTrue() {
-                    return agents.size() == 0;
-                }
-            });
+            TestUtils.waitUntil(new Check() {
+                    @Override
+                    public Boolean isTrue() {
+                        return agents.size() == 0;
+                    }
+                });
 
             agent.close();
 
-            Job job = new Job();
-            Step step = new Step();
-            Task task = new Task();
-            task.pluginId = "com.chaos.octopus.agent.unit.TestPlugin, 1.0.0";
-            step.tasks.add(task);
-            job.steps.add(step);
+            Job job = make_Job();
             orchestrator.enqueue(job);
 
             assertEquals("Agent should be removed from list after disconnect", agents.size(), 0);
         }
+    }
+
+    private Job make_Job()
+    {
+        Job job = new Job();
+        Step step = new Step();
+        Task task = new Task();
+        task.pluginId = "com.chaos.octopus.agent.unit.TestPlugin, 1.0.0";
+        step.tasks.add(task);
+        job.steps.add(step);
+
+        return job;
     }
 
     @Test(expected = ConnectException.class)
@@ -61,16 +68,5 @@ public class AgentNetworkingTest
         }
     }
 
-    private void waitUntil(Check check) throws InterruptedException
-    {
-        for(int i = 0; i < 5000 && check.isTrue(); i++)
-        {
-            Thread.sleep(1);
-        }
-    }
 }
 
-interface Check
-{
-    Boolean isTrue();
-}

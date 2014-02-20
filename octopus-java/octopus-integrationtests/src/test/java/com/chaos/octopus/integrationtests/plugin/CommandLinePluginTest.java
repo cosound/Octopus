@@ -4,9 +4,13 @@ import com.chaos.octopus.agent.plugin.CommandLinePlugin;
 import com.chaos.octopus.commons.core.Plugin;
 import com.chaos.octopus.commons.core.PluginDefinition;
 import com.chaos.octopus.commons.core.Task;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -17,6 +21,37 @@ import static org.junit.Assert.*;
  */
 public class CommandLinePluginTest
 {
+    private String fileToCall = "script";
+
+    @Before
+    public void before() throws IOException
+    {
+        File file = new File(fileToCall);
+
+        file.createNewFile();
+        file.setExecutable(true);
+
+        try (FileWriter writer = new FileWriter(fileToCall)) {
+            writer.write("#!/bin/sh\n\r" +
+                    "ECHO \"Hello World\"\n\r" +
+                    "ECHO \"<PROGRESS>0.0</PROGRESS>\"\n\r" +
+                    "ECHO \"<PROGRESS>0.5</PROGRESS>\"\n\r" +
+                    "ECHO \"<WARNING>warning!</WARNING>\"\n\r" +
+                    "ECHO \"<PROGRESS>1.0</PROGRESS>\"\n\r" +
+                    "ECHO \"<STATUS>SUCCESS</STATUS>\"\n\r" +
+                    "exit 0" );
+
+        }
+    }
+
+    @After
+    public void after()
+    {
+        File file = new File(fileToCall);
+
+        file.delete();
+    }
+
     @Test
     public void getId_default_ReturnId()
     {
@@ -48,18 +83,6 @@ public class CommandLinePluginTest
         Task result = plugin.getTask();
 
         assertEquals(task, result);
-    }
-
-    @Test
-    public void execute_ExecuteScriptWithProgress_ProgressShouldBeUpdated() throws Exception
-    {
-        Task task     = makeTask();
-        task.properties.put("commandline", "..\\doc\\sample-batch.bat");
-        Plugin plugin = makeCommandLinePluginFactory().create(task);
-
-        plugin.execute();
-
-        assertEquals((int)1.0, (int)task.progress);
     }
 
     private Task makeTask()

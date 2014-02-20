@@ -29,10 +29,15 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
     
     public Agent(String hostname, int port, int listenPort)
     {
-    	this(new OrchestratorProxy(hostname, port, listenPort));
+    	this(new OrchestratorProxy(hostname, port, listenPort), 4);
+    }
+
+    public Agent(String hostname, int port, int listenPort, int parrallelism)
+    {
+        this(new OrchestratorProxy(hostname, port, listenPort), parrallelism);
     }
     
-    public Agent(Orchestrator orchestrator)
+    public Agent(Orchestrator orchestrator, int parrallelism)
     {
         _Gson         = new Gson();
     	_orchestrator = orchestrator;
@@ -40,7 +45,7 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
     	_isRunning         = false;
     	_thread            = new Thread(this);
     	_PluginDefinitions = new HashMap<>();
-    	_executionHandler = new ExecutionHandler(this);
+    	_executionHandler = new ExecutionHandler(this, parrallelism);
     }
 
 	public void open() throws IOException 
@@ -67,7 +72,15 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 					switch (msg.getAction())
 					{
 						case Commands.LIST_SUPPORTED_PLUGINS:
-							socket.getOutputStream().write(serializeSupportedPlugins());
+                            AgentConfigurationMessage response = new AgentConfigurationMessage();
+                            response.setNumberOfSimulataniousTasks(_executionHandler.getParralelism());
+
+                            for (PluginDefinition definition : get_SupportedPlugins())
+                            {
+                                response.getSupportedPlugins().add(definition.getId());
+                            }
+
+							socket.getOutputStream().write(_Gson.toJson(response).getBytes());
 							break;
 						case Commands.ENQUEUE_TASK:
                             TaskMessage enqueueTask = _Gson.fromJson(message, TaskMessage.class);
@@ -112,6 +125,7 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 		_PluginDefinitions.put(pluginFactory.getId(), pluginFactory);
 	}
 
+    // TODO CAN BE REMOVED????
 	public List<PluginDefinition> get_SupportedPlugins()
 	{
 		List<PluginDefinition> list = new ArrayList<>();

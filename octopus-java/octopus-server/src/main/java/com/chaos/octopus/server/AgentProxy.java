@@ -113,4 +113,12 @@ public class AgentProxy
     {
         _AllocatedTasks.remove(task.taskId);
     }
+
+    public boolean isQueueFull()
+    {
+        synchronized (_EnqueueBlock)
+        {
+            return _MaxNumberOfSimultaneousTasks - _AllocatedTasks.size() == 0;
+        }
+    }
 }

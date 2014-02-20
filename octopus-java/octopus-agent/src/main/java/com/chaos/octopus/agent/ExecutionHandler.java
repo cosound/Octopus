@@ -10,10 +10,13 @@ public class ExecutionHandler implements AutoCloseable, TaskCompleteListener
 {
 	private Agent _agent;
     private ExecutorService _pool;
+    private int parrallelism;
 
-	public ExecutionHandler(Agent agent)
+    public ExecutionHandler(Agent agent, int parrallelism)
 	{
-        _pool = Executors.newFixedThreadPool(4);
+        this.parrallelism = parrallelism;
+
+        _pool = Executors.newFixedThreadPool(parrallelism);
 		_agent = agent;
 	}
 
@@ -36,5 +39,10 @@ public class ExecutionHandler implements AutoCloseable, TaskCompleteListener
     public void close() throws Exception
     {
         _pool.shutdown();
+    }
+
+    public int getParralelism()
+    {
+        return parrallelism;
     }
 }
