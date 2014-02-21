@@ -27,7 +27,7 @@ public class Daemon implements org.apache.commons.daemon.Daemon
 
         if(config.getIsAgent())
         {
-            agent = new Agent(config.getOrchestratorIp(), config.getOrchestratorPort(), config.getListeningPort());
+            agent = new Agent(config.getOrchestratorIp(), config.getOrchestratorPort(), config.getListeningPort(), config.getNumberOfParallelTasks());
             agent.addPlugin(new TestPlugin());
             agent.addPlugin(new CommandLinePlugin());
             agent.addPlugin(new ChaosPlugin());

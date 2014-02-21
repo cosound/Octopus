@@ -15,16 +15,17 @@ public class OctopusConfiguration
 
     private String orchestratorIp = null;
     private int orchestratorPort  = 0;
+    private int numberOfParallelTasks = 8;
 
     public OctopusConfiguration() throws ConfigurationException
     {
-        System.out.println("OctopusConfiguration");
         String wd = System.getProperty("user.dir");
-        System.out.println(wd);
         String path = Paths.get(wd, "octopus.properties").toString();
-        System.out.println(path);
         Configuration config = new PropertiesConfiguration(path);
         port = config.getInt("listening.port");
+
+        if(config.containsKey("agent.numberOfParallelTasks"))
+            numberOfParallelTasks = config.getInt("agent.numberOfParallelTasks");
 
         if(config.containsKey("orchestrator.ip"))
             orchestratorIp = config.getString("orchestrator.ip");
@@ -51,5 +52,10 @@ public class OctopusConfiguration
     public Boolean getIsAgent()
     {
         return getOrchestratorIp() != null && getOrchestratorPort() != 0;
+    }
+
+    public int getNumberOfParallelTasks() {
+
+        return numberOfParallelTasks;
     }
 }

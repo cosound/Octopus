@@ -17,6 +17,7 @@ public class OctopusConfigurationTest
         assertEquals(26000, result.getListeningPort());
         assertEquals("127.0.0.1", result.getOrchestratorIp());
         assertEquals(25000, result.getOrchestratorPort());
+        assertEquals(4, result.getNumberOfParallelTasks());
     }
 
     @Test
