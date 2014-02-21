@@ -49,8 +49,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable
         ConcurrentJobQueue queue = new ConcurrentJobQueue();
         OrchestratorImpl leader = new OrchestratorImpl(config.getListeningPort(), sync, queue);
 
-        Chaos chaos = new Chaos("http://api.cosound.chaos-systems.com");  // TODO move to config file
-        AuthenticatedChaosClient client = chaos.authenticate("b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270");
+        Chaos chaos = new Chaos(config.getChaosApiUrl());
+        AuthenticatedChaosClient client = chaos.authenticate(config.getChaosApiKey());
         sync.addSynchronizationTask(new EnqueueJobs(leader, client));
         sync.addSynchronizationTask(new UpdateJob(queue, client));
 
