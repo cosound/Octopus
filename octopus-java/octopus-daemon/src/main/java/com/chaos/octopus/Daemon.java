@@ -6,6 +6,12 @@ import com.chaos.octopus.agent.plugin.CommandLinePlugin;
 import com.chaos.octopus.commons.core.OctopusConfiguration;
 import com.chaos.octopus.commons.core.TestPlugin;
 import com.chaos.octopus.server.OrchestratorImpl;
+import com.chaos.octopus.server.synchronization.EnqueueJobs;
+import com.chaos.octopus.server.synchronization.Synchronization;
+import com.chaos.octopus.server.synchronization.UpdateJob;
+import com.chaos.sdk.AuthenticatedChaosClient;
+import com.chaos.sdk.Chaos;
+import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
 
@@ -36,7 +42,7 @@ public class Daemon implements org.apache.commons.daemon.Daemon
         }
         else
         {
-            leader = new OrchestratorImpl(config.getListeningPort());
+            leader = OrchestratorImpl.create(config);
             leader.open();
         }
     }

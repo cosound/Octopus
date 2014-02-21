@@ -3,6 +3,7 @@ package com.chaos.octopus.agent;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import com.chaos.octopus.commons.core.Plugin;
 
@@ -39,6 +40,7 @@ public class ExecutionHandler implements AutoCloseable, TaskCompleteListener
     public void close() throws Exception
     {
         _pool.shutdown();
+        _pool.awaitTermination(5000, TimeUnit.MILLISECONDS);
     }
 
     public int getParralelism()

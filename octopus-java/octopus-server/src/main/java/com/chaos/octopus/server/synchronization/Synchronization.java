@@ -1,9 +1,6 @@
 package com.chaos.octopus.server.synchronization;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class Synchronization extends TimerTask
 {
@@ -12,7 +9,12 @@ public class Synchronization extends TimerTask
 
     public Synchronization(SynchronizationTask... tasks)
     {
-        this.tasks = Arrays.asList(tasks);
+        this.tasks = new ArrayList<>();
+
+        for(SynchronizationTask task : tasks)
+        {
+            this.tasks.add(task);
+        }
     }
 
     public void synchronize()
@@ -34,5 +36,10 @@ public class Synchronization extends TimerTask
     public void run()
     {
         synchronize();
+    }
+
+    public void addSynchronizationTask(SynchronizationTask task)
+    {
+        tasks.add(task);
     }
 }

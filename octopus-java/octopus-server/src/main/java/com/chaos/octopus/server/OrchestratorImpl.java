@@ -1,5 +1,15 @@
 package com.chaos.octopus.server;
 
+import com.chaos.octopus.commons.core.*;
+import com.chaos.octopus.commons.util.Commands;
+import com.chaos.octopus.commons.util.StreamUtilities;
+import com.chaos.octopus.server.synchronization.EnqueueJobs;
+import com.chaos.octopus.server.synchronization.Synchronization;
+import com.chaos.octopus.server.synchronization.UpdateJob;
+import com.chaos.sdk.AuthenticatedChaosClient;
+import com.chaos.sdk.Chaos;
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -7,21 +17,10 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.chaos.octopus.commons.core.*;
-import com.chaos.octopus.commons.util.Commands;
-import com.chaos.octopus.commons.util.StreamUtilities;
-import com.chaos.octopus.server.synchronization.EnqueueJobs;
-import com.chaos.octopus.server.synchronization.Synchronization;
-import com.chaos.octopus.server.synchronization.UpdateJob;
-import com.chaos.sdk.Chaos;
-import com.chaos.sdk.AuthenticatedChaosClient;
-import com.google.gson.Gson;
-
 public class OrchestratorImpl implements Orchestrator, Runnable
 {
-    private final Chaos _chaos;
     private final ConcurrentJobQueue _jobsWithUpdates;
-    private boolean           _isRunning;
+    private boolean           _isRunning = false;
 	private Thread            _thread;
 	private ServerSocket      _socket;
 	private int               _port;
@@ -31,13 +30,31 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 
     public OrchestratorImpl(int port)
 	{
-        _AllocationHandler = new AllocationHandler();
-        _Gson  = new Gson();
-		_port = port;
-		_isRunning = false;
-        _chaos = new Chaos("http://api.cosound.chaos-systems.com");  // TODO move to config file
-        _jobsWithUpdates = new ConcurrentJobQueue();
+        this(port, new Synchronization(), new ConcurrentJobQueue());
+    }
 
+    private OrchestratorImpl(int listeningPort, Synchronization sync, ConcurrentJobQueue queue)
+    {
+        _AllocationHandler = new AllocationHandler();
+        _Gson = new Gson();
+        _port = listeningPort;
+
+        _jobsWithUpdates = queue;
+        _synchronization = sync;
+    }
+
+    public static OrchestratorImpl create(OctopusConfiguration config) throws IOException
+    {
+        Synchronization sync = new Synchronization();
+        ConcurrentJobQueue queue = new ConcurrentJobQueue();
+        OrchestratorImpl leader = new OrchestratorImpl(config.getListeningPort(), sync, queue);
+
+        Chaos chaos = new Chaos("http://api.cosound.chaos-systems.com");  // TODO move to config file
+        AuthenticatedChaosClient client = chaos.authenticate("b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270");
+        sync.addSynchronizationTask(new EnqueueJobs(leader, client));
+        sync.addSynchronizationTask(new UpdateJob(queue, client));
+
+        return leader;
     }
 
 	public ArrayList<AgentProxy> getAgents()
@@ -55,10 +72,9 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 			
 			_thread = new Thread(this);
 			_thread.start();
-            AuthenticatedChaosClient client = _chaos.authenticate("b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270");
-            _synchronization = new Synchronization(new EnqueueJobs(this, client), new UpdateJob(_jobsWithUpdates, client));
+
          // TODO make synchronization testable
-         //   _synchronization.synchronize(10 *1000); // synchronize every 60 seconds
+            _synchronization.synchronize(10 *1000); // synchronize every 60 seconds
 		} 
 		catch (IOException e)
 		{
