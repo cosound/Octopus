@@ -18,6 +18,8 @@ public class OctopusConfigurationTest
         assertEquals("127.0.0.1", result.getOrchestratorIp());
         assertEquals(25000, result.getOrchestratorPort());
         assertEquals(4, result.getNumberOfParallelTasks());
+        assertEquals("api url", result.getChaosApiUrl());
+        assertEquals("api key", result.getChaosApiKey());
     }
 
     @Test

@@ -16,6 +16,8 @@ public class OctopusConfiguration
     private String orchestratorIp = null;
     private int orchestratorPort  = 0;
     private int numberOfParallelTasks = 8;
+    private String chaosApiUrl = null;
+    private String chaosApiKey = null;
 
     public OctopusConfiguration() throws ConfigurationException
     {
@@ -32,6 +34,12 @@ public class OctopusConfiguration
 
         if(config.containsKey("orchestrator.port"))
             orchestratorPort = config.getInt("orchestrator.port");
+
+        if(config.containsKey("orchestrator.chaosApiUrl"))
+            chaosApiUrl = config.getString("orchestrator.chaosApiUrl");
+
+        if(config.containsKey("orchestrator.chaosApiKey"))
+            chaosApiKey = config.getString("orchestrator.chaosApiKey");
     }
 
     public int getListeningPort()
@@ -57,5 +65,13 @@ public class OctopusConfiguration
     public int getNumberOfParallelTasks() {
 
         return numberOfParallelTasks;
+    }
+
+    public String getChaosApiUrl() {
+        return chaosApiUrl;
+    }
+
+    public String getChaosApiKey() {
+        return chaosApiKey;
     }
 }
