@@ -20,6 +20,7 @@ public class StreamUtilities
 			
 				return new String(buffer, 0, read);
 			}
+
 			Thread.sleep(1);
 		}
 		

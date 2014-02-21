@@ -72,15 +72,9 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 					switch (msg.getAction())
 					{
 						case Commands.LIST_SUPPORTED_PLUGINS:
-                            AgentConfigurationMessage response = new AgentConfigurationMessage();
-                            response.setNumberOfSimulataniousTasks(_executionHandler.getParralelism());
+                            AgentConfigurationMessage response = createAgentConfigurationMessage();
 
-                            for (PluginDefinition definition : get_SupportedPlugins())
-                            {
-                                response.getSupportedPlugins().add(definition.getId());
-                            }
-
-							socket.getOutputStream().write(_Gson.toJson(response).getBytes());
+							socket.getOutputStream().write(response.toJson().getBytes());
 							break;
 						case Commands.ENQUEUE_TASK:
                             TaskMessage enqueueTask = _Gson.fromJson(message, TaskMessage.class);
@@ -99,8 +93,22 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 			}
 		}
 	}
-	
-	public void close() throws Exception
+
+    private AgentConfigurationMessage createAgentConfigurationMessage()
+    {
+        AgentConfigurationMessage message = new AgentConfigurationMessage();
+
+        message.setNumberOfSimulataniousTasks(_executionHandler.getParralelism());
+
+        for (PluginDefinition definition : get_SupportedPlugins())
+        {
+            message.getSupportedPlugins().add(definition.getId());
+        }
+
+        return message;
+    }
+
+    public void close() throws Exception
 	{
 		_isRunning = false;
 		

@@ -9,66 +9,6 @@ import static org.junit.Assert.*;
 
 public class DistributeToWorkersTest extends TestBase
 {
-//	@Test
-//	public void enqueue_GivenJobWithTwoSteps_FirstStepHasToCompleteBeforeTheSecondCanBegin() throws Exception
-//    {
-//        try (OrchestratorImpl orchestrator = new OrchestratorImpl(20000);
-//             Agent agent = new Agent("localhost", 20000, 20001))
-//        {
-//            agent.addPlugin(new TestPlugin());
-//            orchestrator.open();
-//            agent.open();
-//
-//            Job  job = new Job();
-//            Step step1 = new Step();
-//            Step step2 = new Step();
-//            Task task1 = Make_TestTaskThatTake10msToExecute();
-//            Task task2 = Make_TestTaskThatTake10msToExecute();
-//            Task task3 = Make_TestTaskThatTake10msToExecute();
-//            Task task4 = Make_TestTaskThatTake10msToExecute();
-//            task1.properties.put("number", "2");
-//            task2.properties.put("number", "4");
-//            task3.properties.put("number", "8");
-//            task3.properties.put("sleep", "10");
-//            task4.properties.put("number", "1");
-//
-//            step1.tasks.add(task1);
-//            step1.tasks.add(task2);
-//            step1.tasks.add(task3);
-//            step2.tasks.add(task4);
-//            job.steps.add(step1);
-//            job.steps.add(step2);
-//
-//            orchestrator.enqueue(job);
-//
-//            for(int i = 1000; i > 0 && !step1.isCompleted(); i--)
-//            {
-//                Thread.sleep(1);
-//            }
-//
-//            assertEquals(TaskState.Committed, task1.get_State());
-//            assertEquals(TaskState.Committed, task2.get_State());
-//            assertEquals(TaskState.Committed, task3.get_State());
-//            // number is 14 if second step hasnt run
-//            assertEquals(14, TestPlugin.getNumber());
-//            assertTrue(step1.isCompleted());
-//            assertFalse(step2.isCompleted());
-//
-//            for(int i = 1000; i > 0 && !step2.isCompleted(); i--)
-//            {
-//                Thread.sleep(1);
-//            }
-//
-//            assertEquals(TaskState.Committed, task1.get_State());
-//            assertEquals(TaskState.Committed, task2.get_State());
-//            assertEquals(TaskState.Committed, task3.get_State());
-//            assertEquals(TaskState.Committed, task4.get_State());
-//            assertEquals(15, TestPlugin.getNumber());
-//            assertTrue(step1.isCompleted());
-//            assertTrue(step2.isCompleted());
-//        }
-//	}
-
     @Test
     public void distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers() throws Exception
     {
@@ -78,18 +18,21 @@ public class DistributeToWorkersTest extends TestBase
         {
             orch.open();
             agent1.addPlugin(new TestPlugin());
-            agent1.open();
             agent2.addPlugin(new TestPlugin());
+            agent1.open();
             agent2.open();
+
+            TestUtils.waitUntil(new Check() {
+                @Override
+                public Boolean isTrue() {return orch.getAgents().size() == 2;}
+            });
 
             Job job = make_JobWithTwoTasks();
             orch.enqueue(job);
 
             TestUtils.waitUntil(new Check() {
                 @Override
-                public Boolean isTrue() {
-                    return agent1.getQueueSize() == 1 && agent2.getQueueSize() == 1;
-                }
+                public Boolean isTrue() {return agent1.getQueueSize() == 1 && agent2.getQueueSize() == 1;}
             });
             
             assertEquals("One task should be queued", 1, agent1.getQueueSize());
@@ -112,7 +55,7 @@ public class DistributeToWorkersTest extends TestBase
     {
         Task task = new Task();
         task.pluginId = "com.chaos.octopus.agent.unit.TestPlugin, 1.0.0";
-        task.properties.put("sleep", "2000");
+        task.properties.put("sleep", "1000");
 
         return task;
     }

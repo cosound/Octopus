@@ -16,17 +16,17 @@ public class AllocationHandler implements AutoCloseable
 {
     private ArrayList<AgentProxy> _agents;
     private ArrayList<Job>        _Jobs;
-    private boolean               _IsRunning;
 
     public AllocationHandler()
     {
-        _agents    = new ArrayList<AgentProxy>();
-        _Jobs      = new ArrayList<Job>();
+        _agents    = new ArrayList<>();
+        _Jobs      = new ArrayList<>();
     }
 
     public void addAgent(AgentProxy agent)
     {
         _agents.add(agent);
+        enqueueNextTaskOnAgent();
     }
 
     public void enqueue(Job job)
@@ -46,11 +46,14 @@ public class AllocationHandler implements AutoCloseable
 
     private void enqueueNextTaskOnAgent()
     {
-        for (Job job : _Jobs)
+        synchronized (_Jobs)
         {
-            for(Task task : job.getTasks())
+            for (Job job : _Jobs)
             {
-                enqueue(task);
+                for(Task task : job.getTasks())
+                {
+                    enqueue(task);
+                }
             }
         }
     }
@@ -61,20 +64,23 @@ public class AllocationHandler implements AutoCloseable
         {
             AgentProxy agent = _agents.get(i);
 
-            if(agent.isQueueFull())
-                continue;
+            if(agent.isQueueFull()) continue;
 
             task.set_State(TaskState.Queued);
-            try
-            {
-                agent.enqueue(task);
-            }
-            catch (DisconnectException e)
-            {
-                _agents.remove(i);
-            }
+            enqueueOrDisconnectAgent(task, i, agent);
 
             return;
+        }
+    }
+
+    private void enqueueOrDisconnectAgent(Task task, int i, AgentProxy agent) {
+        try
+        {
+            agent.enqueue(task);
+        }
+        catch (DisconnectException e)
+        {
+            _agents.remove(agent);
         }
     }
 
@@ -107,7 +113,6 @@ public class AllocationHandler implements AutoCloseable
     @Override
     public void close() throws Exception
     {
-        _IsRunning = false;
     }
 
     public Job getJob(Task task) throws ArrayIndexOutOfBoundsException

@@ -70,9 +70,9 @@ public class EstablishConnectionTest extends TestBase
 		try(OrchestratorImpl leader = new OrchestratorImpl(port); 
 			Agent  agent  = new Agent("localhost", port, 20001))
 		{
+            leader.open();
 			TestPlugin pl = new TestPlugin();
 			agent.addPlugin(pl);
-			leader.open();
 			agent.open();
 			
 			for(int i = 1000; i > 0 && noOfPlugins != 1; i--)
@@ -119,38 +119,4 @@ public class EstablishConnectionTest extends TestBase
 		assertEquals(1, noOfPluginsFromAgent1);
 		assertEquals(1, noOfPluginsFromAgent2);
 	}
-
-//	@Test
-//	public void NotifyServer_GivenAWorkerCompletesATask_NotifyTheServerThatTheTaskIsDone() throws Exception
-//	{
-//		int port = 20000;
-//        Job job = new Job();
-//        Step step = new Step();
-//        step.tasks.add(Make_TestTaskThatTake10msToExecute());
-//        job.steps.add(step);
-//
-//		try(OrchestratorImpl leader = new OrchestratorImpl(port);
-//			Agent  agent1 = new Agent("localhost", port, 20001);)
-//		{
-//			agent1.addPlugin(new TestPlugin());
-//			leader.open();
-//			agent1.open();
-//
-//			// make sure the agent have had time to connect with the server
-//			for(int i = 1000; i > 0 && leader.getAgents().size() == 0; i--)
-//			{
-//				Thread.sleep(1);
-//			}
-//
-//			leader.enqueue(job);
-//			assertEquals(3, leader.getAgents().get(0).get_MaxNumberOfSimultaniousTasks());
-//
-//			for(int i = 1000; i > 0 && leader.getAgents().get(0).get_MaxNumberOfSimultaniousTasks() != 4; i--)
-//			{
-//				Thread.sleep(1);
-//			}
-//
-//			assertEquals(4, leader.getAgents().get(0).get_MaxNumberOfSimultaniousTasks());
-//		}
-//	}
 }

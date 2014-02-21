@@ -1,10 +1,12 @@
 package com.chaos.octopus.server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.*;
 
+import com.chaos.octopus.commons.core.AgentConfigurationMessage;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
 import com.chaos.octopus.commons.core.Message;
@@ -24,50 +26,52 @@ public class AgentProxy
 
 	public AgentProxy(String hostname, int port) 
 	{
-        _AllocatedTasks = new HashMap<String, Task>();
+        _AllocatedTasks = new HashMap<>();
         _Gson           = new Gson();
         _Hostname       = hostname;
 		_Port           = port;
-		
-		_MaxNumberOfSimultaneousTasks = 4;
+        InitializeAgent();
 	}
 
 	public List<String> get_SupportedPlugins()
 	{
-		if(_SupportedPlugins == null)
-		{
-			try
-			{
-				try(Socket socket = new Socket(_Hostname, _Port))
-				{
-                    String msg = _Gson.toJson(new Message(Commands.LIST_SUPPORTED_PLUGINS));
-                    socket.getOutputStream().write(msg.getBytes());
-					
-					String plugins = StreamUtilities.ReadString(socket.getInputStream());
-					
-					_SupportedPlugins = new ArrayList<String>();
-					
-					for (String s : plugins.split(";"))
-					{
-						_SupportedPlugins.add(s);					
-					}
-				}
-			} 
-			catch (IOException e)
-			{
-				return new ArrayList<String>();
-			} 
-			catch (Exception e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
 		return _SupportedPlugins;
 	}
-		
-	public void set_SupportedPlugins(List<String> supportedPlugins)
+
+    private void InitializeAgent()
+    {
+        try
+        {
+            try(Socket socket = new Socket(_Hostname, _Port))
+            {
+                String msg = _Gson.toJson(new Message(Commands.LIST_SUPPORTED_PLUGINS));
+                socket.getOutputStream().write(msg.getBytes());
+
+                AgentConfigurationMessage response = AgentConfigurationMessage.create(socket.getInputStream());
+
+                InitializeAgent(response);
+            }
+        }
+        catch (Exception e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private void InitializeAgent(AgentConfigurationMessage response)
+    {
+        _SupportedPlugins = new ArrayList<>();
+
+        for (String pluginId : response.getSupportedPlugins())
+        {
+            _SupportedPlugins.add(pluginId);
+        }
+
+        _MaxNumberOfSimultaneousTasks = response.getNumberOfSimulataniousTasks();
+    }
+
+    public void set_SupportedPlugins(List<String> supportedPlugins)
 	{
 		_SupportedPlugins = supportedPlugins;
 	}
@@ -104,11 +108,6 @@ public class AgentProxy
 		}
 	}
 	
-	public int get_MaxNumberOfSimultaniousTasks()
-	{
-		return _MaxNumberOfSimultaneousTasks - _AllocatedTasks.size();
-	}
-
     public void taskCompleted(Task task)
     {
         _AllocatedTasks.remove(task.taskId);

@@ -25,8 +25,9 @@ public class AgentNetworkingTest
         try(OrchestratorImpl orchestrator = new OrchestratorImpl(2000);
             Agent agent = new Agent("localhost", 2000, 2001))
         {
-            agent.addPlugin(new TestPlugin());
             orchestrator.open();
+
+            agent.addPlugin(new TestPlugin());
             agent.open();
 
             final ArrayList<AgentProxy> agents = orchestrator.getAgents();
@@ -34,7 +35,7 @@ public class AgentNetworkingTest
             TestUtils.waitUntil(new Check() {
                     @Override
                     public Boolean isTrue() {
-                        return agents.size() == 0;
+                        return agents.size() == 1;
                     }
                 });
 

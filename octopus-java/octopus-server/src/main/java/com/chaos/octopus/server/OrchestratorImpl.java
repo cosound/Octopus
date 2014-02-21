@@ -57,7 +57,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 			_thread.start();
             AuthenticatedChaosClient client = _chaos.authenticate("b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270");
             _synchronization = new Synchronization(new EnqueueJobs(this, client), new UpdateJob(_jobsWithUpdates, client));
-            _synchronization.synchronize(10 *1000); // synchronize every 60 seconds
+         // TODO make synchronization testable
+         //   _synchronization.synchronize(10 *1000); // synchronize every 60 seconds
 		} 
 		catch (IOException e)
 		{

@@ -7,9 +7,11 @@ public class TestUtils
 {
     public static void waitUntil(Check check) throws InterruptedException
     {
-        for(int i = 0; i < 5000 && check.isTrue(); i++)
+        for(int i = 0; i < 500; i++)
         {
-            Thread.sleep(1);
+            if(check.isTrue()) return;
+
+            Thread.sleep(10);
         }
     }
 }
