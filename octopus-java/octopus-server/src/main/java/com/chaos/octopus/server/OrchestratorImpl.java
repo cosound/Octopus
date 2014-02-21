@@ -66,14 +66,12 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 	{
 		try
 		{
-
 			_isRunning = true;
 			_socket = new ServerSocket(_port);
 			
 			_thread = new Thread(this);
 			_thread.start();
 
-         // TODO make synchronization testable
             _synchronization.synchronize(10 *1000); // synchronize every 60 seconds
 		} 
 		catch (IOException e)
@@ -185,7 +183,6 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 		
 		return pluginDefinitions;
 	}
-
 
     public Synchronization get_synchronization()
     {
