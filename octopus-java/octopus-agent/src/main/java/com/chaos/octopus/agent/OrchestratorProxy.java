@@ -37,7 +37,7 @@ public class OrchestratorProxy implements Orchestrator
         }
         catch (UnknownHostException e)
         {
-            throw new com.chaos.octopus.commons.exception.ConnectException("Could not determine local host address");
+            throw new com.chaos.octopus.commons.exception.ConnectException("Could not determine local host address", e);
         }
     }
 
