@@ -6,7 +6,7 @@ public interface Orchestrator extends AutoCloseable
 	void taskCompleted(Task task);
     void taskUpdate(Task task);
 
-	int get_ListenPort();
+	int get_localListenPort();
 
     void enqueue(Job job);
 }

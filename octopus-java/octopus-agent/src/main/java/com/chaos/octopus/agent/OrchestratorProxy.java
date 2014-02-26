@@ -1,32 +1,49 @@
 package com.chaos.octopus.agent;
 
 import java.io.IOException;
+import java.net.*;
 import java.net.ConnectException;
-import java.net.Socket;
 
 import com.chaos.octopus.commons.core.*;
 import com.chaos.octopus.commons.util.Commands;
-import com.chaos.sdk.Chaos;
 import com.google.gson.Gson;
 
 public class OrchestratorProxy implements Orchestrator
 {
 	private String _Hostname;
     private int    _Port;
-    private int    _ListenPort;
+    private int _localListenPort;
     private Gson   _Gson;
-    
-	public OrchestratorProxy(String hostname, int port, int listenPort)
+    private String _localHostAddress;
+
+    public OrchestratorProxy(String hostname, int port, int listenPort)
 	{
         _Gson       = new Gson();
 		_Hostname   = hostname;
 		_Port       = port;
-		_ListenPort = listenPort;
+        _localHostAddress = getHostAddress();
+		_localListenPort = listenPort;
 	}
-	
-	public void open() 
+
+    private String getHostAddress()
+    {
+        try
+        {
+            String hostAddress = Inet4Address.getLocalHost().getHostAddress();
+
+            System.out.println("Local IP: " + hostAddress);
+
+            return hostAddress;
+        }
+        catch (UnknownHostException e)
+        {
+            throw new com.chaos.octopus.commons.exception.ConnectException("Could not determine local host address");
+        }
+    }
+
+    public void open()
 	{
-        ConnectMessage msg = new ConnectMessage(_Hostname, _ListenPort);
+        ConnectMessage msg = new ConnectMessage(_localHostAddress, _localListenPort);
 
         SendMessage(msg);
 	}
@@ -67,9 +84,9 @@ public class OrchestratorProxy implements Orchestrator
     }
 
 	@Override
-	public int get_ListenPort() 
+	public int get_localListenPort()
 	{
-		return _ListenPort;
+		return _localListenPort;
 	}
 
     @Override

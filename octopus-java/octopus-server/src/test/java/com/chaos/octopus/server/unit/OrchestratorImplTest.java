@@ -2,6 +2,8 @@ package com.chaos.octopus.server.unit;
 
 import static org.junit.Assert.*;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import com.chaos.octopus.server.synchronization.Synchronization;

@@ -27,14 +27,14 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
     private ServerSocket _Server;
     private Gson _Gson;
     
-    public Agent(String hostname, int port, int listenPort)
+    public Agent(String orchestratorHostname, int orchestratorPort, int listenPort)
     {
-    	this(new OrchestratorProxy(hostname, port, listenPort), 4);
+    	this(new OrchestratorProxy(orchestratorHostname, orchestratorPort, listenPort), 4);
     }
 
-    public Agent(String hostname, int port, int listenPort, int parrallelism)
+    public Agent(String orchestratorHostname, int orchestratorPort, int listenPort, int parrallelism)
     {
-        this(new OrchestratorProxy(hostname, port, listenPort), parrallelism);
+        this(new OrchestratorProxy(orchestratorHostname, orchestratorPort, listenPort), parrallelism);
     }
     
     public Agent(Orchestrator orchestrator, int parrallelism)
@@ -51,7 +51,7 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 	public void open() throws IOException 
 	{
 		_orchestrator.open();
-		_Server = new ServerSocket(_orchestrator.get_ListenPort());
+		_Server = new ServerSocket(_orchestrator.get_localListenPort());
 		_isRunning = true;
 		_thread.start();
 	}

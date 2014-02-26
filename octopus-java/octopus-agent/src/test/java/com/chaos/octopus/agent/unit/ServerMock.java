@@ -27,7 +27,7 @@ public class ServerMock implements Orchestrator
     }
 
 	@Override
-	public int get_ListenPort() {
+	public int get_localListenPort() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
