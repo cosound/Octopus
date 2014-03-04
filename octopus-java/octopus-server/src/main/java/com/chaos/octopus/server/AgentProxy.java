@@ -40,8 +40,15 @@ public class AgentProxy
 
     private void InitializeAgent()
     {
+        InitializeAgent(10);
+    }
+
+    private void InitializeAgent(int retries)
+    {
         try
         {
+            Thread.sleep(500);
+
             try(Socket socket = new Socket(_Hostname, _Port))
             {
                 String msg = _Gson.toJson(new Message(Commands.LIST_SUPPORTED_PLUGINS));
@@ -54,7 +61,10 @@ public class AgentProxy
         }
         catch (Exception e)
         {
-            // TODO Auto-generated catch block
+            if(retries > 0)
+                InitializeAgent(--retries);
+
+            // TODO This exception should be handled at a higher level
             System.err.println("Couldn't connect to: " + _Hostname + ":" + _Port);
             e.printStackTrace();
         }
