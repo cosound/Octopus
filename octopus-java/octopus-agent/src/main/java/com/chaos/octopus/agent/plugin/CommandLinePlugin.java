@@ -78,6 +78,7 @@ public class CommandLinePlugin implements Plugin, PluginDefinition
 
                 if(m.find())
                 {
+                    setOrAppend("status", m.group(1));
                     System.out.println ("status: " + m.group(1));
                 }
 
@@ -86,6 +87,7 @@ public class CommandLinePlugin implements Plugin, PluginDefinition
 
                 if(m.find())
                 {
+                    setOrAppend("warning", m.group(1));
                     System.err.println ("warning: " + m.group(1));
                 }
 
@@ -94,12 +96,21 @@ public class CommandLinePlugin implements Plugin, PluginDefinition
 
                 if(m.find())
                 {
-                    System.err.println ("exception: " + m.group(1));
+                    setOrAppend("exception", m.group(1));
+                    System.err.println("exception: " + m.group(1));
                 }
             }
         }
 
         process.waitFor();
+    }
+
+    private void setOrAppend(String key, String value)
+    {
+        if(getTask().properties.containsKey(key))
+            value = getTask().properties.get(key) + "/n" + value;
+
+        getTask().properties.put(key, value);
     }
 
     @Override

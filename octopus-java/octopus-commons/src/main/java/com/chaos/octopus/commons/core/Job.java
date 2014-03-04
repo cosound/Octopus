@@ -11,6 +11,7 @@ public class Job
     public Job()
     {
         id = "";
+        status = "new";
     }
 
     public boolean validate()

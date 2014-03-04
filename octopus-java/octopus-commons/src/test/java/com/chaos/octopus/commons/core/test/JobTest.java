@@ -260,4 +260,5 @@ public class JobTest extends TestBase
         Task actual = step1.tasks.iterator().next();
         assertSame(task2, actual);
     }
+
 }

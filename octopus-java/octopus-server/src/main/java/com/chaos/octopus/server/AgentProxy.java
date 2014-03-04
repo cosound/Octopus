@@ -17,11 +17,11 @@ import com.google.gson.Gson;
 
 public class AgentProxy
 {
-    private Gson         _Gson;
-	private List<String> _SupportedPlugins;
-    private String       _Hostname;
-    private int          _Port;
-    private int _MaxNumberOfSimultaneousTasks;
+    private Gson              _Gson;
+    private List<String>      _SupportedPlugins;
+    private String            _Hostname;
+    private int               _Port;
+    private int               _MaxNumberOfSimultaneousTasks;
     private Map<String, Task> _AllocatedTasks;
 
 	public AgentProxy(String hostname, int port) 
@@ -55,6 +55,7 @@ public class AgentProxy
         catch (Exception e)
         {
             // TODO Auto-generated catch block
+            System.err.println("Couldn't connect to: " + _Hostname + ":" + _Port);
             e.printStackTrace();
         }
     }

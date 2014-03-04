@@ -44,12 +44,22 @@ public class AllocationHandler implements AutoCloseable
         }
     }
 
+    public void dequeue(Job job)
+    {
+        synchronized (_Jobs)
+        {
+            _Jobs.remove(job);
+        }
+    }
+
     private void enqueueNextTaskOnAgent()
     {
         synchronized (_Jobs)
         {
             for (Job job : _Jobs)
             {
+
+
                 for(Task task : job.getTasks())
                 {
                     enqueue(task);
@@ -105,6 +115,14 @@ public class AllocationHandler implements AutoCloseable
         for (AgentProxy agent : getAgents())
         {
             agent.taskCompleted(task);
+        }
+
+        if(task.get_State() == TaskState.Rolledback)
+        {
+            Job job = getJob(task);
+            job.status = "failed";
+
+            dequeue(job);
         }
 
         enqueueNextTaskOnAgent();

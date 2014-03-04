@@ -19,7 +19,7 @@ public class ExecutionSlot implements Runnable
         _taskUpdateListeners   = new ArrayList<>();
 		_plugin = plugin;
 	}
-
+// todo: rollback and commit it not implemetned correctly
 	@Override
 	public void run()
 	{
