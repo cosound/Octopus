@@ -60,7 +60,7 @@ public class TestPlugin implements Plugin, PluginDefinition
                 number += num;
             }
 
-            System.out.println(getTask().taskId + ": " + num + ", executing");
+            System.err.println(getTask().taskId + ": " + num + ", executing");
         }
 
         if(getTask().properties.containsKey("sleep"))
@@ -74,10 +74,10 @@ public class TestPlugin implements Plugin, PluginDefinition
         {
             int num = Integer.parseInt(getTask().properties.get("number"));
 
-            System.out.println(getTask().taskId + ": " + num + ", executed");
+            System.err.println(getTask().taskId + ": " + num + ", executed");
         }
         else
-            System.out.println(getId() + " executed");
+            System.err.println(getId() + " executed");
 
 		WasExecuted = true;
 	}
