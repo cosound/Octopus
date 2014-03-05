@@ -108,7 +108,7 @@ public class CommandLinePlugin implements Plugin, PluginDefinition
     private void setOrAppend(String key, String value)
     {
         if(getTask().properties.containsKey(key))
-            value = getTask().properties.get(key) + "/n" + value;
+            value = getTask().properties.get(key) + "\n" + value;
 
         getTask().properties.put(key, value);
     }

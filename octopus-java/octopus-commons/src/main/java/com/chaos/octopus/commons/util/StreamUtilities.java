@@ -11,15 +11,23 @@ public class StreamUtilities
 		for(int i = 1000; i > 0; i--)
 		{
 			int available = stream.available();
-			
-			if(available > 0)
-			{
-				byte[] buffer = new byte[4096];
-				
-				int read = stream.read(buffer);
-			
-				return new String(buffer, 0, read);
-			}
+
+            if(available > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                while(available > 0)
+                {
+                    byte[] buffer = new byte[available];
+
+                    int read = stream.read(buffer);
+
+                    sb.append(new String(buffer, 0, read));
+                    available = stream.available();
+                }
+
+                return sb.toString();
+            }
 
 			Thread.sleep(1);
 		}

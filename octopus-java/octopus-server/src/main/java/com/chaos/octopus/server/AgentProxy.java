@@ -47,6 +47,7 @@ public class AgentProxy
     {
         try
         {
+            // todo optimize by only sleeping if retry is necessary
             Thread.sleep(500);
 
             try(Socket socket = new Socket(_Hostname, _Port))

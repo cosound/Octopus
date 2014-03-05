@@ -9,6 +9,8 @@ import com.chaos.octopus.server.synchronization.UpdateJob;
 import com.chaos.sdk.AuthenticatedChaosClient;
 import com.chaos.sdk.Chaos;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.MalformedJsonException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -27,6 +29,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
     private Gson              _Gson;
     private AllocationHandler _AllocationHandler;
     private Synchronization   _synchronization;
+    private Gson gson;
 
     public OrchestratorImpl(int port)
 	{
@@ -41,6 +44,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 
         _jobsWithUpdates = queue;
         _synchronization = sync;
+        gson = new Gson();
     }
 
     public static OrchestratorImpl create(OctopusConfiguration config) throws IOException
@@ -82,8 +86,6 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 
     public void run()
 	{
-		Gson gson = new Gson();
-		
 		while(_isRunning)
 		{
 			try
@@ -92,13 +94,13 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 				
 				String result = StreamUtilities.ReadString(agent.getInputStream());
 				
-				Message message = gson.fromJson(result, Message.class);
+				Message message = tryParseJson(result, Message.class);
 
                 switch (message.getAction())
                 {
                     case Commands.CONNECT:
                     {
-                        ConnectMessage connect = gson.fromJson(result, ConnectMessage.class);
+                        ConnectMessage connect = tryParseJson(result, ConnectMessage.class);
                         AgentProxy     ap      = new AgentProxy(connect.get_Hostname(), connect.get_Port());
 
                         _AllocationHandler.addAgent(ap);
@@ -106,7 +108,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
                     }
                     case Commands.TASK_DONE:
                     {
-                        TaskMessage msg = _Gson.fromJson(result, TaskMessage.class);
+                        TaskMessage msg = tryParseJson(result, TaskMessage.class);
 
                         taskCompleted(msg.getTask());
 
@@ -114,7 +116,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
                     }
                     case Commands.TASK_UPDATE:
                     {
-                        TaskMessage taskMessage = _Gson.fromJson(result, TaskMessage.class);
+                        TaskMessage taskMessage = tryParseJson(result, TaskMessage.class);
 
                         taskUpdate(taskMessage.getTask());
 
@@ -134,6 +136,22 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 			}
         }
 	}
+
+    private <T> T tryParseJson(String value, Class<T> type)
+    {
+        try
+        {
+            return gson.fromJson(value, type);
+        }
+        catch (JsonSyntaxException e)
+        {
+            System.err.println("Critial error: JsonSyntaxException ===");
+            System.err.println(value);
+            System.err.println("======================================");
+
+            throw e;
+        }
+    }
 
     @Override
     public void taskCompleted(Task task)
