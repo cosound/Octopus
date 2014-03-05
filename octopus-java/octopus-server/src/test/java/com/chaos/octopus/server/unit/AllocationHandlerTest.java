@@ -9,6 +9,7 @@ import com.chaos.octopus.server.AllocationHandler;
 import com.chaos.octopus.commons.exception.DisconnectException;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -71,6 +72,38 @@ public class AllocationHandlerTest
 
         Task actual = job.steps.get(0).tasks.get(0);
         assertSame(task2, actual);
+    }
+
+    @Test
+    public void taskComplete_JobIsComplete_RemoveFromQueue()
+    {
+        AllocationHandler ah = new AllocationHandler();
+        Job job = make_JobWithOneStep();
+        Task task = new Task();
+        task.taskId = "unique id";
+        ah.enqueue(job);
+        assertEquals(1, ah.getQueued());
+        task.set_State(TaskState.Committed);
+
+        ah.taskComplete(task);
+
+        assertEquals(0, ah.getQueued());
+    }
+
+    @Test
+    public void taskComplete_JobIsRolledBack_RemoveFromQueue()
+    {
+        AllocationHandler ah = new AllocationHandler();
+        Job job = make_JobWithOneStep();
+        Task task = new Task();
+        task.taskId = "unique id";
+        task.set_State(TaskState.Rolledback);
+        ah.enqueue(job);
+        assertEquals(1, ah.getQueued());
+
+        ah.taskComplete(task);
+
+        assertEquals(0, ah.getQueued());
     }
 
     private Job make_JobWithOneStep()

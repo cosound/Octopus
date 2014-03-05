@@ -156,7 +156,11 @@ public class OrchestratorImpl implements Orchestrator, Runnable
     @Override
     public void taskCompleted(Task task)
     {
+        Job job = _AllocationHandler.getJob(task);
+
         _AllocationHandler.taskComplete(task);
+
+        _jobsWithUpdates.put(job);
     }
 
     @Override

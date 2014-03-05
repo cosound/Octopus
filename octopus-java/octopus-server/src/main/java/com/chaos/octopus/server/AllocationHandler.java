@@ -59,7 +59,6 @@ public class AllocationHandler implements AutoCloseable
             for (Job job : _Jobs)
             {
 
-
                 for(Task task : job.getTasks())
                 {
                     enqueue(task);
@@ -112,18 +111,25 @@ public class AllocationHandler implements AutoCloseable
 
     public void taskComplete(Task task)
     {
+        taskUpdate(task);
+
         for (AgentProxy agent : getAgents())
         {
             agent.taskCompleted(task);
         }
 
+        Job job = getJob(task);
+
         if(task.get_State() == TaskState.Rolledback)
         {
-            Job job = getJob(task);
             job.status = "failed";
 
+            // todo make sure job is synchronized before being removed
             dequeue(job);
         }
+
+        if(job.isComplete())
+            dequeue(job);
 
         enqueueNextTaskOnAgent();
     }
@@ -135,20 +141,20 @@ public class AllocationHandler implements AutoCloseable
 
     public Job getJob(Task task) throws ArrayIndexOutOfBoundsException
     {
-        Job result = null;
-
         synchronized (_Jobs)
         {
             for(Job job : _Jobs)
             {
                 if(job.containsTask(task.taskId))
-                    result = job;
+                    return job;
             }
         }
 
-        if(result != null)
-            return result;
-
         throw new ArrayIndexOutOfBoundsException("Job containing given task not found");
+    }
+
+    public int getQueued()
+    {
+        return _Jobs.size();
     }
 }

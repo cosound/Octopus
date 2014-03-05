@@ -14,14 +14,23 @@ public class Step
 	{
 		for(Task task : tasks)
 		{
-			if (task.get_State() != TaskState.Committed &&
-			    task.get_State() != TaskState.Rolledback &&
-                task.get_State() != TaskState.Executed)
+			if (task.get_State() != TaskState.Committed && task.get_State() != TaskState.Rolledback && task.get_State() != TaskState.Executed)
                 return false;
 		}
 		
 		return true;
 	}
+
+    public boolean isFinished()
+    {
+        for(Task task : tasks)
+        {
+            if (task.get_State() != TaskState.Committed && task.get_State() != TaskState.Rolledback)
+                return false;
+        }
+
+        return true;
+    }
 
     public boolean validate()
     {

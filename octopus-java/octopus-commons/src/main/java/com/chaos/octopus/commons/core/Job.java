@@ -39,7 +39,7 @@ public class Job
     {
         for(Step step : steps)
         {
-            if(!step.isCompleted()) return false;
+            if(!step.isFinished()) return false;
         }
 
         return true;
