@@ -1,19 +1,15 @@
 package com.chaos.octopus.server;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.ConnectException;
-import java.net.Socket;
 import java.util.*;
 
 import com.chaos.octopus.commons.core.AgentConfigurationMessage;
+import com.chaos.octopus.commons.exception.DisconnectError;
 import com.chaos.octopus.commons.util.Commands;
-import com.chaos.octopus.commons.util.StreamUtilities;
+import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.chaos.octopus.commons.core.Message;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskMessage;
-import com.chaos.octopus.commons.exception.DisconnectException;
 import com.google.gson.Gson;
 
 public class AgentProxy
@@ -24,6 +20,7 @@ public class AgentProxy
     private int               _Port;
     private int               _MaxNumberOfSimultaneousTasks;
     private Map<String, Task> _AllocatedTasks;
+    private NetworkingUtil _network;
 
 	public AgentProxy(String hostname, int port)
 	{
@@ -31,6 +28,7 @@ public class AgentProxy
         _Gson           = new Gson();
         _Hostname       = hostname;
 		_Port           = port;
+        _network = new NetworkingUtil(hostname, port);
         InitializeAgent();
 	}
 
@@ -41,67 +39,12 @@ public class AgentProxy
 
     private void InitializeAgent()
     {
-        InitializeAgent(10);
-    }
-
-    private void InitializeAgent(int retries)
-    {
         String msg = _Gson.toJson(new Message(Commands.LIST_SUPPORTED_PLUGINS));
-        String responseString = sendMessage(msg);
+        String responseString = _network.sendWithReply(msg);
 
         AgentConfigurationMessage response = AgentConfigurationMessage.create(responseString);
 
         InitializeAgent(response);
-    }
-
-
-    private String sendMessage(String msg)
-    {
-        return sendMessage(msg, 10);
-    }
-
-    private String sendMessage(String msg, int retries)
-    {
-        try
-        {
-            try(Socket socket = new Socket(_Hostname, _Port))
-            {
-                OutputStream out = socket.getOutputStream();
-
-                out.write(msg.getBytes());
-                out.flush();
-
-                InputStream in = socket.getInputStream();
-                return StreamUtilities.ReadString(in);
-            }
-
-        }
-        catch (Exception e)
-        {
-            if(retries > 0)
-            {
-                sleep(500);
-                InitializeAgent(--retries);
-            }
-
-            // TODO This exception should be handled at a higher level
-            System.err.println("Couldn't connect to: " + _Hostname + ":" + _Port);
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private void sleep(int millis)
-    {
-        try
-        {
-            Thread.sleep(millis);
-        }
-        catch (InterruptedException e1)
-        {
-
-        }
     }
 
     private void InitializeAgent(AgentConfigurationMessage response)
@@ -123,27 +66,18 @@ public class AgentProxy
 
 	private Object _EnqueueBlock = new Object();
 	
-	public void enqueue(Task task) throws DisconnectException
+	public void enqueue(Task task) throws DisconnectError
     {
 		synchronized (_EnqueueBlock) 
 		{
 			try
 			{
-				try(Socket socket = new Socket(_Hostname, _Port))
-				{
-                    String msg = _Gson.toJson(new TaskMessage(Commands.ENQUEUE_TASK, task));
-					socket.getOutputStream().write(msg.getBytes());
+                String msg = _Gson.toJson(new TaskMessage(Commands.ENQUEUE_TASK, task));
+                String response = _network.sendWithReply(msg);
+                Message parsedResponse = _Gson.fromJson(response, Message.class);
 
-                    Message response = _Gson.fromJson(StreamUtilities.ReadString(socket.getInputStream()), Message.class);
-
-					if(!response.getAction().equals("OK")) throw new IOException("Agent didnt queue task");
-
-                    _AllocatedTasks.put(task.taskId, task);
-				}
-			} 
-			catch (ConnectException e)
-			{
-                throw new DisconnectException("Agent Disconnected", e);
+                if(!parsedResponse.getAction().equals("OK")) throw new IOException("Agent didnt queue task");
+                _AllocatedTasks.put(task.taskId, task);
 			}
             catch (Exception e)
 			{

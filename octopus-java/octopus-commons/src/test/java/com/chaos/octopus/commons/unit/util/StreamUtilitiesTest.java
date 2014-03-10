@@ -2,10 +2,9 @@ package com.chaos.octopus.commons.unit.util;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import org.junit.Test;
 
 import com.chaos.octopus.commons.util.StreamUtilities;
@@ -23,5 +22,4 @@ public class StreamUtilitiesTest
 		
 		assertEquals(expected, result);
 	}
-
 }

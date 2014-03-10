@@ -1,7 +1,7 @@
 package com.chaos.octopus.server;
 
 import com.chaos.octopus.commons.core.*;
-import com.chaos.octopus.commons.exception.DisconnectException;
+import com.chaos.octopus.commons.exception.ConnectException;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
 import com.chaos.octopus.server.synchronization.EnqueueJobs;
@@ -11,7 +11,6 @@ import com.chaos.sdk.AuthenticatedChaosClient;
 import com.chaos.sdk.Chaos;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.MalformedJsonException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -75,6 +74,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 			_socket = new ServerSocket(_port);
 			
 			_thread = new Thread(this);
+            _thread.setName("Orchestrator");
 			_thread.start();
 
             _synchronization.synchronize(10 *1000); // synchronize every 60 seconds
@@ -92,25 +92,24 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 			try
 			{
 				Socket agent = _socket.accept();
-				
 				String result = StreamUtilities.ReadString(agent.getInputStream());
-				
 				Message message = tryParseJson(result, Message.class);
 
                 switch (message.getAction())
                 {
                     case Commands.CONNECT:
                     {
-                    //    try
+                        ConnectMessage connect = tryParseJson(result, ConnectMessage.class);
+
+                        try
                         {
-                            ConnectMessage connect = tryParseJson(result, ConnectMessage.class);
                             AgentProxy ap = new AgentProxy(connect.get_Hostname(), connect.get_Port());
 
                             _AllocationHandler.addAgent(ap);
                         }
-                       // catch (DisconnectException e)
+                        catch (ConnectException e)
                         {
-                            // Don't add agent if connection can't be established
+                            System.err.println("Connection to Agent could not be established, hostname: " + connect.get_Hostname() + ", port: " + connect.get_Port());
                         }
 
                         break;

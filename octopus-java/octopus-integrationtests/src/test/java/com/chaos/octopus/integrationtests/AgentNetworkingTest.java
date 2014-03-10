@@ -38,13 +38,14 @@ public class AgentNetworkingTest
                         return agents.size() == 1;
                     }
                 });
+            assertEquals("Agent should be added", 1, agents.size());
 
             agent.close();
 
             Job job = make_Job();
             orchestrator.enqueue(job);
 
-            assertEquals("Agent should be removed from list after disconnect", agents.size(), 0);
+            assertEquals("Agent should be removed from list after disconnect", 0, agents.size());
         }
     }
 

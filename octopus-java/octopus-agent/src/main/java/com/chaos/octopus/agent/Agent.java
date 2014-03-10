@@ -1,12 +1,15 @@
 package com.chaos.octopus.agent;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.chaos.octopus.commons.core.*;
+import com.chaos.octopus.commons.exception.DisconnectError;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
 import com.google.gson.Gson;
@@ -44,16 +47,34 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
         _currentQueueSize = new AtomicInteger(0);
     	_isRunning         = false;
     	_thread            = new Thread(this);
+        _thread.setName("Agent");
     	_PluginDefinitions = new HashMap<>();
     	_executionHandler = new ExecutionHandler(this, parrallelism);
     }
 
 	public void open() throws IOException 
 	{
-		_orchestrator.open();
-		_Server = new ServerSocket(_orchestrator.get_localListenPort());
-		_isRunning = true;
-		_thread.start();
+		try
+        {
+            _orchestrator.open();
+
+            _Server = new ServerSocket(_orchestrator.get_localListenPort());
+            _isRunning = true;
+            _thread.start();
+        }
+        catch (DisconnectError e)
+        {
+            System.out.println(Thread.currentThread().getId()+ " AGENT DISCONNECTED");
+            try
+            {
+                close();
+            }
+            catch (Exception ex)
+            {
+                e.printStackTrace();
+            }
+        }
+
 	}
 
 	public void run() 
@@ -65,22 +86,26 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 				// todo refactor so the implementation doesn't depend on the socket
 				try(Socket socket = _Server.accept())
 				{
-					String message = StreamUtilities.ReadString(socket.getInputStream());
+                    String message = StreamUtilities.ReadString(socket.getInputStream());
 
                     Message msg = _Gson.fromJson(message, Message.class);
 
-					switch (msg.getAction())
+                    OutputStream out = socket.getOutputStream();
+
+                    switch (msg.getAction())
 					{
 						case Commands.LIST_SUPPORTED_PLUGINS:
                             AgentConfigurationMessage response = createAgentConfigurationMessage();
 
-							socket.getOutputStream().write(response.toJson().getBytes());
+                            PrintStream ps = new PrintStream(out);
+                            ps.println(response.toJson());
 							break;
 						case Commands.ENQUEUE_TASK:
                             TaskMessage enqueueTask = _Gson.fromJson(message, TaskMessage.class);
 
 							enqueue(enqueueTask.getTask());
-							socket.getOutputStream().write(_Gson.toJson(new Message("OK")).getBytes());
+
+                            new PrintStream(out).println(_Gson.toJson(new Message("OK")));
 							break;
 						default:
 							break;

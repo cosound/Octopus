@@ -1,11 +1,11 @@
 package com.chaos.octopus.agent;
 
-import java.io.IOException;
 import java.net.*;
 import java.net.ConnectException;
 
 import com.chaos.octopus.commons.core.*;
 import com.chaos.octopus.commons.util.Commands;
+import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.google.gson.Gson;
 
 public class OrchestratorProxy implements Orchestrator
@@ -15,6 +15,7 @@ public class OrchestratorProxy implements Orchestrator
     private int _localListenPort;
     private Gson   _Gson;
     private String _localHostAddress;
+    private NetworkingUtil _network;
 
     public OrchestratorProxy(String hostname, int port, int listenPort)
 	{
@@ -23,6 +24,7 @@ public class OrchestratorProxy implements Orchestrator
 		_Port       = port;
         _localHostAddress = getHostAddress();
 		_localListenPort = listenPort;
+        _network = new NetworkingUtil(hostname, port);
 	}
 
     private String getHostAddress()
@@ -41,18 +43,18 @@ public class OrchestratorProxy implements Orchestrator
         }
     }
 
-    public void open()
-	{
+    public void open() throws ConnectException
+    {
         ConnectMessage msg = new ConnectMessage(_localHostAddress, _localListenPort);
 
-        SendMessage(msg);
+        _network.send(msg.toJson());
 	}
 
 	public void taskCompleted(Task task)
 	{
         TaskMessage msg = new TaskMessage(Commands.TASK_DONE, task);
 
-        SendMessage(msg);
+        _network.send(msg.toJson());
     }
 
     @Override
@@ -60,27 +62,7 @@ public class OrchestratorProxy implements Orchestrator
     {
         TaskMessage msg = new TaskMessage(Commands.TASK_UPDATE, task);
 
-        SendMessage(msg);
-    }
-
-    private void SendMessage(Message msg)
-    {
-        try
-        {
-            try(Socket socket = new Socket(_Hostname, _Port))
-            {
-                socket.getOutputStream().write(msg.toJson().getBytes());
-            }
-        }
-        catch(ConnectException e)
-        {
-            throw new com.chaos.octopus.commons.exception.ConnectException("Connection to Orchestrator could not be established, check hostname and port", e);
-        }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        _network.send(msg.toJson());
     }
 
 	@Override

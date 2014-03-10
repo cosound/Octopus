@@ -1,38 +1,30 @@
 package com.chaos.octopus.commons.util;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class StreamUtilities
 {
 
 	public static String ReadString(InputStream stream) throws IOException, InterruptedException
 	{
-		for(int i = 30000; i > 0; i--)
+        InputStreamReader in = new InputStreamReader(stream);
+        BufferedReader reader = new BufferedReader(in);
+
+        for(int i = 5000; i > 0; i--)
 		{
-			int available = stream.available();
-
-            if(available > 0)
-            {
-                StringBuilder sb = new StringBuilder();
-
-                while(available > 0)
-                {
-                    byte[] buffer = new byte[available];
-
-                    int read = stream.read(buffer);
-
-                    sb.append(new String(buffer, 0, read));
-                    available = stream.available();
-                }
-
-                return sb.toString();
-            }
-
-			Thread.sleep(1);
+            if(!reader.ready()) Thread.sleep(1);
 		}
-		
-		throw new IOException("no data received");
+
+        StringBuilder builder = new StringBuilder();
+        String line = null;
+
+        while(reader.ready())
+        {
+            line = reader.readLine();
+            builder.append(line);
+        }
+
+        return builder.toString();
 	}
 
 }
