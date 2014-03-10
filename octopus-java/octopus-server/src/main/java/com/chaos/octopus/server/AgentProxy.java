@@ -2,6 +2,7 @@ package com.chaos.octopus.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.*;
@@ -24,7 +25,7 @@ public class AgentProxy
     private int               _MaxNumberOfSimultaneousTasks;
     private Map<String, Task> _AllocatedTasks;
 
-	public AgentProxy(String hostname, int port) 
+	public AgentProxy(String hostname, int port)
 	{
         _AllocatedTasks = new HashMap<>();
         _Gson           = new Gson();
@@ -45,29 +46,61 @@ public class AgentProxy
 
     private void InitializeAgent(int retries)
     {
+        String msg = _Gson.toJson(new Message(Commands.LIST_SUPPORTED_PLUGINS));
+        String responseString = sendMessage(msg);
+
+        AgentConfigurationMessage response = AgentConfigurationMessage.create(responseString);
+
+        InitializeAgent(response);
+    }
+
+
+    private String sendMessage(String msg)
+    {
+        return sendMessage(msg, 10);
+    }
+
+    private String sendMessage(String msg, int retries)
+    {
         try
         {
-            // todo optimize by only sleeping if retry is necessary
-            Thread.sleep(500);
-
             try(Socket socket = new Socket(_Hostname, _Port))
             {
-                String msg = _Gson.toJson(new Message(Commands.LIST_SUPPORTED_PLUGINS));
-                socket.getOutputStream().write(msg.getBytes());
+                OutputStream out = socket.getOutputStream();
 
-                AgentConfigurationMessage response = AgentConfigurationMessage.create(socket.getInputStream());
+                out.write(msg.getBytes());
+                out.flush();
 
-                InitializeAgent(response);
+                InputStream in = socket.getInputStream();
+                return StreamUtilities.ReadString(in);
             }
+
         }
         catch (Exception e)
         {
             if(retries > 0)
+            {
+                sleep(500);
                 InitializeAgent(--retries);
+            }
 
             // TODO This exception should be handled at a higher level
             System.err.println("Couldn't connect to: " + _Hostname + ":" + _Port);
             e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private void sleep(int millis)
+    {
+        try
+        {
+            Thread.sleep(millis);
+        }
+        catch (InterruptedException e1)
+        {
+
         }
     }
 

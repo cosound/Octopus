@@ -8,7 +8,7 @@ public class StreamUtilities
 
 	public static String ReadString(InputStream stream) throws IOException, InterruptedException
 	{
-		for(int i = 1000; i > 0; i--)
+		for(int i = 30000; i > 0; i--)
 		{
 			int available = stream.available();
 

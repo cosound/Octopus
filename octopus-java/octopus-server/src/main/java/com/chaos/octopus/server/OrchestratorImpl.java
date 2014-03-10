@@ -1,6 +1,7 @@
 package com.chaos.octopus.server;
 
 import com.chaos.octopus.commons.core.*;
+import com.chaos.octopus.commons.exception.DisconnectException;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
 import com.chaos.octopus.server.synchronization.EnqueueJobs;
@@ -100,10 +101,18 @@ public class OrchestratorImpl implements Orchestrator, Runnable
                 {
                     case Commands.CONNECT:
                     {
-                        ConnectMessage connect = tryParseJson(result, ConnectMessage.class);
-                        AgentProxy     ap      = new AgentProxy(connect.get_Hostname(), connect.get_Port());
+                    //    try
+                        {
+                            ConnectMessage connect = tryParseJson(result, ConnectMessage.class);
+                            AgentProxy ap = new AgentProxy(connect.get_Hostname(), connect.get_Port());
 
-                        _AllocationHandler.addAgent(ap);
+                            _AllocationHandler.addAgent(ap);
+                        }
+                       // catch (DisconnectException e)
+                        {
+                            // Don't add agent if connection can't be established
+                        }
+
                         break;
                     }
                     case Commands.TASK_DONE:

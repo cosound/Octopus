@@ -20,11 +20,9 @@ public class AgentConfigurationMessage extends Message
 
     }
 
-    public static AgentConfigurationMessage create(InputStream stream) throws IOException, InterruptedException
+    public static AgentConfigurationMessage create(String config)
     {
-        String responseString = StreamUtilities.ReadString(stream);
-
-        return new Gson().fromJson(responseString, AgentConfigurationMessage.class);
+        return new Gson().fromJson(config, AgentConfigurationMessage.class);
     }
 
     public int getNumberOfSimulataniousTasks() {
