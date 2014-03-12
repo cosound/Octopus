@@ -70,7 +70,6 @@ public class CommandLinePlugin implements Plugin, PluginDefinition
                 if(m.find())
                 {
                     getTask().progress = Double.parseDouble(m.group(1));
-                    System.out.println ("progress: " + getTask().progress);
                 }
 
                 r = Pattern.compile("<STATUS>(.*?)</STATUS>", Pattern.CASE_INSENSITIVE);
@@ -79,7 +78,6 @@ public class CommandLinePlugin implements Plugin, PluginDefinition
                 if(m.find())
                 {
                     setOrAppend("status", m.group(1));
-                    System.out.println ("status: " + m.group(1));
                 }
 
                 r = Pattern.compile("<WARNING>(.*?)</WARNING>", Pattern.CASE_INSENSITIVE);
@@ -108,7 +106,7 @@ public class CommandLinePlugin implements Plugin, PluginDefinition
     private void setOrAppend(String key, String value)
     {
         if(getTask().properties.containsKey(key))
-            value = getTask().properties.get(key) + "\n" + value;
+            value = getTask().properties.get(key) + " [###] " + value;
 
         getTask().properties.put(key, value);
     }

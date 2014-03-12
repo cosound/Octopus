@@ -2,7 +2,6 @@ package com.chaos.octopus.agent;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -11,8 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.chaos.octopus.commons.core.*;
 import com.chaos.octopus.commons.exception.DisconnectError;
 import com.chaos.octopus.commons.util.Commands;
+import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.chaos.octopus.commons.util.StreamUtilities;
-import com.google.gson.Gson;
 
 /**
  * User: Jesper Fyhr Knudsen
@@ -28,8 +27,7 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
     private ExecutionHandler _executionHandler;
     private Orchestrator _orchestrator;
     private ServerSocket _Server;
-    private Gson _Gson;
-    
+
     public Agent(String orchestratorHostname, int orchestratorPort, int listenPort)
     {
     	this(new OrchestratorProxy(orchestratorHostname, orchestratorPort, listenPort), 4);
@@ -42,7 +40,6 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
     
     public Agent(Orchestrator orchestrator, int parrallelism)
     {
-        _Gson         = new Gson();
     	_orchestrator = orchestrator;
         _currentQueueSize = new AtomicInteger(0);
     	_isRunning         = false;
@@ -88,7 +85,7 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 				{
                     String message = StreamUtilities.ReadString(socket.getInputStream());
 
-                    Message msg = _Gson.fromJson(message, Message.class);
+                    Message msg = StreamUtilities.ReadJson(message, Message.class);
 
                     OutputStream out = socket.getOutputStream();
 
@@ -97,15 +94,14 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 						case Commands.LIST_SUPPORTED_PLUGINS:
                             AgentConfigurationMessage response = createAgentConfigurationMessage();
 
-                            PrintStream ps = new PrintStream(out);
-                            ps.println(response.toJson());
+                            NetworkingUtil.send(response.toJson(), out);
 							break;
 						case Commands.ENQUEUE_TASK:
-                            TaskMessage enqueueTask = _Gson.fromJson(message, TaskMessage.class);
+                            TaskMessage enqueueTask = StreamUtilities.ReadJson(message, TaskMessage.class);
 
 							enqueue(enqueueTask.getTask());
 
-                            new PrintStream(out).println(_Gson.toJson(new Message("OK")));
+                            NetworkingUtil.send(new Message("OK").toJson(), out);
 							break;
 						default:
 							break;

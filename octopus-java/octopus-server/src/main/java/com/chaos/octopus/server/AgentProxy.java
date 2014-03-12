@@ -10,14 +10,12 @@ import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.chaos.octopus.commons.core.Message;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskMessage;
+import com.chaos.octopus.commons.util.StreamUtilities;
 import com.google.gson.Gson;
 
 public class AgentProxy
 {
-    private Gson              _Gson;
     private List<String>      _SupportedPlugins;
-    private String            _Hostname;
-    private int               _Port;
     private int               _MaxNumberOfSimultaneousTasks;
     private Map<String, Task> _AllocatedTasks;
     private NetworkingUtil _network;
@@ -25,9 +23,6 @@ public class AgentProxy
 	public AgentProxy(String hostname, int port)
 	{
         _AllocatedTasks = new HashMap<>();
-        _Gson           = new Gson();
-        _Hostname       = hostname;
-		_Port           = port;
         _network = new NetworkingUtil(hostname, port);
         InitializeAgent();
 	}
@@ -39,7 +34,7 @@ public class AgentProxy
 
     private void InitializeAgent()
     {
-        String msg = _Gson.toJson(new Message(Commands.LIST_SUPPORTED_PLUGINS));
+        String msg = new Message(Commands.LIST_SUPPORTED_PLUGINS).toJson();
         String responseString = _network.sendWithReply(msg);
 
         AgentConfigurationMessage response = AgentConfigurationMessage.create(responseString);
@@ -72,9 +67,9 @@ public class AgentProxy
 		{
 			try
 			{
-                String msg = _Gson.toJson(new TaskMessage(Commands.ENQUEUE_TASK, task));
+                String msg = new TaskMessage(Commands.ENQUEUE_TASK, task).toJson();
                 String response = _network.sendWithReply(msg);
-                Message parsedResponse = _Gson.fromJson(response, Message.class);
+                Message parsedResponse = StreamUtilities.ReadJson(response, Message.class);
 
                 if(!parsedResponse.getAction().equals("OK")) throw new IOException("Agent didnt queue task");
                 _AllocatedTasks.put(task.taskId, task);

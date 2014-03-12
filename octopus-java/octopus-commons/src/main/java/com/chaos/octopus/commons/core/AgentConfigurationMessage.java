@@ -1,10 +1,7 @@
 package com.chaos.octopus.commons.core;
 
-import com.chaos.octopus.commons.util.StreamUtilities;
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 /**

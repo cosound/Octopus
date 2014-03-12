@@ -15,11 +15,13 @@ public class AuthenticatedChaosClient
 {
     private ChaosGateway gateway;
     private String sessionId;
+    private final Gson gson;
 
     public AuthenticatedChaosClient(ChaosGateway gateway, String sessionId)
     {
         this.gateway = gateway;
         this.sessionId = sessionId;
+        gson = new Gson();
     }
 
     public McmObject objectCreate(String guid, int objectTypeId, int folderId) throws IOException
@@ -41,7 +43,6 @@ public class AuthenticatedChaosClient
     {
         PortalResponse response = gateway.call("GET", "v6/Job/GetIncomplete", "sessionGUID=" + sessionId);
         ArrayList<Job> jobs = new ArrayList<>();
-        Gson gson = new Gson();
 
         for(HashMap<String, Object> job : response.Body.getResults())
         {
@@ -61,8 +62,6 @@ public class AuthenticatedChaosClient
 
     public void jobSet(Iterable<Job> jobs) throws IOException
     {
-        Gson gson = new Gson();
-
         for(Job job : jobs)
         {
             job.status = job.isComplete() ? "complete" : "inprogress";

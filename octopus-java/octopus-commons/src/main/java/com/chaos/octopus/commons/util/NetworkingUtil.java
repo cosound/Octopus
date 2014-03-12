@@ -1,9 +1,7 @@
 package com.chaos.octopus.commons.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import javax.net.SocketFactory;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
 
@@ -37,11 +35,41 @@ public class NetworkingUtil
         {
             try(Socket socket = new Socket(_hostname, _port))
             {
-                send(message, socket);
+                OutputStream outputStream = socket.getOutputStream();
+                send(message, outputStream);
 
-                if(handleResponse) return receive(socket);
+                if(!handleResponse) return null;
+
+                return StreamUtilities.ReadString(socket.getInputStream());
+
+//                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+//
+//                out.write(message);
+//                out.newLine();
+//
+//
+//
+//                StringBuffer result = new StringBuffer();
+//
+//                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//                String inputLine;
+//
+//                while ((inputLine = in.readLine()) != null)
+//                    result.append(inputLine);
+//
+//                return result.toString();
+
+//                OutputStream out = socket.getOutputStream();
+//                PrintStream ps = new PrintStream(out);
+//                ps.println(message);
+//                ps.flush();
+//
+//                if(handleResponse)
+//                {
+//                    InputStream in = socket.getInputStream();
+//                    return StreamUtilities.ReadString(in);
+//                }
             }
-
         }
         catch (ConnectException e)
         {
@@ -63,17 +91,13 @@ public class NetworkingUtil
         return null;
     }
 
-    private void send(String message, Socket socket) throws IOException
+    public static void send(String message, OutputStream outputStream) throws IOException
     {
-        OutputStream out = socket.getOutputStream();
-        PrintStream ps = new PrintStream(out);
-        ps.println(message);
-    }
-
-    private String receive(Socket socket) throws IOException, InterruptedException
-    {
-        InputStream in = socket.getInputStream();
-        return StreamUtilities.ReadString(in);
+        DataOutputStream out = new DataOutputStream(outputStream);
+        byte[] buffer = message.getBytes();
+        out.writeInt(buffer.length);
+        out.write(buffer);
+        out.flush();
     }
 
     private void sleep(int millis)

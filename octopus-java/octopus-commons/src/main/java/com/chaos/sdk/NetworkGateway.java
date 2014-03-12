@@ -3,10 +3,7 @@ package com.chaos.sdk;
 import com.chaos.sdk.v6.dto.PortalResponse;
 import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -19,10 +16,12 @@ import java.net.URLConnection;
 public class NetworkGateway implements ChaosGateway
 {
     private String _Hostname;
+    private final Gson gson;
 
     public NetworkGateway(String hostname)
     {
         _Hostname = hostname;
+        gson = new Gson();
     }
 
     @Override
@@ -30,7 +29,6 @@ public class NetworkGateway implements ChaosGateway
     {
         if("POST".equals(method)) return callPost(path, query);
 
-        Gson gson = new Gson();
         URL  url  = new URL(_Hostname + "/" + path + "?" + query + "&format=json2");
         StringBuffer result = new StringBuffer();
 
@@ -44,8 +42,6 @@ public class NetworkGateway implements ChaosGateway
             while ((inputLine = in.readLine()) != null)
                 result.append(inputLine);
         }
-        System.out.println(url);
-        System.out.println(result.toString());
 
         return gson.fromJson(result.toString(), PortalResponse.class);
     }
@@ -53,7 +49,6 @@ public class NetworkGateway implements ChaosGateway
     public PortalResponse callPost(String path, String query) throws IOException
     {
         query += "&format=json2";
-        Gson gson = new Gson();
         URL  url  = new URL(_Hostname + "/" + path);
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -75,10 +70,6 @@ public class NetworkGateway implements ChaosGateway
             while ((inputLine = in.readLine()) != null)
                 result.append(inputLine);
         }
-        System.out.println(url);
-        System.out.println(query);
-        System.out.println(result.toString());
-
         return gson.fromJson(result.toString(), PortalResponse.class);
     }
 }

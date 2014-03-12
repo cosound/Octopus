@@ -29,6 +29,10 @@ public class Daemon implements org.apache.commons.daemon.Daemon
     @Override
     public void start() throws Exception
     {
+        System.err.println("HeapSize: " + Runtime.getRuntime().totalMemory());
+        System.err.println("HeapMaxSize: " + Runtime.getRuntime().maxMemory());
+        System.err.println("HeapFreeSize: " + Runtime.getRuntime().freeMemory());
+
         config = new OctopusConfiguration();
 
         if(config.getIsAgent())

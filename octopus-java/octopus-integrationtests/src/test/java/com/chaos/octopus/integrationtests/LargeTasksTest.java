@@ -46,7 +46,6 @@ public class LargeTasksTest {
         Job job = new Job();
         Step step = new Step();
         step.tasks.add(make_TaskWithALargeProperty());
-        step.tasks.add(make_TaskWithALargeProperty());
         job.steps.add(step);
 
         return job;

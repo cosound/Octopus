@@ -10,18 +10,12 @@ import com.google.gson.Gson;
 
 public class OrchestratorProxy implements Orchestrator
 {
-	private String _Hostname;
-    private int    _Port;
     private int _localListenPort;
-    private Gson   _Gson;
     private String _localHostAddress;
     private NetworkingUtil _network;
 
     public OrchestratorProxy(String hostname, int port, int listenPort)
 	{
-        _Gson       = new Gson();
-		_Hostname   = hostname;
-		_Port       = port;
         _localHostAddress = getHostAddress();
 		_localListenPort = listenPort;
         _network = new NetworkingUtil(hostname, port);

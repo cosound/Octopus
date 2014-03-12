@@ -125,7 +125,6 @@ public class AllocationHandler implements AutoCloseable
         {
             job.status = "failed";
 
-            // todo make sure job is synchronized before being removed
             dequeue(job);
         }
 
