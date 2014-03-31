@@ -1,11 +1,14 @@
 package com.chaos.octopus.server.synchronization;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Synchronization extends TimerTask
 {
     private List<SynchronizationTask> tasks;
-    private Timer timer;
+    private ScheduledExecutorService timer;
 
     public Synchronization(SynchronizationTask... tasks)
     {
@@ -13,23 +16,19 @@ public class Synchronization extends TimerTask
 
         for(SynchronizationTask task : tasks)
         {
-            this.tasks.add(task);
+            addSynchronizationTask(task);
         }
     }
 
-    public void synchronize()
+    public void addSynchronizationTask(SynchronizationTask task)
     {
-        for(SynchronizationTask task : tasks)
-        {
-            task.action();
-        }
+        tasks.add(task);
     }
 
     public void synchronize(int period)
     {
-        timer = new Timer("synchronization", true);
-
-        timer.schedule(this, 0, period);
+        timer = Executors.newSingleThreadScheduledExecutor();
+        timer.scheduleWithFixedDelay(this, 0, period, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -38,8 +37,11 @@ public class Synchronization extends TimerTask
         synchronize();
     }
 
-    public void addSynchronizationTask(SynchronizationTask task)
+    public void synchronize()
     {
-        tasks.add(task);
+        for(SynchronizationTask task : tasks)
+        {
+            task.action();
+        }
     }
 }
