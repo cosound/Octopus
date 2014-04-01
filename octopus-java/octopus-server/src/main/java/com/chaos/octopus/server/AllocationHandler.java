@@ -106,8 +106,8 @@ public class AllocationHandler implements AutoCloseable
     {
         Job job = getJob(task);
 
-        job.replaceTask(task);
-
+        if(!job.isComplete())
+            job.replaceTask(task);
     }
 
     public void taskComplete(Task task)

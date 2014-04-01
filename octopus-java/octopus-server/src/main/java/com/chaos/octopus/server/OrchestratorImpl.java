@@ -104,6 +104,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
                         catch (ConnectException e)
                         {
                             System.err.println("Connection to Agent could not be established, hostname: " + connect.get_Hostname() + ", port: " + connect.get_Port());
+                            e.printStackTrace();
                         }
 
                         break;

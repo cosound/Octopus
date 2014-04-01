@@ -29,9 +29,9 @@ public class ExecutionSlot implements Runnable
             onTaskUpdated(_plugin.getTask());
 			_plugin.execute();
             _plugin.getTask().set_State(TaskState.Executed);
-            onTaskUpdated(_plugin.getTask());
+            //onTaskUpdated(_plugin.getTask());
             _plugin.getTask().set_State(TaskState.Committing);
-            onTaskUpdated(_plugin.getTask());
+            //onTaskUpdated(_plugin.getTask());
 			_plugin.commit();
             _plugin.getTask().set_State(TaskState.Committed);
             onTaskUpdated(_plugin.getTask());
