@@ -67,7 +67,7 @@ public class Step
         {
             Task task = tasks.get(i);
 
-            if(task.taskId.equals(taskId))
+            if(task.taskId.equals(taskId) && task.get_State() != TaskState.Committed)
                 tasks.set(i, replace);
         }
     }
