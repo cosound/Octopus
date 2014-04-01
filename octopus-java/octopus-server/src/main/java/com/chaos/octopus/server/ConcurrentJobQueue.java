@@ -3,33 +3,22 @@ package com.chaos.octopus.server;
 import com.chaos.octopus.commons.core.Job;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ConcurrentJobQueue
 {
-    private List<Job> _jobs;
-
+    private HashMap<String, Job> _hashJobs;
     public ConcurrentJobQueue()
     {
-        _jobs = new ArrayList<>();
+        _hashJobs = new HashMap<>();
     }
 
     public void put(Job job)
     {
-        synchronized (_jobs)
+        synchronized (_hashJobs)
         {
-            for(int i = 0; i < _jobs.size(); i++)
-            {
-                Job j = _jobs.get(i);
-
-                if(j.id.equals(job.id))
-                {
-                    _jobs.set(i, job);
-                    return;
-                }
-            }
-
-            _jobs.add(job);
+            _hashJobs.put(job.id, job);
         }
     }
 
@@ -37,14 +26,11 @@ public class ConcurrentJobQueue
     {
         ArrayList<Job> result = new ArrayList<>();
 
-        synchronized (_jobs)
+        synchronized (_hashJobs.values())
         {
-            while(_jobs.size() != 0)
-            {
-                Job job = _jobs.get(0);
-                result.add(job);
-                _jobs.remove(0);
-            }
+            result.addAll(_hashJobs.values());
+
+            _hashJobs.clear();
         }
 
         return result;
