@@ -44,4 +44,9 @@ public class Synchronization extends TimerTask
             task.action();
         }
     }
+
+    public void stop()
+    {
+        if(timer != null) timer.shutdownNow();
+    }
 }

@@ -49,8 +49,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 
         Chaos chaos = new Chaos(config.getChaosApiUrl());
         AuthenticatedChaosClient client = chaos.authenticate(config.getChaosApiKey());
-        sync.addSynchronizationTask(new EnqueueJobs(leader, client));
         sync.addSynchronizationTask(new UpdateJob(queue, client));
+        sync.addSynchronizationTask(new EnqueueJobs(leader, client));
 
         return leader;
     }
@@ -142,21 +142,33 @@ public class OrchestratorImpl implements Orchestrator, Runnable
     @Override
     public void taskCompleted(Task task)
     {
-        Job job = _AllocationHandler.getJob(task);
+        try
+        {
+            Job job = _AllocationHandler.getJob(task);
+            _jobsWithUpdates.put(job);
 
-        _AllocationHandler.taskComplete(task);
-
-        _jobsWithUpdates.put(job);
+            _AllocationHandler.taskComplete(task);
+        }
+        catch (ArrayIndexOutOfBoundsException e)
+        {
+            // No job found
+        }
     }
 
     @Override
     public void taskUpdate(Task task)
     {
-        Job job = _AllocationHandler.getJob(task);
+        try
+        {
+            Job job = _AllocationHandler.getJob(task);
+            _jobsWithUpdates.put(job);
 
-        _AllocationHandler.taskUpdate(task);
-
-        _jobsWithUpdates.put(job);
+            _AllocationHandler.taskUpdate(task);
+        }
+        catch (ArrayIndexOutOfBoundsException e)
+        {
+            // No job found
+        }
     }
 
     @Override
@@ -168,6 +180,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable
     @Override
     public void enqueue(Job job)
     {
+        if(_jobsWithUpdates.contains(job.id)) return;
+
         _AllocationHandler.enqueue(job);
     }
 
@@ -177,6 +191,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 		
 		if(_socket != null) _socket.close();
         if(_AllocationHandler != null) _AllocationHandler.close();
+        if(_synchronization != null) _synchronization.stop();
 	}
 
 	public List<String> parsePluginList(byte[] data)

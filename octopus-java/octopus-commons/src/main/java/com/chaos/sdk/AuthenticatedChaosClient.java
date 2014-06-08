@@ -64,10 +64,18 @@ public class AuthenticatedChaosClient
     {
         for(Job job : jobs)
         {
-            job.status = job.isComplete() ? "complete" : "inprogress";
-
-            String data = gson.toJson(job);
-            PortalResponse response = gateway.call("POST", "v6/Job/Set", "sessionGUID=" + sessionId + "&data=" + data);
+            jobSet(job);
         }
+    }
+
+    public void jobSet(Job job) throws IOException
+    {
+        if(job.validate())
+            job.status = job.isComplete() ? "complete" : "inprogress";
+        else
+            job.status = "Invalid Job";
+
+        String data = gson.toJson(job);
+        PortalResponse response = gateway.call("POST", "v6/Job/Set", "sessionGUID=" + sessionId + "&data=" + data);
     }
 }

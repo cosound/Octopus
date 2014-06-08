@@ -6,6 +6,7 @@ import com.chaos.octopus.agent.Agent;
 import com.chaos.octopus.agent.plugin.ChaosPlugin;
 import com.chaos.octopus.agent.plugin.CommandLinePlugin;
 import com.chaos.octopus.commons.core.Job;
+import com.chaos.octopus.commons.core.OctopusConfiguration;
 import com.chaos.octopus.commons.core.TestPlugin;
 import com.chaos.octopus.server.*;
 import com.google.gson.*;
@@ -22,9 +23,19 @@ public class Program
         }
 
 		System.out.println("Initializing Octopus...");
-		
-		try(OrchestratorImpl leader = new OrchestratorImpl(port);
-		    Agent agent = new Agent("localhost", port, port +1))
+
+        OctopusConfiguration orcConfig = new OctopusConfiguration();
+        orcConfig.setChaosApiUrl("http://api.cosound.chaos-systems.com/v6/");
+        orcConfig.setChaosApiKey("b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270");
+        orcConfig.setPort(2500);
+
+        OctopusConfiguration agentConfig = new OctopusConfiguration();
+        agentConfig.setPort(2501);
+        agentConfig.setOrchestratorIp("127.0.0.1");
+        agentConfig.setOrchestratorPort(2500);
+
+		try(OrchestratorImpl leader = OrchestratorImpl.create(orcConfig);
+		    Agent agent = Agent.create(agentConfig))
 		{
 			agent.addPlugin(new TestPlugin());
             agent.addPlugin(new CommandLinePlugin());

@@ -38,7 +38,7 @@ public class StepTest extends TestBase
 		step.tasks.add(task2);
 		task1.set_State(TaskState.Committed);
 
-        Iterator<Task> results = step.getTasks().iterator();
+        Iterator<Task> results = step.getTasks(TaskState.isQueueable()).iterator();
 
         assertEquals(task2, results.next());
         assertFalse(results.hasNext());

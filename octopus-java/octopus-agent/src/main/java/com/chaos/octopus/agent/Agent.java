@@ -49,6 +49,11 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
     	_executionHandler = new ExecutionHandler(this, parrallelism);
     }
 
+    public static Agent create(OctopusConfiguration config)
+    {
+        return new Agent(config.getOrchestratorIp(), config.getOrchestratorPort(), config.getListeningPort(), config.getNumberOfParallelTasks());
+    }
+
 	public void open() throws IOException 
 	{
 		try

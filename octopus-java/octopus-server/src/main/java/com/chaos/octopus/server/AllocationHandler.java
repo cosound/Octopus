@@ -1,10 +1,7 @@
 package com.chaos.octopus.server;
 
-import com.chaos.octopus.commons.core.Job;
-import com.chaos.octopus.commons.core.Task;
-import com.chaos.octopus.commons.core.TaskState;
+import com.chaos.octopus.commons.core.*;
 import com.chaos.octopus.commons.exception.ConnectException;
-import com.chaos.octopus.commons.exception.DisconnectError;
 
 import java.util.ArrayList;
 
@@ -39,6 +36,9 @@ public class AllocationHandler implements AutoCloseable
                 if(j.id.equals(job.id)) return;
             }
 
+            job.print();
+            job.resume();
+
             _Jobs.add(job);
 
             enqueueNextTaskOnAgent();
@@ -59,8 +59,7 @@ public class AllocationHandler implements AutoCloseable
         {
             for (Job job : _Jobs)
             {
-
-                for(Task task : job.getTasks())
+                for(Task task : job.getTasks(TaskState.isQueueable()))
                 {
                     enqueue(task);
                 }

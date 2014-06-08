@@ -6,12 +6,6 @@ import com.chaos.octopus.agent.plugin.CommandLinePlugin;
 import com.chaos.octopus.commons.core.OctopusConfiguration;
 import com.chaos.octopus.commons.core.TestPlugin;
 import com.chaos.octopus.server.OrchestratorImpl;
-import com.chaos.octopus.server.synchronization.EnqueueJobs;
-import com.chaos.octopus.server.synchronization.Synchronization;
-import com.chaos.octopus.server.synchronization.UpdateJob;
-import com.chaos.sdk.AuthenticatedChaosClient;
-import com.chaos.sdk.Chaos;
-import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
 
@@ -29,15 +23,11 @@ public class Daemon implements org.apache.commons.daemon.Daemon
     @Override
     public void start() throws Exception
     {
-        System.err.println("HeapSize: " + Runtime.getRuntime().totalMemory());
-        System.err.println("HeapMaxSize: " + Runtime.getRuntime().maxMemory());
-        System.err.println("HeapFreeSize: " + Runtime.getRuntime().freeMemory());
-
         config = new OctopusConfiguration();
 
         if(config.getIsAgent())
         {
-            agent = new Agent(config.getOrchestratorIp(), config.getOrchestratorPort(), config.getListeningPort(), config.getNumberOfParallelTasks());
+            agent = Agent.create(config);
             agent.addPlugin(new TestPlugin());
             agent.addPlugin(new CommandLinePlugin());
             agent.addPlugin(new ChaosPlugin());

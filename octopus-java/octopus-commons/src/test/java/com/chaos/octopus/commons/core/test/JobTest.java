@@ -6,6 +6,7 @@ import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.commons.core.Step;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
+import com.google.gson.Gson;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -41,7 +42,7 @@ public class JobTest extends TestBase
         step.tasks.add(task2);
         task1.set_State(TaskState.Queued);
 
-        Iterator<Task> results = job.getTasks().iterator();
+        Iterator<Task> results = job.getTasks(TaskState.isQueueable()).iterator();
 
         assertEquals(task2, results.next());
         assertFalse(results.hasNext());
@@ -61,10 +62,10 @@ public class JobTest extends TestBase
         step1.tasks.add(task1);
         step1.tasks.add(task2);
         step2.tasks.add(task3);
-        task1.set_State(TaskState.Executed);
-        task2.set_State(TaskState.Executed);
+        task1.set_State(TaskState.Committed);
+        task2.set_State(TaskState.Committed);
 
-        Iterator<Task> results = job.getTasks().iterator();
+        Iterator<Task> results = job.getTasks(TaskState.isQueueable()).iterator();
 
         assertEquals(task3, results.next());
         assertFalse(results.hasNext());
@@ -87,11 +88,11 @@ public class JobTest extends TestBase
 		step2.tasks.add(task3);
 		step2.tasks.add(task4);
 		task1.set_State(TaskState.Committed);
-		task2.set_State(TaskState.Executing);
+		task2.set_State(TaskState.Rolledback);
 
-        Iterator<Task> results = job.getTasks().iterator();
+        Iterator<Task> results = job.getTasks(TaskState.isQueueable()).iterator();
 
-		assertFalse(results.hasNext());
+        assertFalse(results.hasNext());
 	}
 
     @Test
@@ -137,7 +138,7 @@ public class JobTest extends TestBase
     }
 
     @Test
-    public void isComplete_AllStepsAreExecuted_ReturnFalse()
+    public void isComplete_AllStepsAreExecuted_ReturnTrue()
     {
         Job  job   = new Job();
         Step step1 = new Step();
@@ -153,7 +154,7 @@ public class JobTest extends TestBase
 
         boolean result = job.isComplete();
 
-        assertFalse(result);
+        assertTrue(result);
     }
 
     @Test
@@ -295,4 +296,33 @@ public class JobTest extends TestBase
         assertSame(task2, actual);
     }
 
+    @Test
+    public void validate_GivenBadlyFormattetJson_ReturnFalse()
+    {
+        String json = "{\"steps\": [{\"tasks\": [{\"pluginId\": \"com.chaos.octopus.CommandLinePlugin, 1.0.0\",\"properties\": {\"commandline\": \"/mnt/workset/cosound/wp0x-store/001_cosound/900_test/910_common/misc/test0001/3040_plugin/helloworld/development/main.sh\"}}]},\t ]}";
+        Job job = new Gson().fromJson(json, Job.class);
+
+        boolean b = job.validate();
+
+        assertFalse(b);
+    }
+
+    @Test
+    public void isComplete_TreatRollingbackAsRolledback_RetrunTrue()
+    {
+        Job  job   = new Job();
+        Step step1 = new Step();
+        Task task1 = make_Task();
+        Task task2 = make_Task();
+        job.steps.add(step1);
+        step1.tasks.add(task1);
+        task1.taskId = "unique taskId";
+        task2.taskId = "unique taskId";
+        task1.set_State(TaskState.Rollingback);
+        task2.set_State(TaskState.Rolledback);
+
+        boolean b = job.isComplete();
+
+        assertTrue(b);
+    }
 }

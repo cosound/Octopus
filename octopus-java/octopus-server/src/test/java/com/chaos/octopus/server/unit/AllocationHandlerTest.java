@@ -25,7 +25,7 @@ public class AllocationHandlerTest
     public void enqueue_JobWithOneStep_CallEnqueueWithTask() throws DisconnectError {
         AllocationHandler ah = new AllocationHandler();
         Job job = make_JobWithOneStep();
-        Task task = job.getTasks().iterator().next();
+        Task task = job.getTasks(TaskState.isQueueable()).iterator().next();
         AgentProxy agent = mock(AgentProxy.class);
         ah.addAgent(agent);
 

@@ -39,7 +39,7 @@ public class ExecutionSlot implements Runnable
 		catch(Exception e)
 		{
             _plugin.getTask().set_State(TaskState.Rollingback);
-            onTaskUpdated(_plugin.getTask());
+            //onTaskUpdated(_plugin.getTask());
 			_plugin.rollback();
             _plugin.getTask().set_State(TaskState.Rolledback);
             onTaskUpdated(_plugin.getTask());

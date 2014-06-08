@@ -24,7 +24,10 @@ public class EnqueueJobs implements SynchronizationTask
         {
             for(Job job : client.jobGet())
             {
-                orchestrator.enqueue(job);
+                if(job.validate() && !job.isComplete())
+                    orchestrator.enqueue(job);
+                else
+                    client.jobSet(job);
             }
         }
         catch (IOException e)

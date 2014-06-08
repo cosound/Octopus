@@ -26,4 +26,9 @@ public class Task
 	{
 		_State = state;
 	}
+
+    public boolean isQueueable()
+    {
+        return get_State() == TaskState.New;
+    }
 }

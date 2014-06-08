@@ -35,4 +35,9 @@ public class ConcurrentJobQueue
 
         return result;
     }
+
+    public boolean contains(String id)
+    {
+        return _hashJobs.containsKey(id);
+    }
 }

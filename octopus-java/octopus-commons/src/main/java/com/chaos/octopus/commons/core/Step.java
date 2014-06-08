@@ -1,31 +1,38 @@
 package com.chaos.octopus.commons.core;
 
-import com.chaos.octopus.commons.core.Task;
-import com.chaos.octopus.commons.core.TaskState;
-
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class Step 
 {
 	public ArrayList<Task> tasks = new ArrayList<>();
 	
-	public boolean isCompleted() 
+	public boolean isCompleted()
 	{
 		for(Task task : tasks)
 		{
 			if (task.get_State() != TaskState.Committed && task.get_State() != TaskState.Rolledback && task.get_State() != TaskState.Executed)
                 return false;
 		}
-		
+
 		return true;
 	}
+
+    public boolean isFailed()
+    {
+        for(Task task : tasks)
+        {
+            if (task.get_State() == TaskState.Rolledback || task.get_State() == TaskState.Rollingback)
+                return true;
+        }
+
+        return false;
+    }
 
     public boolean isFinished()
     {
         for(Task task : tasks)
         {
-            if (task.get_State() != TaskState.Committed && task.get_State() != TaskState.Rolledback)
+            if (task.get_State() != TaskState.Committed)
                 return false;
         }
 
@@ -37,17 +44,18 @@ public class Step
         return !tasks.isEmpty();
     }
 
-    public Iterable<Task> getTasks()
+    public Iterable<Task> getTasks(TaskState... criteria)
+    {
+        ArrayList<Task> list = new ArrayList<>();
+
+        for (Task task : tasks)
         {
-            ArrayList<Task> list = new ArrayList<>();
+            //if(task.isQueueable() || task.get_State() == TaskState.Executing || task.get_State() == TaskState.Queued)
+            if(task.get_State().isIn(criteria))
+                list.add(task);
+        }
 
-            for (Task task : tasks)
-            {
-                if(TaskState.New.equals(task.get_State()))
-                    list.add(task);
-            }
-
-            return list;
+        return list;
     }
 
     public boolean containsTask(String taskId)

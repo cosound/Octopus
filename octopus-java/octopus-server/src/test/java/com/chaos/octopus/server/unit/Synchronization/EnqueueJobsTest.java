@@ -2,6 +2,8 @@ package com.chaos.octopus.server.unit.Synchronization;
 
 import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.commons.core.Orchestrator;
+import com.chaos.octopus.commons.core.Step;
+import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.server.synchronization.EnqueueJobs;
 import com.chaos.sdk.AuthenticatedChaosClient;
 import org.junit.Test;
@@ -19,6 +21,10 @@ public class EnqueueJobsTest
         AuthenticatedChaosClient chaos = mock(AuthenticatedChaosClient.class);
         EnqueueJobs enqueueJobs = new EnqueueJobs(orchestrator, chaos);
         Job job = new Job();
+        Step step = new Step();
+        Task task = new Task();
+        step.tasks.add(task);
+        job.steps.add(step);
         when(chaos.jobGet()).thenReturn(Arrays.asList(job));
 
         enqueueJobs.action();

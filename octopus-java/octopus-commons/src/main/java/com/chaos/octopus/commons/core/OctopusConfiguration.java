@@ -74,4 +74,28 @@ public class OctopusConfiguration
     public String getChaosApiKey() {
         return chaosApiKey;
     }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void setOrchestratorIp(String orchestratorIp) {
+        this.orchestratorIp = orchestratorIp;
+    }
+
+    public void setOrchestratorPort(int orchestratorPort) {
+        this.orchestratorPort = orchestratorPort;
+    }
+
+    public void setNumberOfParallelTasks(int numberOfParallelTasks) {
+        this.numberOfParallelTasks = numberOfParallelTasks;
+    }
+
+    public void setChaosApiUrl(String chaosApiUrl) {
+        this.chaosApiUrl = chaosApiUrl;
+    }
+
+    public void setChaosApiKey(String chaosApiKey) {
+        this.chaosApiKey = chaosApiKey;
+    }
 }

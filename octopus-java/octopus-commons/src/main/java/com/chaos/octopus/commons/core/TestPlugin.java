@@ -60,7 +60,7 @@ public class TestPlugin implements Plugin, PluginDefinition
                 number += num;
             }
 
-            System.err.println(getTask().taskId + ": " + num + ", executing");
+            System.out.println(getTask().taskId + ": " + num + ", executing");
         }
 
         if(getTask().properties.containsKey("randomstatus"))
@@ -79,10 +79,10 @@ public class TestPlugin implements Plugin, PluginDefinition
         {
             int num = Integer.parseInt(getTask().properties.get("number"));
 
-            System.err.println(getTask().taskId + ": " + num + ", executed");
+            System.out.println(getTask().taskId + ": " + num + ", executed");
         }
         else
-            System.err.println(getId() + " executed");
+            System.out.println(getId() + " executed");
 
 		WasExecuted = true;
 	}
