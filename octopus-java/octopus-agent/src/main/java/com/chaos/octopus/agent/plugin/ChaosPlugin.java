@@ -52,7 +52,7 @@ public class ChaosPlugin implements Plugin, PluginDefinition
     public void execute() throws Exception
     {
         // TODO once more actions are implemented, replace with Strategy pattern
-        if("object.create".equals(getAction()))
+        if("object.createFromJson".equals(getAction()))
         {
             String metadata = getInoutXmlContent();
 

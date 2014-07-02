@@ -40,11 +40,11 @@ public class ChaosPluginTest
     {
         Task task          = new Task();
         ChaosPlugin plugin = new ChaosPlugin(task);
-        task.properties.put("action", "object.create");
+        task.properties.put("action", "object.createFromJson");
 
         String result = plugin.getAction();
 
-        assertEquals("object.create", result);
+        assertEquals("object.createFromJson", result);
     }
 
     @Test

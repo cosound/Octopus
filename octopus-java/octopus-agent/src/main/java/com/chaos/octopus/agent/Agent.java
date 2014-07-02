@@ -106,7 +106,7 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener
 
 							enqueue(enqueueTask.getTask());
 
-                            NetworkingUtil.send(new Message("OK").toJson(), out);
+                            NetworkingUtil.send(Message.createWithAction("OK").toJson(), out);
 							break;
 						default:
 							break;

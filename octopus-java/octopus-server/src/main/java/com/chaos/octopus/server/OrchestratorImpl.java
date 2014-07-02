@@ -19,6 +19,10 @@ import java.util.List;
 
 public class OrchestratorImpl implements Orchestrator, Runnable
 {
+    // keeps track of the jobs thqt need to be updated
+    // listens for packets from the agents
+    // Parses the messages and decides how to handle it
+    // Contains the synchronization
     private final ConcurrentJobQueue _jobsWithUpdates;
     private boolean           _isRunning = false;
 	private Thread            _thread;
@@ -71,6 +75,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
             _thread.setName("Orchestrator");
 			_thread.start();
 
+            // todo: move interval to configuration
             _synchronization.synchronize(30 * 1000); // synchronize every 30 seconds
 		} 
 		catch (IOException e)
@@ -87,13 +92,14 @@ public class OrchestratorImpl implements Orchestrator, Runnable
 			{
 				String result = StreamUtilities.ReadString(agent.getInputStream());
 
-				Message message = StreamUtilities.ReadJson(result, Message.class);
+				Message message = Message.createFromJson(result);
 
+                // todo: refactor switch, perhaps using the specification pattern.
                 switch (message.getAction())
                 {
                     case Commands.CONNECT:
                     {
-                        ConnectMessage connect = StreamUtilities.ReadJson(result, ConnectMessage.class);
+                        ConnectMessage connect = ConnectMessage.createFromJson(result);
 
                         try
                         {
@@ -111,7 +117,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
                     }
                     case Commands.TASK_DONE:
                     {
-                        TaskMessage taskMessage = StreamUtilities.ReadJson(result, TaskMessage.class);
+                        TaskMessage taskMessage = TaskMessage.createFromJson(result);
 
                         taskCompleted(taskMessage.getTask());
 
@@ -119,7 +125,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable
                     }
                     case Commands.TASK_UPDATE:
                     {
-                        TaskMessage taskMessage = StreamUtilities.ReadJson(result, TaskMessage.class);
+                        TaskMessage taskMessage = TaskMessage.createFromJson(result);
 
                         taskUpdate(taskMessage.getTask());
 

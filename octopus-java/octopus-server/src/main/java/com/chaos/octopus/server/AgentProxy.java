@@ -34,7 +34,7 @@ public class AgentProxy
 
     private void InitializeAgent()
     {
-        String msg = new Message(Commands.LIST_SUPPORTED_PLUGINS).toJson();
+        String msg = Message.createWithAction(Commands.LIST_SUPPORTED_PLUGINS).toJson();
         String responseString = _network.sendWithReply(msg);
 
         AgentConfigurationMessage response = AgentConfigurationMessage.create(responseString);

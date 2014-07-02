@@ -16,7 +16,7 @@ public class StreamUtilities
         return ReadJson(value, type);
     }
 
-    public static <T> T ReadJson(String value, Class<T> type) throws IOException, InterruptedException
+    public static <T> T ReadJson(String value, Class<T> type) throws JsonSyntaxException
     {
         try
         {

@@ -45,7 +45,7 @@ public class ChaosPluginTest
     {
         Task task          = new Task();
         ChaosPlugin plugin = new ChaosPlugin(task);
-        task.properties.put("action", "object.create");
+        task.properties.put("action", "object.createFromJson");
         task.properties.put("input-xmlfilepath", "output.xml");
         task.properties.put("chaos-location", "http://api.cosound.chaos-systems.com");
         task.properties.put("chaos-apikey", "b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270");

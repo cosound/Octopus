@@ -1,5 +1,6 @@
 package com.chaos.octopus.commons.core;
 
+import com.chaos.octopus.commons.util.StreamUtilities;
 import com.google.gson.Gson;
 
 public class Message
@@ -7,9 +8,18 @@ public class Message
 	private String action;
 
     public Message() { }
-    public Message(String action)
+
+    public static Message createFromJson(String json)
     {
-        setAction(action);
+        return StreamUtilities.ReadJson(json, Message.class);
+    }
+
+    public static Message createWithAction(String action)
+    {
+        Message msg = new Message();
+        msg.setAction(action);
+
+        return msg;
     }
 
     public String getAction()
@@ -28,4 +38,6 @@ public class Message
 
         return gson.toJson(this);
     }
+
 }
+

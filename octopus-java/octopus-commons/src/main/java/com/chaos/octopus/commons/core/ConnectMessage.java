@@ -1,5 +1,7 @@
 package com.chaos.octopus.commons.core;
 
+import com.chaos.octopus.commons.util.StreamUtilities;
+
 public class ConnectMessage extends Message
 {
 	private String hostname;
@@ -11,6 +13,11 @@ public class ConnectMessage extends Message
         setAction("connect");
         this.hostname = hostname;
         this.port     = port;
+    }
+
+    public static ConnectMessage createFromJson(String json)
+    {
+        return StreamUtilities.ReadJson(json, ConnectMessage.class);
     }
 
 	public String get_Hostname() 
