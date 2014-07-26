@@ -1,50 +1,47 @@
-
+/**
+ * This file is subject to the terms and conditions defined in
+ * file 'LICENSE.txt', which is part of this source code package.
+ */
 package com.chaos.octopus.agent;
+
+import com.chaos.octopus.commons.core.Plugin;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import com.chaos.octopus.commons.core.Plugin;
+public class ExecutionHandler implements AutoCloseable, TaskCompleteListener {
+  private Agent _agent;
+  private ExecutorService _pool;
+  private int parallelism;
 
-public class ExecutionHandler implements AutoCloseable, TaskCompleteListener
-{
-	private Agent _agent;
-    private ExecutorService _pool;
-    private int parrallelism;
+  public ExecutionHandler(Agent agent, int parallelism) {
+    this.parallelism = parallelism;
 
-    public ExecutionHandler(Agent agent, int parrallelism)
-	{
-        this.parrallelism = parrallelism;
+    _pool = Executors.newFixedThreadPool(parallelism);
+    _agent = agent;
+  }
 
-        _pool = Executors.newFixedThreadPool(parrallelism);
-		_agent = agent;
-	}
+  @Override
+  public void onTaskComplete(ExecutionSlot completedTask) {
+    _agent.onTaskComplete(completedTask.getPlugin().getTask());
+  }
 
-	@Override
-	public void onTaskComplete(ExecutionSlot completedTask)
-	{
-        _agent.onTaskComplete(completedTask.getPlugin().getTask());
-	}
+  public void enqueue(Plugin plugin) {
+    ExecutionSlot slot = new ExecutionSlot(plugin);
+    slot.addTaskCompleteListener(this);
+    slot.addTaskUpdateListener(_agent);
 
-    public void enqueue(Plugin plugin)
-    {
-        ExecutionSlot slot = new ExecutionSlot(plugin);
-        slot.addTaskCompleteListener(this);
-        slot.addTaskUpdateListener(_agent);
+    _pool.execute(slot);
+  }
 
-        _pool.execute(slot);
-    }
+  @Override
+  public void close() throws Exception {
+    _pool.shutdown();
+    _pool.awaitTermination(5000, TimeUnit.MILLISECONDS);
+  }
 
-    @Override
-    public void close() throws Exception
-    {
-        _pool.shutdown();
-        _pool.awaitTermination(5000, TimeUnit.MILLISECONDS);
-    }
-
-    public int getParralelism()
-    {
-        return parrallelism;
-    }
+  public int getParallelism() {
+    return parallelism;
+  }
 }

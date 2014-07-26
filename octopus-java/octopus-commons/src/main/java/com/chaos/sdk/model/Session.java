@@ -1,26 +1,21 @@
+/**
+ * This file is subject to the terms and conditions defined in
+ * file 'LICENSE.txt', which is part of this source code package.
+ */
 package com.chaos.sdk.model;
 
-/**
- * User: Jesper Fyhr Knudsen
- * Date: 27-10-13
- * Time: 20:21
- */
-public class Session
-{
-    private String Id;
+public class Session {
+  private String Id;
 
-    public Session(String id)
-    {
-        setId(id);
-    }
+  public Session(String id) {
+    setId(id);
+  }
 
-    public String getId()
-    {
-        return Id;
-    }
+  public String getId() {
+    return Id;
+  }
 
-    private void setId(String id)
-    {
-        Id = id;
-    }
+  private void setId(String id) {
+    Id = id;
+  }
 }

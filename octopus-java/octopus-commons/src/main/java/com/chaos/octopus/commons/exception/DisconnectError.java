@@ -1,8 +1,9 @@
+/**
+ * This file is subject to the terms and conditions defined in
+ * file 'LICENSE.txt', which is part of this source code package.
+ */
 package com.chaos.octopus.commons.exception;
 
-/**
- * Copyright (c) 2014 Chaos ApS. All rights reserved. See LICENSE.TXT for details.
- */
 public class DisconnectError extends Error
 {
     public DisconnectError() {

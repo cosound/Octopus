@@ -1,8 +1,9 @@
+/**
+ * This file is subject to the terms and conditions defined in
+ * file 'LICENSE.txt', which is part of this source code package.
+ */
 package com.chaos.octopus.server.synchronization;
 
-/**
- * Created by JesperFyhr on 22-01-14.
- */
 public interface SynchronizationTask
 {
     void action();
