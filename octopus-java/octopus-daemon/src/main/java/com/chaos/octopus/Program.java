@@ -28,12 +28,12 @@ public class Program {
 
     System.out.println("Initializing Octopus...");
 
-    OctopusConfiguration orcConfig = new OctopusConfiguration();
+    OctopusConfiguration orcConfig = new OctopusConfiguration(false);
     orcConfig.setChaosApiUrl("http://api.cosound.chaos-systems.com/v6/");
     orcConfig.setChaosApiKey("b22058bb0c7b2fe4bd3cbffe99fe456b396cbe2083be6c0fdcc50b706d8b4270");
     orcConfig.setPort(2500);
 
-    OctopusConfiguration agentConfig = new OctopusConfiguration();
+    OctopusConfiguration agentConfig = new OctopusConfiguration(false);
     agentConfig.setPort(2501);
     agentConfig.setOrchestratorIp("127.0.0.1");
     agentConfig.setOrchestratorPort(2500);

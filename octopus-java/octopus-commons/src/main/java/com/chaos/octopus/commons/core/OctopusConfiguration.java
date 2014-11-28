@@ -41,6 +41,10 @@ public class OctopusConfiguration {
       chaosApiKey = config.getString("orchestrator.chaosApiKey");
   }
 
+  public OctopusConfiguration(boolean useFile) throws ConfigurationException {
+
+  }
+
   public int getListeningPort() {
     return port;
   }
