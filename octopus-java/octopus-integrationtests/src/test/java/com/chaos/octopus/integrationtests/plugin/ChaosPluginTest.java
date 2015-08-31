@@ -5,6 +5,7 @@ import com.chaos.octopus.commons.core.Task;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.*;
@@ -40,7 +41,7 @@ public class ChaosPluginTest
         file.delete();
     }
 
-    @Test
+    @Ignore
     public void execute_GivenObjectCreate_UpdateProgress() throws Exception
     {
         Task task          = new Task();

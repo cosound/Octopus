@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/octopus-agent/octopus-agent.iml" filepath="$PROJECT_DIR$/octopus-agent/octopus-agent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/octopus-cli/octopus-cli.iml" filepath="$PROJECT_DIR$/octopus-cli/octopus-cli.iml" />
+      <module fileurl="file://$PROJECT_DIR$/octopus-commons/octopus-commons.iml" filepath="$PROJECT_DIR$/octopus-commons/octopus-commons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/octopus-daemon/octopus-daemon.iml" filepath="$PROJECT_DIR$/octopus-daemon/octopus-daemon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/octopus-integrationtests/octopus-integrationtests.iml" filepath="$PROJECT_DIR$/octopus-integrationtests/octopus-integrationtests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/octopus-server/octopus-server.iml" filepath="$PROJECT_DIR$/octopus-server/octopus-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent-project.iml" filepath="$PROJECT_DIR$/parent-project.iml" />
+    </modules>
+  </component>
+</project>

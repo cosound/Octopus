@@ -21,7 +21,7 @@ public class Chaos {
   }
 
   public AuthenticatedChaosClient authenticate(String key) throws IOException {
-    PortalResponse session = gateway.call("GET", "v6/SiteAccess/Auth", "apiKey=" + key);
+    PortalResponse session = gateway.call("GET", "v6/AuthKey/Login", "token=" + key);
     String sessionId = session.Body.getResults().get(0).get("Guid").toString();
 
     return createAuthenticatedClient(sessionId);

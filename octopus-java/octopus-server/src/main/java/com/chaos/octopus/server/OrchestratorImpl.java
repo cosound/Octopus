@@ -9,6 +9,7 @@ import com.chaos.octopus.commons.exception.ConnectException;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.StreamUtilities;
 import com.chaos.octopus.server.synchronization.EnqueueJobs;
+import com.chaos.octopus.server.synchronization.Heartbeat;
 import com.chaos.octopus.server.synchronization.Synchronization;
 import com.chaos.octopus.server.synchronization.UpdateJob;
 import com.chaos.sdk.AuthenticatedChaosClient;
@@ -55,6 +56,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
     AuthenticatedChaosClient client = chaos.authenticate(config.getChaosApiKey());
     sync.addSynchronizationTask(new UpdateJob(queue, client));
     sync.addSynchronizationTask(new EnqueueJobs(leader, client));
+    sync.addSynchronizationTask(new Heartbeat(client));
 
     return leader;
   }
