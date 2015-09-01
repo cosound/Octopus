@@ -5,7 +5,7 @@ import com.chaos.octopus.commons.exception.InsufficientPermissionsException;
 import com.chaos.sdk.Chaos;
 import com.chaos.sdk.model.McmObject;
 import com.chaos.sdk.AuthenticatedChaosClient;
-import junit.framework.Assert;
+import com.chaos.sdk.v6.dto.ClusterState;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class ChaosTest {
   @Test
   public void authenticate_GivenValidKey_ReturnAuthenticatedClient() throws IOException {
     String key = "somekey";
-    MockGateway gateway = new MockGateway("v6/SiteAccess/Auth?apiKey=" + key, "{\"Header\": {\"Duration\": 177.4577},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"Guid\": \"d01755b9-e019-4d7c-98d2-ca4583196a4f\",\"UserGuid\": \"33333633-3136-3433-2d33-3633382d3633\",\"DateCreated\": 1382903500,\"DateModified\": 1382903500,\"FullName\": \"Chaos.Mcm.Data.Dto.Object\"}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}");
+    MockGateway gateway = new MockGateway("v6/AuthKey/Login?token=" + key, "{\"Header\": {\"Duration\": 177.4577},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"Guid\": \"d01755b9-e019-4d7c-98d2-ca4583196a4f\",\"UserGuid\": \"33333633-3136-3433-2d33-3633382d3633\",\"DateCreated\": 1382903500,\"DateModified\": 1382903500,\"FullName\": \"Chaos.Mcm.Data.Dto.Object\"}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}");
     Chaos api = new Chaos(gateway);
 
     AuthenticatedChaosClient result = api.authenticate(key);
@@ -52,7 +52,7 @@ public class ChaosTest {
     String metadataXml = "somemetadataXml";
     String sessionGuid = "someguid";
     String response = "{\"Header\": {\"Duration\": 177.4577},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"Value\": \"1\",\"FullName\": \"Chaos.Mcm.Data.Dto.ScalarResult\"}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}";
-    MockGateway gateway = new MockGateway("v6/Metadata/set?sessionGUID=" + sessionGuid + "&objectGuid=someobjectGuid&metadataSchemaGuid=somemetadataSchemaGuid&languageCode=somelanguageCode&revisionID=somerevisionID&metadataXml=somemetadataXml", response);
+    MockGateway gateway = new MockGateway("v6/Metadata/Set?sessionGUID=" + sessionGuid + "&objectGuid=someobjectGuid&metadataSchemaGuid=somemetadataSchemaGuid&languageCode=somelanguageCode&revisionID=somerevisionID&metadataXml=somemetadataXml", response);
     Chaos api = new Chaos(gateway);
 
     int result = api.metadataSet(sessionGuid, objectGuid, metadataSchemaGuid, languageCode, revisionID, metadataXml);
@@ -77,19 +77,19 @@ public class ChaosTest {
   public void set_GivenInvalidSession_Throw() throws IOException {
     String sessionGuid = "someguid";
     String response = "{\"Header\": {\"Duration\": 177.4577},\"Body\": {\"Count\": 0,\"TotalCount\": 0,\"Results\": []},\"Error\": {\"Fullname\": \"Chaos.Portal.Core.Exceptions.InsufficientPermissionsException\",\"Message\": \"\",\"InnerException\": null}}";
-    MockGateway gateway = new MockGateway("v6/Heartbeat/Set?sessionGUID=" + sessionGuid + "", response);
+    MockGateway gateway = new MockGateway("v6/Heartbeat/Set?sessionGUID=" + sessionGuid + "&state={\"ConnectedAgents\":0,\"jobsInQueue\":0}", response);
     AuthenticatedChaosClient api = new AuthenticatedChaosClient(gateway, sessionGuid);
 
-    api.set();
+    api.set(new ClusterState());
   }
 
   @Test
   public void set_GivenValidSession_ReturnTrue() throws IOException {
     String sessionGuid = "someguid";
     String response = "{\"Header\": {\"Duration\": 177.4577},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"WasSucess\":true}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}";
-    MockGateway gateway = new MockGateway("v6/Heartbeat/Set?sessionGUID=" + sessionGuid + "", response);
+    MockGateway gateway = new MockGateway("v6/Heartbeat/Set?sessionGUID=" + sessionGuid + "&state={\"ConnectedAgents\":0,\"jobsInQueue\":0}", response);
     AuthenticatedChaosClient api = new AuthenticatedChaosClient(gateway, sessionGuid);
 
-    api.set();
+    api.set(new ClusterState());
   }
 }

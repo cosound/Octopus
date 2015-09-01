@@ -56,7 +56,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
     AuthenticatedChaosClient client = chaos.authenticate(config.getChaosApiKey());
     sync.addSynchronizationTask(new UpdateJob(queue, client));
     sync.addSynchronizationTask(new EnqueueJobs(leader, client));
-    sync.addSynchronizationTask(new Heartbeat(client));
+    sync.addSynchronizationTask(new Heartbeat(leader._AllocationHandler, client));
 
     return leader;
   }

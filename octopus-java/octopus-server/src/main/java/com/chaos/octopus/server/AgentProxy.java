@@ -24,6 +24,7 @@ public class AgentProxy {
   private int _MaxNumberOfSimultaneousTasks;
   private Map<String, Task> _AllocatedTasks;
   private NetworkingUtil _network;
+  private Boolean _isConnected;
 
   public AgentProxy(String hostname, int port) {
     _AllocatedTasks = new HashMap<>();
@@ -68,7 +69,13 @@ public class AgentProxy {
 
         if (!parsedResponse.getAction().equals("OK")) throw new IOException("Agent didnt queue task");
         _AllocatedTasks.put(task.taskId, task);
-      } catch (Exception e) {
+        _isConnected = true;
+      }catch (DisconnectError e){
+        _isConnected = false;
+
+        throw e;
+      }
+      catch (Exception e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
@@ -83,5 +90,13 @@ public class AgentProxy {
     synchronized (_EnqueueBlock) {
       return _MaxNumberOfSimultaneousTasks - _AllocatedTasks.size() == 0;
     }
+  }
+
+  public boolean get_IsConnected() {
+    return _isConnected;
+  }
+
+  public NetworkingUtil get_network() {
+    return _network;
   }
 }

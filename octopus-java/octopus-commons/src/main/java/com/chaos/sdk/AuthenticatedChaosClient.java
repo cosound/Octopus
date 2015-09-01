@@ -7,6 +7,7 @@ package com.chaos.sdk;
 import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.commons.exception.InsufficientPermissionsException;
 import com.chaos.sdk.model.McmObject;
+import com.chaos.sdk.v6.dto.ClusterState;
 import com.chaos.sdk.v6.dto.PortalResponse;
 import com.google.gson.Gson;
 
@@ -74,9 +75,11 @@ public class AuthenticatedChaosClient implements HeartbeatGateway{
   }
 
   @Override
-  public void set() {
+  public void set(ClusterState heartbeat) {
     try {
-      PortalResponse response = gateway.call("POST", "v6/Heartbeat/Set", "sessionGUID=" + sessionId);
+      String json = gson.toJson(heartbeat);
+      System.out.println(json);
+      PortalResponse response = gateway.call("POST", "v6/Heartbeat/Set", "sessionGUID=" + sessionId + "&state=" + json);
 
       if("Chaos.Portal.Core.Exceptions.InsufficientPermissionsException".equals(response.Error.Fullname))
         throw new InsufficientPermissionsException();

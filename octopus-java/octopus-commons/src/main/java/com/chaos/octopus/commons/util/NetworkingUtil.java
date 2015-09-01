@@ -36,34 +36,6 @@ public class NetworkingUtil {
         if (!handleResponse) return null;
 
         return StreamUtilities.ReadString(socket.getInputStream());
-
-//                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-//
-//                out.write(message);
-//                out.newLine();
-//
-//
-//
-//                StringBuffer result = new StringBuffer();
-//
-//                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//                String inputLine;
-//
-//                while ((inputLine = in.readLine()) != null)
-//                    result.append(inputLine);
-//
-//                return result.toString();
-
-//                OutputStream out = socket.getOutputStream();
-//                PrintStream ps = new PrintStream(out);
-//                ps.println(message);
-//                ps.flush();
-//
-//                if(handleResponse)
-//                {
-//                    InputStream in = socket.getInputStream();
-//                    return StreamUtilities.ReadString(in);
-//                }
       }
     } catch (ConnectException e) {
       throw new com.chaos.octopus.commons.exception.ConnectException("Connection to Orchestrator could not be established, check hostname and port", e);
@@ -95,5 +67,13 @@ public class NetworkingUtil {
     } catch (InterruptedException e1) {
 
     }
+  }
+
+  public int get_port() {
+    return _port;
+  }
+
+  public String get_hostname() {
+    return _hostname;
   }
 }

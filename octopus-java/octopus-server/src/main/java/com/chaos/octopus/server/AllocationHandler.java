@@ -80,14 +80,14 @@ public class AllocationHandler implements AutoCloseable {
     }
   }
 
-  public void taskUpdate(Task task) {
+  public synchronized void taskUpdate(Task task) {
     Job job = getJob(task);
 
     if (!job.isComplete())
       job.replaceTask(task);
   }
 
-  public void taskComplete(Task task) {
+  public synchronized void taskComplete(Task task) {
     taskUpdate(task);
 
     for (AgentProxy agent : getAgents())
