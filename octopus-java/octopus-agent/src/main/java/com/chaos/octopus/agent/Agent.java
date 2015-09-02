@@ -4,34 +4,30 @@
  */
 package com.chaos.octopus.agent;
 
+import com.chaos.octopus.agent.action.AgentAction;
+import com.chaos.octopus.agent.action.AgentStateAction;
+import com.chaos.octopus.agent.action.EnqueueTaskAction;
+import com.chaos.octopus.agent.action.ListSupportedPluginsAction;
 import com.chaos.octopus.commons.core.*;
-import com.chaos.octopus.commons.core.message.AgentStateMessage;
 import com.chaos.octopus.commons.core.message.Message;
-import com.chaos.octopus.commons.core.message.TaskMessage;
 import com.chaos.octopus.commons.exception.DisconnectError;
 import com.chaos.octopus.commons.util.Commands;
-import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.chaos.octopus.commons.util.StreamUtilities;
-import com.chaos.sdk.v6.dto.ClusterState;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener {
-  private AtomicInteger _currentQueueSize;
+public class Agent implements Runnable, AutoCloseable, TaskStatusChangeListener {
   private boolean _isRunning;
   private Thread _thread;
-  private Map<String, PluginDefinition> _PluginDefinitions;
   private ExecutionHandler _executionHandler;
   private Orchestrator _orchestrator;
   private ServerSocket _Server;
+  private Map<String, AgentAction> _agentActions = new HashMap<>();
+  private PluginFactory _pluginFactory;
 
   public Agent(String orchestratorHostname, int orchestratorPort, int listenPort) {
     this(new OrchestratorProxy(orchestratorHostname, orchestratorPort, listenPort), 4);
@@ -43,12 +39,16 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener {
 
   public Agent(Orchestrator orchestrator, int parallelism) {
     _orchestrator = orchestrator;
-    _currentQueueSize = new AtomicInteger(0);
     _isRunning = false;
     _thread = new Thread(this);
     _thread.setName("Agent");
-    _PluginDefinitions = new HashMap<>();
     _executionHandler = new ExecutionHandler(this, parallelism);
+
+    _pluginFactory =  new PluginFactory();
+
+    _agentActions.put(Commands.LIST_SUPPORTED_PLUGINS, new ListSupportedPluginsAction(_pluginFactory, parallelism));
+    _agentActions.put(Commands.ENQUEUE_TASK, new EnqueueTaskAction(this));
+    _agentActions.put(Commands.AGENT_STATE, new AgentStateAction(_executionHandler));
   }
 
   public static Agent create(OctopusConfiguration config) {
@@ -82,54 +82,12 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener {
 
           Message msg = StreamUtilities.ReadJson(message, Message.class);
 
-          OutputStream out = socket.getOutputStream();
-
-          switch (msg.getAction()) {
-            case Commands.LIST_SUPPORTED_PLUGINS:
-              AgentConfigurationMessage response = createAgentConfigurationMessage();
-
-              NetworkingUtil.send(response.toJson(), out);
-              break;
-            case Commands.ENQUEUE_TASK:
-              TaskMessage enqueueTask = StreamUtilities.ReadJson(message, TaskMessage.class);
-
-              enqueue(enqueueTask.getTask());
-
-              NetworkingUtil.send(Message.createWithAction("OK").toJson(), out);
-              break;
-            case Commands.AGENT_STATE:{
-              ClusterState.AgentState state = getState();
-
-              NetworkingUtil.send(new AgentStateMessage(state), out);
-            }
-            default:
-              break;
-          }
+          _agentActions.get(msg.getAction()).invoke(message, socket.getOutputStream());
         }
       } catch (Exception e) {
         if (!_Server.isClosed()) e.printStackTrace();
       }
     }
-  }
-
-  public ClusterState.AgentState getState(){
-    ClusterState.AgentState state = new ClusterState.AgentState();
-    state.runningSize = getQueueSize() > _executionHandler.getParallelism() ? _executionHandler.getParallelism() : getQueueSize();
-    state.queueSize = getQueueSize();
-    state.parallelism = _executionHandler.getParallelism();
-
-    return state;
-  }
-
-  private AgentConfigurationMessage createAgentConfigurationMessage() {
-    AgentConfigurationMessage message = new AgentConfigurationMessage();
-
-    message.setNumberOfSimulataniousTasks(_executionHandler.getParallelism());
-
-    for (PluginDefinition definition : get_SupportedPlugins())
-      message.getSupportedPlugins().add(definition.getId());
-
-    return message;
   }
 
   public void close() throws Exception {
@@ -139,49 +97,26 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener {
     if (_executionHandler != null) _executionHandler.close();
   }
 
-  public byte[] serializeSupportedPlugins() {
-    StringBuilder sb = new StringBuilder();
-
-    for (PluginDefinition definition : get_SupportedPlugins())
-      sb.append(String.format("%s;", definition.getId()));
-
-    return sb.toString().getBytes();
-  }
-
   public void addPlugin(PluginDefinition pluginFactory) {
-    _PluginDefinitions.put(pluginFactory.getId(), pluginFactory);
-  }
-
-  // TODO CAN BE REMOVED????
-  public List<PluginDefinition> get_SupportedPlugins() {
-    List<PluginDefinition> list = new ArrayList<>();
-
-    for (PluginDefinition definition : _PluginDefinitions.values())
-      list.add(definition);
-
-    return list;
+    _pluginFactory.addPlugin(pluginFactory);
   }
 
   public Plugin enqueue(Task task) {
-    Plugin plugin = _PluginDefinitions.get(task.pluginId).create(task);
+    Plugin plugin = _pluginFactory.create(task);
 
     _executionHandler.enqueue(plugin);
-    _currentQueueSize.incrementAndGet();
 
     return plugin;
   }
 
   public void onTaskComplete(Task task) {
-    _currentQueueSize.decrementAndGet();
     _orchestrator.taskCompleted(task);
   }
-
-  @Override
   public void onTaskUpdate(Task task) {
     _orchestrator.taskUpdate(task);
   }
 
   public int getQueueSize() {
-    return _currentQueueSize.get();
+    return _executionHandler.getQueueSize();
   }
 }

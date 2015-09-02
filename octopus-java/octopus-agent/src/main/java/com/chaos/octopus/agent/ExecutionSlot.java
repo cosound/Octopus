@@ -43,7 +43,7 @@ public class ExecutionSlot implements Runnable {
       _plugin.getTask().set_State(TaskState.Rolledback);
       onTaskUpdated(_plugin.getTask());
     } finally {
-      onTaskComplete();
+      onTaskComplete(_plugin.getTask());
     }
   }
 
@@ -59,9 +59,9 @@ public class ExecutionSlot implements Runnable {
     return _plugin;
   }
 
-  private void onTaskComplete() {
+  private void onTaskComplete(Task task) {
     for (TaskCompleteListener callback : _taskCompleteListeners)
-      callback.onTaskComplete(this);
+      callback.onTaskComplete(task);
   }
 
   private void onTaskUpdated(Task task) {

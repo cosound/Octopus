@@ -5,6 +5,7 @@
 package com.chaos.octopus.agent;
 
 import com.chaos.octopus.commons.core.Plugin;
+import com.chaos.octopus.commons.core.Task;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,26 +13,28 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExecutionHandler implements AutoCloseable, TaskCompleteListener {
-  private Agent _agent;
+  private TaskStatusChangeListener _taskStatusChangedListener;
   private ExecutorService _pool;
   private int parallelism;
+  private AtomicInteger _currentQueueSize = new AtomicInteger(0);
 
-  public ExecutionHandler(Agent agent, int parallelism) {
+  public ExecutionHandler(TaskStatusChangeListener agent, int parallelism) {
     this.parallelism = parallelism;
 
     _pool = Executors.newFixedThreadPool(parallelism);
-    _agent = agent;
+    _taskStatusChangedListener = agent;
   }
 
-  @Override
-  public void onTaskComplete(ExecutionSlot completedTask) {
-    _agent.onTaskComplete(completedTask.getPlugin().getTask());
+  public void onTaskComplete(Task task) {
+    _currentQueueSize.decrementAndGet();
+    _taskStatusChangedListener.onTaskComplete(task);
   }
 
   public void enqueue(Plugin plugin) {
+    _currentQueueSize.incrementAndGet();
     ExecutionSlot slot = new ExecutionSlot(plugin);
     slot.addTaskCompleteListener(this);
-    slot.addTaskUpdateListener(_agent);
+    slot.addTaskUpdateListener(_taskStatusChangedListener);
 
     _pool.execute(slot);
   }
@@ -44,5 +47,8 @@ public class ExecutionHandler implements AutoCloseable, TaskCompleteListener {
 
   public int getParallelism() {
     return parallelism;
+  }
+  public int getQueueSize() {
+    return _currentQueueSize.get();
   }
 }
