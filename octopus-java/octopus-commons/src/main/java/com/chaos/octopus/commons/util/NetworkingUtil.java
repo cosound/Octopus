@@ -4,6 +4,8 @@
  */
 package com.chaos.octopus.commons.util;
 
+import com.chaos.octopus.commons.core.message.Message;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -41,7 +43,7 @@ public class NetworkingUtil {
       throw new com.chaos.octopus.commons.exception.ConnectException("Connection to Orchestrator could not be established, check hostname and port", e);
     } catch (Exception e) {
       if (retries > 0) {
-        sleep(500);
+        sleep(250);
         send(message, handleResponse, --retries);
       }
 
@@ -51,6 +53,10 @@ public class NetworkingUtil {
     }
 
     return null;
+  }
+
+  public static void send(Message message, OutputStream outputStream) throws IOException {
+    send(message.toJson(), outputStream);
   }
 
   public static void send(String message, OutputStream outputStream) throws IOException {

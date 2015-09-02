@@ -77,7 +77,7 @@ public class ChaosTest {
   public void set_GivenInvalidSession_Throw() throws IOException {
     String sessionGuid = "someguid";
     String response = "{\"Header\": {\"Duration\": 177.4577},\"Body\": {\"Count\": 0,\"TotalCount\": 0,\"Results\": []},\"Error\": {\"Fullname\": \"Chaos.Portal.Core.Exceptions.InsufficientPermissionsException\",\"Message\": \"\",\"InnerException\": null}}";
-    MockGateway gateway = new MockGateway("v6/Heartbeat/Set?sessionGUID=" + sessionGuid + "&state={\"ConnectedAgents\":0,\"jobsInQueue\":0}", response);
+    MockGateway gateway = new MockGateway("v6/Heartbeat/Set?sessionGUID=" + sessionGuid, response);
     AuthenticatedChaosClient api = new AuthenticatedChaosClient(gateway, sessionGuid);
 
     api.set(new ClusterState());
@@ -87,7 +87,7 @@ public class ChaosTest {
   public void set_GivenValidSession_ReturnTrue() throws IOException {
     String sessionGuid = "someguid";
     String response = "{\"Header\": {\"Duration\": 177.4577},\"Body\": {\"Count\": 1,\"TotalCount\": 1,\"Results\": [{\"WasSucess\":true}]},\"Error\": {\"Fullname\": null,\"Message\": null,\"InnerException\": null}}";
-    MockGateway gateway = new MockGateway("v6/Heartbeat/Set?sessionGUID=" + sessionGuid + "&state={\"ConnectedAgents\":0,\"jobsInQueue\":0}", response);
+    MockGateway gateway = new MockGateway("v6/Heartbeat/Set?sessionGUID=" + sessionGuid, response);
     AuthenticatedChaosClient api = new AuthenticatedChaosClient(gateway, sessionGuid);
 
     api.set(new ClusterState());

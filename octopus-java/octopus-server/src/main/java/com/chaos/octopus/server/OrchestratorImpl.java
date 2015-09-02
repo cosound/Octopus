@@ -5,8 +5,13 @@
 package com.chaos.octopus.server;
 
 import com.chaos.octopus.commons.core.*;
+import com.chaos.octopus.commons.core.message.AgentStateMessage;
+import com.chaos.octopus.commons.core.message.ConnectMessage;
+import com.chaos.octopus.commons.core.message.Message;
+import com.chaos.octopus.commons.core.message.TaskMessage;
 import com.chaos.octopus.commons.exception.ConnectException;
 import com.chaos.octopus.commons.util.Commands;
+import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.chaos.octopus.commons.util.StreamUtilities;
 import com.chaos.octopus.server.synchronization.EnqueueJobs;
 import com.chaos.octopus.server.synchronization.Heartbeat;
@@ -14,8 +19,10 @@ import com.chaos.octopus.server.synchronization.Synchronization;
 import com.chaos.octopus.server.synchronization.UpdateJob;
 import com.chaos.sdk.AuthenticatedChaosClient;
 import com.chaos.sdk.Chaos;
+import com.chaos.sdk.v6.dto.ClusterState;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -25,7 +32,7 @@ import java.util.List;
 public class OrchestratorImpl implements Orchestrator, Runnable {
   // keeps track of the jobs thqt need to be updated
   // listens for packets from the agents
-  // Parses the messages and decides how to handle it
+  // Parses the message and decides how to handle it
   // Contains the synchronization
   private final ConcurrentJobQueue _jobsWithUpdates;
   private boolean _isRunning = false;
@@ -83,8 +90,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
 
   public void run() {
     while (_isRunning) {
-      try (Socket agent = _socket.accept()) {
-        String result = StreamUtilities.ReadString(agent.getInputStream());
+      try (Socket socket = _socket.accept()) {
+        String result = StreamUtilities.ReadString(socket.getInputStream());
 
         Message message = Message.createFromJson(result);
 
@@ -94,9 +101,10 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
             ConnectMessage connect = ConnectMessage.createFromJson(result);
 
             try {
-              AgentProxy agentProxy = new AgentProxy(connect.get_Hostname(), connect.get_Port());
+              AgentProxy ap = new AgentProxy(connect.get_Hostname(), connect.get_Port());
+              ap.InitializeAgent();
 
-              _AllocationHandler.addAgent(agentProxy);
+              _AllocationHandler.addAgent(ap);
             } catch (ConnectException e) {
               System.err.println("Connection to Agent could not be established, hostname: " + connect.get_Hostname() + ", port: " + connect.get_Port());
               e.printStackTrace();

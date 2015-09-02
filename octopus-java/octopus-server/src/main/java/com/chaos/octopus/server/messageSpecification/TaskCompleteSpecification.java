@@ -6,7 +6,7 @@ package com.chaos.octopus.server.messageSpecification;
 
 import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.commons.core.Task;
-import com.chaos.octopus.commons.core.TaskMessage;
+import com.chaos.octopus.commons.core.message.TaskMessage;
 import com.chaos.octopus.server.AllocationHandler;
 import com.chaos.octopus.server.ConcurrentJobQueue;
 

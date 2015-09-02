@@ -15,5 +15,6 @@ public class ClusterState {
     public int ramUsage;
     public int queueSize;
     public int runningSize;
+    public int parallelism;
   }
 }

@@ -25,7 +25,7 @@ public class MockGateway implements ChaosGateway
     @Override
     public PortalResponse call(String method, String path, String query)
     {
-        if(url.equals(path + "?" + query))
+        if((path + "?" + query).startsWith(url))
             return gson.fromJson(result, PortalResponse.class);
 
         return null;

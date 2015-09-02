@@ -4,6 +4,7 @@
  */
 package com.chaos.octopus.commons.core;
 
+import com.chaos.octopus.commons.core.message.Message;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;

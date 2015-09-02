@@ -5,6 +5,8 @@
 package com.chaos.octopus.agent;
 
 import com.chaos.octopus.commons.core.*;
+import com.chaos.octopus.commons.core.message.ConnectMessage;
+import com.chaos.octopus.commons.core.message.TaskMessage;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.NetworkingUtil;
 

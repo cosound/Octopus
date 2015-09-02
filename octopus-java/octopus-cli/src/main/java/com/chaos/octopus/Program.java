@@ -95,7 +95,7 @@ public class Program
     private static Options createOptions()
     {
         Options options = new Options();
-        options.addOption("d", "debug", false, "Prints debug messages to stdout");
+        options.addOption("d", "debug", false, "Prints debug message to stdout");
         options.addOption("h", "help", false, "Print help");
 
         return options;

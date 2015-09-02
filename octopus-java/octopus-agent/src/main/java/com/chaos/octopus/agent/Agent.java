@@ -5,6 +5,9 @@
 package com.chaos.octopus.agent;
 
 import com.chaos.octopus.commons.core.*;
+import com.chaos.octopus.commons.core.message.AgentStateMessage;
+import com.chaos.octopus.commons.core.message.Message;
+import com.chaos.octopus.commons.core.message.TaskMessage;
 import com.chaos.octopus.commons.exception.DisconnectError;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.NetworkingUtil;
@@ -94,6 +97,11 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener {
 
               NetworkingUtil.send(Message.createWithAction("OK").toJson(), out);
               break;
+            case Commands.AGENT_STATE:{
+              ClusterState.AgentState state = getState();
+
+              NetworkingUtil.send(new AgentStateMessage(state), out);
+            }
             default:
               break;
           }
@@ -106,9 +114,9 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener {
 
   public ClusterState.AgentState getState(){
     ClusterState.AgentState state = new ClusterState.AgentState();
-    int executing = getQueueSize() > _executionHandler.getParallelism() ? _executionHandler.getParallelism() : getQueueSize();
-    state.runningSize = executing;
+    state.runningSize = getQueueSize() > _executionHandler.getParallelism() ? _executionHandler.getParallelism() : getQueueSize();
     state.queueSize = getQueueSize();
+    state.parallelism = _executionHandler.getParallelism();
 
     return state;
   }

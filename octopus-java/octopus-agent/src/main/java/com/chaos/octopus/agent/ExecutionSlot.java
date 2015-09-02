@@ -30,15 +30,15 @@ public class ExecutionSlot implements Runnable {
       onTaskUpdated(_plugin.getTask());
       _plugin.execute();
       _plugin.getTask().set_State(TaskState.Executed);
-      //onTaskUpdated(_plugin.getTask());
+      //onTaskUpdated(_plugin.getState());
       _plugin.getTask().set_State(TaskState.Committing);
-      //onTaskUpdated(_plugin.getTask());
+      //onTaskUpdated(_plugin.getState());
       _plugin.commit();
       _plugin.getTask().set_State(TaskState.Committed);
       onTaskUpdated(_plugin.getTask());
     } catch (Exception e) {
       _plugin.getTask().set_State(TaskState.Rollingback);
-      //onTaskUpdated(_plugin.getTask());
+      //onTaskUpdated(_plugin.getState());
       _plugin.rollback();
       _plugin.getTask().set_State(TaskState.Rolledback);
       onTaskUpdated(_plugin.getTask());

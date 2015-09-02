@@ -5,14 +5,18 @@
 package com.chaos.octopus.server;
 
 import com.chaos.octopus.commons.core.AgentConfigurationMessage;
-import com.chaos.octopus.commons.core.Message;
+import com.chaos.octopus.commons.core.message.AgentStateMessage;
+import com.chaos.octopus.commons.core.message.Message;
 import com.chaos.octopus.commons.core.Task;
-import com.chaos.octopus.commons.core.TaskMessage;
+import com.chaos.octopus.commons.core.message.TaskMessage;
+import com.chaos.octopus.commons.exception.ConnectException;
 import com.chaos.octopus.commons.exception.DisconnectError;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.chaos.octopus.commons.util.StreamUtilities;
+import com.chaos.sdk.v6.dto.ClusterState;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,19 +28,17 @@ public class AgentProxy {
   private int _MaxNumberOfSimultaneousTasks;
   private Map<String, Task> _AllocatedTasks;
   private NetworkingUtil _network;
-  private Boolean _isConnected;
 
   public AgentProxy(String hostname, int port) {
     _AllocatedTasks = new HashMap<>();
     _network = new NetworkingUtil(hostname, port);
-    InitializeAgent();
   }
 
   public List<String> get_SupportedPlugins() {
     return _SupportedPlugins;
   }
 
-  private void InitializeAgent() {
+  public void InitializeAgent() {
     String msg = Message.createWithAction(Commands.LIST_SUPPORTED_PLUGINS).toJson();
     String responseString = _network.sendWithReply(msg);
 
@@ -69,13 +71,7 @@ public class AgentProxy {
 
         if (!parsedResponse.getAction().equals("OK")) throw new IOException("Agent didnt queue task");
         _AllocatedTasks.put(task.taskId, task);
-        _isConnected = true;
-      }catch (DisconnectError e){
-        _isConnected = false;
-
-        throw e;
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
@@ -92,11 +88,25 @@ public class AgentProxy {
     }
   }
 
-  public boolean get_IsConnected() {
-    return _isConnected;
-  }
-
   public NetworkingUtil get_network() {
     return _network;
+  }
+
+  public ClusterState.AgentState getState() {
+    ClusterState.AgentState state = new ClusterState.AgentState();
+
+    try{
+      String response = _network.sendWithReply(new AgentStateMessage().toJson());
+      state = AgentStateMessage.createFromJson(response).getState();
+      state.state = "Connected";
+    }catch (DisconnectError e){
+      state.state = "Disconnected";
+    } catch (ConnectException e){
+      state.state = "Disconnected";
+    } catch (Exception e){
+      state.state = "Disconnected";
+    }
+
+    return state;
   }
 }
