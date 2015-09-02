@@ -9,6 +9,7 @@ import com.chaos.octopus.commons.core.Plugin;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExecutionHandler implements AutoCloseable, TaskCompleteListener {
   private Agent _agent;

@@ -10,4 +10,5 @@ public class Commands {
   public static final String ENQUEUE_TASK = "enqueue-task";
   public static final String TASK_DONE = "task-done";
   public static final String TASK_UPDATE = "task-update";
+  public static final String AGENT_STATE = "agent-state";
 }

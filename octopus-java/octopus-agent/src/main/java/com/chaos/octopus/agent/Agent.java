@@ -9,6 +9,7 @@ import com.chaos.octopus.commons.exception.DisconnectError;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.chaos.octopus.commons.util.StreamUtilities;
+import com.chaos.sdk.v6.dto.ClusterState;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -101,6 +102,15 @@ public class Agent implements Runnable, AutoCloseable, TaskUpdatedListener {
         if (!_Server.isClosed()) e.printStackTrace();
       }
     }
+  }
+
+  public ClusterState.AgentState getState(){
+    ClusterState.AgentState state = new ClusterState.AgentState();
+    int executing = getQueueSize() > _executionHandler.getParallelism() ? _executionHandler.getParallelism() : getQueueSize();
+    state.runningSize = executing;
+    state.queueSize = getQueueSize();
+
+    return state;
   }
 
   private AgentConfigurationMessage createAgentConfigurationMessage() {

@@ -11,5 +11,9 @@ public class ClusterState {
     public boolean hasAvailableSlots;
     public String hostname;
     public int port;
+    public int cpuUsage;
+    public int ramUsage;
+    public int queueSize;
+    public int runningSize;
   }
 }
