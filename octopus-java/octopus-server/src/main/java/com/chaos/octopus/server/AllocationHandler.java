@@ -49,7 +49,10 @@ public class AllocationHandler implements AutoCloseable {
     synchronized (_Jobs) {
       for (Job job : _Jobs)
         for (Task task : job.getTasks(TaskState.isQueueable()))
+        {
+          task.setTargetAgent(job.targetAgent);
           enqueue(task);
+        }
     }
   }
 
@@ -57,16 +60,17 @@ public class AllocationHandler implements AutoCloseable {
     for (int i = 0; i < _agents.size(); i++) {
       AgentProxy agent = _agents.get(i);
 
-      if (agent.isQueueFull()) continue;
+      if(task.getTargetAgent() != null && !agent.getHostname().equals(task.getTargetAgent())) continue;
+      if(agent.isQueueFull()) continue;
 
       task.set_State(TaskState.Queued);
-      enqueueOrDisconnectAgent(task, i, agent);
+      enqueueOrDisconnectAgent(task, agent);
 
       return;
     }
   }
 
-  private void enqueueOrDisconnectAgent(Task task, int i, AgentProxy agent) {
+  private void enqueueOrDisconnectAgent(Task task, AgentProxy agent) {
     try {
       agent.enqueue(task);
     } catch (ConnectException e) {

@@ -10,6 +10,7 @@ public class Job {
   public String id;
   public ArrayList<Step> steps = new ArrayList<>();
   public String status;
+  public String targetAgent;
 
   public Job() {
     id = "";

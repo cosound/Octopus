@@ -16,7 +16,6 @@ import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.chaos.octopus.commons.util.StreamUtilities;
 import com.chaos.sdk.v6.dto.ClusterState;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,12 +23,14 @@ import java.util.List;
 import java.util.Map;
 
 public class AgentProxy {
+  private final String _hostname;
   private List<String> _SupportedPlugins;
   private int _MaxNumberOfSimultaneousTasks;
   private Map<String, Task> _AllocatedTasks;
   private NetworkingUtil _network;
 
   public AgentProxy(String hostname, int port) {
+    _hostname = hostname;
     _AllocatedTasks = new HashMap<>();
     _network = new NetworkingUtil(hostname, port);
   }
@@ -108,5 +109,9 @@ public class AgentProxy {
     }
 
     return state;
+  }
+
+  public String getHostname() {
+    return _hostname;
   }
 }
