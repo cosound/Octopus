@@ -17,26 +17,56 @@
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
-      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+      <profile default="false" name="Annotation profile for octopus-daemon" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="octopus-daemon" />
+      </profile>
+      <profile default="false" name="Annotation profile for octopus-agent" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="octopus-agent" />
-        <module name="octopus-cli" />
-        <module name="octopus-commons" />
-        <module name="octopus-daemon" />
-        <module name="octopus-integrationtests" />
+      </profile>
+      <profile default="false" name="Annotation profile for octopus-server" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="octopus-server" />
       </profile>
+      <profile default="false" name="Annotation profile for octopus-integrationtests" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="octopus-integrationtests" />
+      </profile>
+      <profile default="false" name="Annotation profile for octopus-cli" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="octopus-cli" />
+      </profile>
+      <profile default="false" name="Annotation profile for octopus-commons" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="octopus-commons" />
+      </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="octopus-agent" target="1.5" />
-      <module name="octopus-cli" target="1.5" />
-      <module name="octopus-commons" target="1.5" />
-      <module name="octopus-daemon" target="1.5" />
-      <module name="octopus-integrationtests" target="1.5" />
-      <module name="octopus-server" target="1.5" />
+    <bytecodeTargetLevel target="1.7">
+      <module name="octopus-agent" target="1.7" />
+      <module name="octopus-cli" target="1.7" />
+      <module name="octopus-commons" target="1.7" />
+      <module name="octopus-daemon" target="1.7" />
+      <module name="octopus-integrationtests" target="1.7" />
+      <module name="octopus-server" target="1.7" />
       <module name="parent-project" target="1.5" />
     </bytecodeTargetLevel>
   </component>
