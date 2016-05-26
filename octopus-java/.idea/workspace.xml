@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="057f0053-f4e8-40ac-9d01-6a2f351d655a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/Job.java" afterPath="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/Job.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/Task.java" afterPath="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/Task.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-integrationtests/src/test/java/com/chaos/octopus/integrationtests/AgentNetworkingTest.java" afterPath="$PROJECT_DIR$/octopus-integrationtests/src/test/java/com/chaos/octopus/integrationtests/AgentNetworkingTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AgentProxy.java" afterPath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AgentProxy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AllocationHandler.java" afterPath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AllocationHandler.java" />
-    </list>
+    <list default="true" id="057f0053-f4e8-40ac-9d01-6a2f351d655a" name="Default" comment="" />
     <ignored path="parent-project.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/octopus-commons/target/" />
@@ -1222,7 +1215,7 @@
       <option name="number" value="Default" />
       <updated>1441027478322</updated>
       <workItem from="1462476725367" duration="21000" />
-      <workItem from="1462476783925" duration="2973000" />
+      <workItem from="1462476783925" duration="3104000" />
     </task>
     <servers />
   </component>
@@ -1259,11 +1252,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2994000" />
+    <option name="totallyTimeSpent" value="3125000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="3862" height="2122" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
