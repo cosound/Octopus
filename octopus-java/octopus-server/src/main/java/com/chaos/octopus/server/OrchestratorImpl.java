@@ -10,6 +10,7 @@ import com.chaos.octopus.commons.core.message.ConnectMessage;
 import com.chaos.octopus.commons.core.message.Message;
 import com.chaos.octopus.commons.core.message.TaskMessage;
 import com.chaos.octopus.commons.exception.ConnectException;
+import com.chaos.octopus.commons.http.SimpleServer;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.chaos.octopus.commons.util.StreamUtilities;
@@ -89,6 +90,9 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
   }
 
   public void run() {
+    SimpleServer ss = new SimpleServer();
+    ss.run();
+
     while (_isRunning) {
       try (Socket socket = _socket.accept()) {
         String result = StreamUtilities.ReadString(socket.getInputStream());
@@ -134,6 +138,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
         e.printStackTrace();
       }
     }
+
+    ss._isRunning = false;
   }
 
   @Override
