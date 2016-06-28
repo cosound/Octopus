@@ -8,6 +8,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Jesper on 23-06-2016.
@@ -35,7 +39,8 @@ public class SimpleServer implements Runnable{
   @Override
   public void run() {
     while (_isRunning) {
-        try(Socket socket = _serverSocket.accept()){
+        try{
+          Socket socket = _serverSocket.accept();
           new HttpRequestHandler(socket).invoke();
         } catch (IOException e) {
           e.printStackTrace();
@@ -53,17 +58,18 @@ public class SimpleServer implements Runnable{
     public void invoke() throws IOException {
       while(socket.getInputStream().available() == 0);
 
-      Request requestString = parseRequest();
+      Request request = parseRequest();
 
       Response res = new Response();
       Response.Result result = res.new Result();
       res.Results.add(result);
 
-      for (String val : requestString.queryString.values()) {
+      for (String val : request.queryString.values()) {
         result.Keys.add(val);
       }
 
       SendResponse(res);
+      socket.close();
     }
 
     private Request parseRequest() throws IOException {
@@ -76,18 +82,26 @@ public class SimpleServer implements Runnable{
         requestString += new String(buffer);
       }
 
-      Request request = new Request();
-      request.method = "GET";
+      int startOfEndpoint = requestString.indexOf(" ");
+      int endOfEndpoint = requestString.indexOf("?") != -1 ?
+          requestString.indexOf("?"):
+          requestString.lastIndexOf("HTTP/");
+      String endpoint = requestString.substring(startOfEndpoint, endOfEndpoint).trim();
+
+      Request request = new Request(endpoint);
       request.queryString = parseQueryString(requestString);
 
       return request;
     }
 
     private Map<String, String> parseQueryString(String requestString) throws UnsupportedEncodingException {
-      String query = requestString.substring(6, requestString.indexOf("HTTP"));
-      query = URLDecoder.decode(query.trim(), "UTF-8");
-
       Map<String, String> parameters = new HashMap<>();
+      int startOfQueryString = requestString.indexOf("?");
+
+      if(startOfQueryString == -1) return parameters;
+
+      String query = requestString.substring(startOfQueryString +1, requestString.indexOf("HTTP"));
+      query = URLDecoder.decode(query.trim(), "UTF-8");
 
       if("".equals(query)) return parameters;
 
