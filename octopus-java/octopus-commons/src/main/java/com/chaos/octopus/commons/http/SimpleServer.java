@@ -1,22 +1,29 @@
 package com.chaos.octopus.commons.http;
 
+import com.chaos.octopus.commons.core.Endpoint;
 import com.chaos.octopus.commons.core.Request;
 import com.chaos.octopus.commons.core.Response;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SimpleServer implements Runnable{
-
+  private Thread _thread;
   private boolean _isRunning = true;
   private ServerSocket _serverSocket;
-  private ExecutorService pool = Executors.newFixedThreadPool(16);
+  private ExecutorService _pool = Executors.newFixedThreadPool(8);
+  private Map<String, Endpoint> _endpoints = new HashMap<>();
 
   public SimpleServer(){
     try {
       _serverSocket = new ServerSocket(8080);
+      _thread = new Thread(this);
+      _thread.setName("CHAOS Webserver");
+      _thread.start();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -26,19 +33,22 @@ public class SimpleServer implements Runnable{
     _isRunning = false;
     try {
       _serverSocket.close();
+      _pool.shutdown();
     } catch (IOException ignored) { }
   }
 
-  @Override
   public void run() {
     while (_isRunning) {
         try{
           final Socket socket = _serverSocket.accept();
-          pool.execute(new RequestHandler(socket));
+          _pool.execute(new RequestHandler(socket));
         } catch (IOException e) {
-          e.printStackTrace();
         }
     }
+  }
+
+  public void addEndpoint(String route, Endpoint endpoint) {
+    _endpoints.put(route, endpoint);
   }
 
   private class RequestHandler implements Runnable {
@@ -51,10 +61,7 @@ public class SimpleServer implements Runnable{
     @Override
     public void run() {
       try {
-        String requestString = readRequestFromStream();
-
-        Request request = RequestParser.parse(requestString);
-
+        Request request = RequestParser.parse(readRequestFromStream());
         Response res = route(request);
 
         SendResponse(res);
@@ -65,6 +72,9 @@ public class SimpleServer implements Runnable{
     }
 
     Response route(Request request) {
+      if(_endpoints.containsKey(request.endpoint))
+        return _endpoints.get(request.endpoint).invoke(request);
+
       Response res = new Response();
       Response.Result result = res.new Result();
       res.Results.add(result);
@@ -91,8 +101,6 @@ public class SimpleServer implements Runnable{
       return requestString;
     }
 
-
-
     void SendResponse(Response response) throws IOException {
       String content = response.toJson();
       byte[] contentBytes = content.getBytes();
@@ -100,10 +108,9 @@ public class SimpleServer implements Runnable{
       String responseString = "HTTP/1.x 200 OK\n" +
           "Connection: close\n" +
           "Content-Type: application/json\n" +
-          "Content-Length: " + contentBytes.length +"\n\n";
+          "Content-Length: " + contentBytes.length +"\n\n" + content;
 
       socket.getOutputStream().write(responseString.getBytes());
-      socket.getOutputStream().write(contentBytes);
     }
   }
 }

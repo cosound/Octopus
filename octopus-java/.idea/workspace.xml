@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="057f0053-f4e8-40ac-9d01-6a2f351d655a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/http/RequestParser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/octopus-commons/src/test/java/com/chaos/octopus/commons/core/http/test/RequestParserTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/OrchestratorProxy.java" afterPath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/OrchestratorProxy.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/http/SimpleServer.java" afterPath="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/http/SimpleServer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-commons/src/test/java/com/chaos/octopus/commons/core/http/test/SimpleServerTest.java" afterPath="$PROJECT_DIR$/octopus-commons/src/test/java/com/chaos/octopus/commons/core/http/test/SimpleServerTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java" afterPath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java" />
     </list>
     <ignored path="parent-project.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -39,70 +39,53 @@
     <favorites_list name="parent-project" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.5988157">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="OrchestratorImpl.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="OrchestratorImpl.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="92" column="20" selection-start-line="92" selection-start-column="20" selection-end-line="92" selection-end-column="20" />
-                  <folding>
-                    <element signature="n#!!doc" expanded="false" />
-                    <element signature="imports" expanded="false" />
-                    <element signature="e#1828#1829#0" expanded="false" />
-                    <element signature="e#1897#1898#0" expanded="false" />
-                    <element signature="e#2845#2846#0" expanded="false" />
-                    <element signature="e#2892#2893#0" expanded="false" />
-                    <element signature="e#5577#5578#0" expanded="false" />
-                    <element signature="e#5599#5600#0" expanded="false" />
-                    <element signature="e#6282#6283#0" expanded="false" />
-                    <element signature="e#6315#6316#0" expanded="false" />
-                  </folding>
+                <state relative-caret-position="378">
+                  <caret line="195" column="0" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Message.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/message/Message.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
-                  <folding>
-                    <element signature="n#!!doc" expanded="false" />
-                    <element signature="imports" expanded="false" />
-                    <element signature="e#398#399#0" expanded="false" />
-                    <element signature="e#460#461#0" expanded="false" />
-                    <element signature="e#631#632#0" expanded="false" />
-                    <element signature="e#654#655#0" expanded="false" />
-                    <element signature="e#696#697#0" expanded="false" />
-                    <element signature="e#726#727#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SimpleServer.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="SimpleServer.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/http/SimpleServer.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="329">
-                  <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+                <state relative-caret-position="584">
+                  <caret line="113" column="0" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#1125#1126#0" expanded="true" />
-                    <element signature="e#1159#1160#0" expanded="true" />
+                    <element signature="e#1326#1327#0" expanded="true" />
+                    <element signature="e#1367#1368#0" expanded="true" />
+                    <element signature="e#1492#1493#0" expanded="true" />
+                    <element signature="e#1526#1527#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Response.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/Response.java">
+          <file leaf-file-name="OrchestratorProxy.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/OrchestratorProxy.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+                <state relative-caret-position="336">
+                  <caret line="55" column="26" selection-start-line="55" selection-start-column="26" selection-end-line="55" selection-end-column="26" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="NetworkingUtil.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/util/NetworkingUtil.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="256">
+                  <caret line="28" column="6" selection-start-line="28" selection-start-column="6" selection-end-line="28" selection-end-column="6" />
                   <folding>
-                    <element signature="imports" expanded="true" />
+                    <element signature="e#701#702#0" expanded="true" />
+                    <element signature="e#735#736#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -112,14 +95,24 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="SimpleServerTest.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="SimpleServerTest.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/octopus-commons/src/test/java/com/chaos/octopus/commons/core/http/test/SimpleServerTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="128">
-                  <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+                <state relative-caret-position="224">
+                  <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="DistributeToWorkersTest.java" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/octopus-integrationtests/src/test/java/com/chaos/octopus/integrationtests/DistributeToWorkersTest.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="432">
+                  <caret line="38" column="36" selection-start-line="38" selection-start-column="36" selection-end-line="38" selection-end-column="36" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -131,8 +124,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -148,9 +141,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/sdk/v6/dto/Error.java" />
-        <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/sdk/Chaos.java" />
-        <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/sdk/v6/dto/Heartbeat.java" />
         <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/TaskState.java" />
         <option value="$PROJECT_DIR$/octopus-server/src/test/java/com/chaos/octopus/server/unit/Synchronization/HeartbeatTest.java" />
         <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/util/Commands.java" />
@@ -190,15 +180,18 @@
         <option value="$PROJECT_DIR$/octopus-integrationtests/src/test/java/com/chaos/octopus/integrationtests/AgentNetworkingTest.java" />
         <option value="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AllocationHandler.java" />
         <option value="$PROJECT_DIR$/LICENSE.txt" />
-        <option value="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java" />
         <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/Response.java" />
         <option value="$PROJECT_DIR$/octopus-commons/src/test/java/com/chaos/octopus/commons/core/http/test/RequestParser.java" />
         <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/http/HttpRequestParser.java" />
         <option value="$PROJECT_DIR$/octopus-commons/src/test/java/com/chaos/octopus/commons/core/http/test/RequestParserTest.java" />
         <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/http/RequestParser.java" />
         <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/Request.java" />
+        <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/EndPoint.java" />
         <option value="$PROJECT_DIR$/octopus-commons/src/test/java/com/chaos/octopus/commons/core/http/test/SimpleServerTest.java" />
         <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/http/SimpleServer.java" />
+        <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/Endpoint.java" />
+        <option value="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/OrchestratorProxy.java" />
+        <option value="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java" />
       </list>
     </option>
   </component>
@@ -835,6 +828,68 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="parent-project" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="octopus-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="octopus-agent" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="parent-project" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="octopus-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="octopus-agent" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="parent-project" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="octopus-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="octopus-agent" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="agent" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -851,7 +906,7 @@
     <property name="last_directory_selection" value="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="extract.method.default.visibility" value="private" />
@@ -868,33 +923,7 @@
       <recent name="com.chaos.sdk" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.SimpleServerTest.nothing">
-    <configuration default="false" name="AgentTest.getState_NoTasksQueued_ReturnEmptyState" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.chaos.octopus.agent.unit.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="octopus-agent" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.chaos.octopus.agent.unit" />
-      <option name="MAIN_CLASS_NAME" value="com.chaos.octopus.agent.unit.AgentTest" />
-      <option name="METHOD_NAME" value="getState_NoTasksQueued_ReturnEmptyState" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="JUnit.DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers">
     <configuration default="false" name="AgentStateActionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -986,6 +1015,32 @@
       <option name="PACKAGE_NAME" value="com.chaos.octopus.commons.core.http.test" />
       <option name="MAIN_CLASS_NAME" value="com.chaos.octopus.commons.core.http.test.RequestParserTest" />
       <option name="METHOD_NAME" value="parse_GivenValidRequest_Return" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="false" name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.chaos.octopus.integrationtests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="octopus-integrationtests" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.chaos.octopus.integrationtests" />
+      <option name="MAIN_CLASS_NAME" value="com.chaos.octopus.integrationtests.DistributeToWorkersTest" />
+      <option name="METHOD_NAME" value="distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
@@ -1444,19 +1499,19 @@
     </configuration>
     <list size="6">
       <item index="0" class="java.lang.String" itemvalue="JUnit.All Tests" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.AgentTest.getState_NoTasksQueued_ReturnEmptyState" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.AgentStateActionTest" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.AgentNetworkingTest.agentDisconnect_NewJobIsQueued_AgentShouldBeRemovedFromAgentList" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.SimpleServerTest.nothing" />
-      <item index="5" class="java.lang.String" itemvalue="JUnit.RequestParserTest.parse_GivenValidRequest_Return" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.AgentStateActionTest" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.AgentNetworkingTest.agentDisconnect_NewJobIsQueued_AgentShouldBeRemovedFromAgentList" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.SimpleServerTest.nothing" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.RequestParserTest.parse_GivenValidRequest_Return" />
+      <item index="5" class="java.lang.String" itemvalue="JUnit.DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.SimpleServerTest.nothing" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.RequestParserTest.parse_GivenValidRequest_Return" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.AgentNetworkingTest.agentDisconnect_NewJobIsQueued_AgentShouldBeRemovedFromAgentList" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.AgentStateActionTest" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.AgentTest.getState_NoTasksQueued_ReturnEmptyState" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.SimpleServerTest.nothing" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.RequestParserTest.parse_GivenValidRequest_Return" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.AgentNetworkingTest.agentDisconnect_NewJobIsQueued_AgentShouldBeRemovedFromAgentList" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.AgentStateActionTest" />
       </list>
     </recent_temporary>
   </component>
@@ -1480,44 +1535,44 @@
       <workItem from="1466691045796" duration="601000" />
       <workItem from="1466764339577" duration="7277000" />
       <workItem from="1467023521811" duration="7535000" />
-      <workItem from="1467103515684" duration="8518000" />
+      <workItem from="1467103515684" duration="15752000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="RequestParserTest_parse_GivenValidRequest_Return - 2016.06.28 at 14h 45m 31s.xml">
-      <configuration name="RequestParserTest.parse_GivenValidRequest_Return" configurationId="JUnit" />
+    <history-entry file="DistributeToWorkersTest_distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers - 2016.06.28 at 16h 41m 07s.xml">
+      <configuration name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SimpleServerTest_nothing - 2016.06.28 at 14h 50m 09s.xml">
-      <configuration name="SimpleServerTest.nothing" configurationId="JUnit" />
+    <history-entry file="DistributeToWorkersTest_distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers - 2016.06.28 at 16h 41m 13s.xml">
+      <configuration name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SimpleServerTest_nothing - 2016.06.28 at 14h 50m 25s.xml">
-      <configuration name="SimpleServerTest.nothing" configurationId="JUnit" />
+    <history-entry file="DistributeToWorkersTest_distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers - 2016.06.28 at 16h 41m 20s.xml">
+      <configuration name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SimpleServerTest_nothing - 2016.06.28 at 14h 50m 36s.xml">
-      <configuration name="SimpleServerTest.nothing" configurationId="JUnit" />
+    <history-entry file="DistributeToWorkersTest_distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers - 2016.06.28 at 16h 42m 07s.xml">
+      <configuration name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SimpleServerTest_nothing - 2016.06.28 at 14h 50m 57s.xml">
-      <configuration name="SimpleServerTest.nothing" configurationId="JUnit" />
+    <history-entry file="DistributeToWorkersTest_distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers - 2016.06.28 at 16h 42m 52s.xml">
+      <configuration name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SimpleServerTest_nothing - 2016.06.28 at 14h 52m 43s.xml">
-      <configuration name="SimpleServerTest.nothing" configurationId="JUnit" />
+    <history-entry file="DistributeToWorkersTest_distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers - 2016.06.28 at 16h 53m 37s.xml">
+      <configuration name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SimpleServerTest_nothing - 2016.06.28 at 14h 53m 42s.xml">
-      <configuration name="SimpleServerTest.nothing" configurationId="JUnit" />
+    <history-entry file="DistributeToWorkersTest_distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers - 2016.06.28 at 16h 57m 16s.xml">
+      <configuration name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SimpleServerTest_nothing - 2016.06.28 at 14h 59m 15s.xml">
-      <configuration name="SimpleServerTest.nothing" configurationId="JUnit" />
+    <history-entry file="DistributeToWorkersTest_distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers - 2016.06.28 at 17h 05m 59s.xml">
+      <configuration name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SimpleServerTest_nothing - 2016.06.28 at 15h 03m 48s.xml">
-      <configuration name="SimpleServerTest.nothing" configurationId="JUnit" />
+    <history-entry file="DistributeToWorkersTest_distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers - 2016.06.28 at 17h 06m 27s.xml">
+      <configuration name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SimpleServerTest_nothing - 2016.06.28 at 15h 04m 26s.xml">
-      <configuration name="SimpleServerTest.nothing" configurationId="JUnit" />
+    <history-entry file="DistributeToWorkersTest_distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers - 2016.06.28 at 17h 06m 44s.xml">
+      <configuration name="DistributeToWorkersTest.distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32638000" />
+    <option name="totallyTimeSpent" value="39872000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1531,11 +1586,11 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.096875" sideWeight="0.4973404" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25052854" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25158563" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1734375" sideWeight="0.4974055" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19947916" sideWeight="0.4974055" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23150106" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1574,34 +1629,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/message/TaskMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="30" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/sdk/NetworkGateway.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="23" column="3" selection-start-line="23" selection-start-column="3" selection-end-line="23" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/message/AgentStateMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-integrationtests/src/test/java/com/chaos/octopus/integrationtests/EstablishConnectionTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="76" column="6" selection-start-line="76" selection-start-column="6" selection-end-line="76" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/octopus-commons/src/test/java/com/chaos/sdk/test/ChaosTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1686,27 +1713,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-integrationtests/src/test/java/com/chaos/octopus/integrationtests/DistributeToWorkersTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="34" column="55" selection-start-line="34" selection-start-column="55" selection-end-line="34" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-agent/src/test/java/com/chaos/octopus/agent/unit/AgentTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="28" column="28" selection-start-line="28" selection-start-column="28" selection-end-line="28" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/Agent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="50" column="55" selection-start-line="50" selection-start-column="55" selection-end-line="50" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/octopus-server/src/test/java/com/chaos/octopus/server/unit/OrchestratorImplTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1787,13 +1793,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/util/NetworkingUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="18" column="18" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/sdk/AuthenticatedChaosClient.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1868,49 +1867,17 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/message/Message.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#398#399#0" expanded="false" />
-            <element signature="e#460#461#0" expanded="false" />
-            <element signature="e#631#632#0" expanded="false" />
-            <element signature="e#654#655#0" expanded="false" />
-            <element signature="e#696#697#0" expanded="false" />
-            <element signature="e#726#727#0" expanded="false" />
+            <element signature="e#1352#1353#0" expanded="false" />
+            <element signature="e#1386#1387#0" expanded="false" />
+            <element signature="e#2055#2056#0" expanded="false" />
+            <element signature="e#2101#2102#0" expanded="false" />
+            <element signature="e#2784#2785#0" expanded="false" />
+            <element signature="e#2829#2830#0" expanded="false" />
+            <element signature="e#3023#3024#0" expanded="false" />
+            <element signature="e#3048#3049#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="92" column="20" selection-start-line="92" selection-start-column="20" selection-end-line="92" selection-end-column="20" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#1828#1829#0" expanded="false" />
-            <element signature="e#1897#1898#0" expanded="false" />
-            <element signature="e#2845#2846#0" expanded="false" />
-            <element signature="e#2892#2893#0" expanded="false" />
-            <element signature="e#5577#5578#0" expanded="false" />
-            <element signature="e#5599#5600#0" expanded="false" />
-            <element signature="e#6282#6283#0" expanded="false" />
-            <element signature="e#6315#6316#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/util/StreamUtilities.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="14" column="21" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -1952,25 +1919,118 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/util/StreamUtilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="22" column="22" selection-start-line="22" selection-start-column="22" selection-end-line="22" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/Agent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="436">
+          <caret line="50" column="55" selection-start-line="50" selection-start-column="55" selection-end-line="50" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/sdk/NetworkGateway.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/message/TaskMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="18" column="3" selection-start-line="18" selection-start-column="3" selection-end-line="18" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/message/Message.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="35" column="8" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-agent/src/test/java/com/chaos/octopus/agent/unit/AgentTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="34" column="17" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/octopus-commons/src/test/java/com/chaos/octopus/commons/core/http/test/SimpleServerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+        <state relative-caret-position="224">
+          <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/util/NetworkingUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="28" column="6" selection-start-line="28" selection-start-column="6" selection-end-line="28" selection-end-column="6" />
+          <folding>
+            <element signature="e#701#702#0" expanded="true" />
+            <element signature="e#735#736#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-integrationtests/src/test/java/com/chaos/octopus/integrationtests/DistributeToWorkersTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="38" column="36" selection-start-line="38" selection-start-column="36" selection-end-line="38" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/http/SimpleServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+        <state relative-caret-position="584">
+          <caret line="113" column="0" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1125#1126#0" expanded="true" />
-            <element signature="e#1159#1160#0" expanded="true" />
+            <element signature="e#1326#1327#0" expanded="true" />
+            <element signature="e#1367#1368#0" expanded="true" />
+            <element signature="e#1492#1493#0" expanded="true" />
+            <element signature="e#1526#1527#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/Endpoint.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="6" column="33" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/OrchestratorProxy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="55" column="26" selection-start-line="55" selection-start-column="26" selection-end-line="55" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="195" column="0" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2026,7 +2086,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>octopus-server</last-edited>
+          <last-edited>octopus-commons</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

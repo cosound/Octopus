@@ -5,14 +5,12 @@
 package com.chaos.octopus.server;
 
 import com.chaos.octopus.commons.core.*;
-import com.chaos.octopus.commons.core.message.AgentStateMessage;
 import com.chaos.octopus.commons.core.message.ConnectMessage;
 import com.chaos.octopus.commons.core.message.Message;
 import com.chaos.octopus.commons.core.message.TaskMessage;
 import com.chaos.octopus.commons.exception.ConnectException;
 import com.chaos.octopus.commons.http.SimpleServer;
 import com.chaos.octopus.commons.util.Commands;
-import com.chaos.octopus.commons.util.NetworkingUtil;
 import com.chaos.octopus.commons.util.StreamUtilities;
 import com.chaos.octopus.server.synchronization.EnqueueJobs;
 import com.chaos.octopus.server.synchronization.Heartbeat;
@@ -20,10 +18,8 @@ import com.chaos.octopus.server.synchronization.Synchronization;
 import com.chaos.octopus.server.synchronization.UpdateJob;
 import com.chaos.sdk.AuthenticatedChaosClient;
 import com.chaos.sdk.Chaos;
-import com.chaos.sdk.v6.dto.ClusterState;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -42,6 +38,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
   private int _port;
   private AllocationHandler _AllocationHandler;
   private Synchronization _synchronization;
+  private SimpleServer _simpleServer;
 
   public OrchestratorImpl(int port) {
     this(port, new Synchronization(), new ConcurrentJobQueue());
@@ -53,6 +50,10 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
 
     _jobsWithUpdates = queue;
     _synchronization = sync;
+
+    _simpleServer = new SimpleServer();
+    _simpleServer.addEndpoint("Task/Update", new TaskUpdateEndpoint());
+    _simpleServer.addEndpoint("Task/Complete", new TaskCompleteEndpoint());
   }
 
   public static OrchestratorImpl create(OctopusConfiguration config) throws IOException {
@@ -90,9 +91,6 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
   }
 
   public void run() {
-    SimpleServer ss = new SimpleServer();
-    ss.run();
-
     while (_isRunning) {
       try (Socket socket = _socket.accept()) {
         String result = StreamUtilities.ReadString(socket.getInputStream());
@@ -116,20 +114,6 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
 
             break;
           }
-          case Commands.TASK_DONE: {
-            TaskMessage taskMessage = TaskMessage.createFromJson(result);
-
-            taskCompleted(taskMessage.getTask());
-
-            break;
-          }
-          case Commands.TASK_UPDATE: {
-            TaskMessage taskMessage = TaskMessage.createFromJson(result);
-
-            taskUpdate(taskMessage.getTask());
-
-            break;
-          }
         }
       } catch (SocketException se) {
         // if the socket is closed it means the server is turned off, so we can ignore the exception
@@ -138,8 +122,6 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
         e.printStackTrace();
       }
     }
-
-    ss._isRunning = false;
   }
 
   @Override
@@ -180,6 +162,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
 
   public void close() throws Exception {
     _isRunning = false;
+    _simpleServer.stop();
 
     if (_socket != null) _socket.close();
     if (_AllocationHandler != null) _AllocationHandler.close();
@@ -198,5 +181,27 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
 
   public Synchronization get_synchronization() {
     return _synchronization;
+  }
+
+  private class TaskUpdateEndpoint implements Endpoint {
+    public Response invoke(Request request) {
+      String taskJson = request.queryString.get("task");
+      Task task = StreamUtilities.ReadJson(taskJson, Task.class);
+
+      taskUpdate(task);
+
+      return new Response();
+    }
+  }
+
+  private class TaskCompleteEndpoint implements Endpoint{
+    public Response invoke(Request request) {
+      String taskJson = request.queryString.get("task");
+      Task task = StreamUtilities.ReadJson(taskJson, Task.class);
+
+      taskCompleted(task);
+
+      return new Response();
+    }
   }
 }

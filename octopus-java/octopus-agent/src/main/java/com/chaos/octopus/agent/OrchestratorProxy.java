@@ -9,9 +9,13 @@ import com.chaos.octopus.commons.core.message.ConnectMessage;
 import com.chaos.octopus.commons.core.message.TaskMessage;
 import com.chaos.octopus.commons.util.Commands;
 import com.chaos.octopus.commons.util.NetworkingUtil;
+import com.chaos.octopus.commons.util.StreamUtilities;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Inet4Address;
+import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class OrchestratorProxy implements Orchestrator {
@@ -44,16 +48,24 @@ public class OrchestratorProxy implements Orchestrator {
   }
 
   public void taskCompleted(Task task) {
-    TaskMessage msg = new TaskMessage(Commands.TASK_DONE, task);
+    try(Socket socket = new Socket("localhost", 8080)) {
+      String taskString = new Gson().toJson(task);
 
-    _network.send(msg.toJson());
+      socket.getOutputStream().write(String.format("GET /Task/Complete/?task=%1s HTTP/1.1", taskString).getBytes());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public void taskUpdate(Task task) {
-    TaskMessage msg = new TaskMessage(Commands.TASK_UPDATE, task);
+    try(Socket socket = new Socket("localhost", 8080)) {
+      String taskString = new Gson().toJson(task);
 
-    _network.send(msg.toJson());
+      socket.getOutputStream().write(String.format("GET /Task/Update/?task=%1s HTTP/1.1", taskString).getBytes());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
