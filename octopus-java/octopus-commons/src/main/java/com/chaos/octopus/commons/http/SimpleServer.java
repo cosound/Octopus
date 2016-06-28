@@ -4,22 +4,15 @@ import com.chaos.octopus.commons.core.Request;
 import com.chaos.octopus.commons.core.Response;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by Jesper on 23-06-2016.
- */
 public class SimpleServer implements Runnable{
 
   private boolean _isRunning = true;
   private ServerSocket _serverSocket;
+  private ExecutorService pool = Executors.newFixedThreadPool(16);
 
   public SimpleServer(){
     try {
@@ -33,33 +26,45 @@ public class SimpleServer implements Runnable{
     _isRunning = false;
     try {
       _serverSocket.close();
-    } catch (IOException e) { }
+    } catch (IOException ignored) { }
   }
 
   @Override
   public void run() {
     while (_isRunning) {
         try{
-          Socket socket = _serverSocket.accept();
-          new HttpRequestHandler(socket).invoke();
+          final Socket socket = _serverSocket.accept();
+          pool.execute(new RequestHandler(socket));
         } catch (IOException e) {
           e.printStackTrace();
         }
     }
   }
 
-  private class HttpRequestHandler {
+  private class RequestHandler implements Runnable {
     private Socket socket;
 
-    public HttpRequestHandler(Socket socket) {
+    public RequestHandler(Socket socket) {
       this.socket = socket;
     }
 
-    public void invoke() throws IOException {
-      while(socket.getInputStream().available() == 0);
+    @Override
+    public void run() {
+      try {
+        String requestString = readRequestFromStream();
 
-      Request request = parseRequest();
+        Request request = RequestParser.parse(requestString);
 
+        Response res = route(request);
+
+        SendResponse(res);
+        socket.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    Response route(Request request) {
       Response res = new Response();
       Response.Result result = res.new Result();
       res.Results.add(result);
@@ -68,11 +73,12 @@ public class SimpleServer implements Runnable{
         result.Keys.add(val);
       }
 
-      SendResponse(res);
-      socket.close();
+      return res;
     }
 
-    private Request parseRequest() throws IOException {
+    String readRequestFromStream() throws IOException {
+      while(socket.getInputStream().available() == 0);
+
       String requestString = "";
 
       while(socket.getInputStream().available() != 0){
@@ -82,40 +88,12 @@ public class SimpleServer implements Runnable{
         requestString += new String(buffer);
       }
 
-      int startOfEndpoint = requestString.indexOf(" ");
-      int endOfEndpoint = requestString.indexOf("?") != -1 ?
-          requestString.indexOf("?"):
-          requestString.lastIndexOf("HTTP/");
-      String endpoint = requestString.substring(startOfEndpoint, endOfEndpoint).trim();
-
-      Request request = new Request(endpoint);
-      request.queryString = parseQueryString(requestString);
-
-      return request;
+      return requestString;
     }
 
-    private Map<String, String> parseQueryString(String requestString) throws UnsupportedEncodingException {
-      Map<String, String> parameters = new HashMap<>();
-      int startOfQueryString = requestString.indexOf("?");
 
-      if(startOfQueryString == -1) return parameters;
 
-      String query = requestString.substring(startOfQueryString +1, requestString.indexOf("HTTP"));
-      query = URLDecoder.decode(query.trim(), "UTF-8");
-
-      if("".equals(query)) return parameters;
-
-      for (String pair : query.split("&")) {
-        String key = pair.split("=")[0];
-        String value = pair.split("=")[1];
-
-        parameters.put(key, value);
-      }
-
-      return parameters;
-    }
-
-    private void SendResponse(Response response) throws IOException {
+    void SendResponse(Response response) throws IOException {
       String content = response.toJson();
       byte[] contentBytes = content.getBytes();
 
