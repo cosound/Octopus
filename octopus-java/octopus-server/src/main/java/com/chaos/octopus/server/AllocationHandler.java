@@ -22,6 +22,7 @@ public class AllocationHandler implements AutoCloseable {
 
   public void addAgent(AgentProxy agent) {
     _agents.add(agent);
+
     enqueueNextTaskOnAgent();
   }
 
@@ -48,23 +49,28 @@ public class AllocationHandler implements AutoCloseable {
   private void enqueueNextTaskOnAgent() {
     synchronized (_Jobs) {
       for (Job job : _Jobs)
-        for (Task task : job.getTasks(TaskState.isQueueable()))
-        {
+        for (Task task : job.getTasks(TaskState.isQueueable())) {
           task.setTargetAgent(job.targetAgent);
           enqueue(task);
         }
     }
   }
 
+  private Object enqueueLock = new Object();
+
   public void enqueue(Task task) {
     for (int i = 0; i < _agents.size(); i++) {
       AgentProxy agent = _agents.get(i);
 
       if(task.getTargetAgent() != null && !agent.getHostname().equals(task.getTargetAgent())) continue;
-      if(agent.isQueueFull()) continue;
+
+      synchronized (enqueueLock) {
+        if(agent.isQueueFull()) continue;
+
+        enqueueOrDisconnectAgent(task, agent);
+      }
 
       task.set_State(TaskState.Queued);
-      enqueueOrDisconnectAgent(task, agent);
 
       return;
     }
@@ -79,9 +85,7 @@ public class AllocationHandler implements AutoCloseable {
   }
 
   public ArrayList<AgentProxy> getAgents() {
-    synchronized (_agents) {
-      return _agents;
-    }
+    return _agents;
   }
 
   public synchronized void taskUpdate(Task task) {
@@ -122,7 +126,7 @@ public class AllocationHandler implements AutoCloseable {
           return job;
     }
 
-    throw new ArrayIndexOutOfBoundsException("Job containing given task not found");
+    throw new ArrayIndexOutOfBoundsException("Job containing given key not found");
   }
 
   public int getQueued() {

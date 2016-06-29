@@ -51,7 +51,7 @@ public class AllocationHandlerTest
         AgentProxy agent = mock(AgentProxy.class);
         ah.addAgent(agent);
         ah.enqueue(job);
-        task1.set_State(TaskState.Committed); // simulate the task was completed
+        task1.set_State(TaskState.Committed); // simulate the key was completed
 
         ah.taskComplete(task1);
 

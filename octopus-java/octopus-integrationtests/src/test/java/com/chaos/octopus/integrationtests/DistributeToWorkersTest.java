@@ -9,6 +9,8 @@ import static org.junit.Assert.*;
 
 public class DistributeToWorkersTest extends TestBase
 {
+
+  // todo occasional bug
     @Test
     public void distributeTasksAmongstWorkers_GivenAJobWithMoreTasksThanOneWorkerCanHandle_ExecuteOnOtherWorkers() throws Exception
     {
@@ -32,11 +34,11 @@ public class DistributeToWorkersTest extends TestBase
 
             TestUtils.waitUntil(new Check() {
                 @Override
-                public Boolean isTrue() {return agent1.getQueueSize() == 1 && agent2.getQueueSize() == 1;}
+                public Boolean isTrue() { return agent1.getQueueSize() == 1 && agent2.getQueueSize() == 1;}
             });
-            
-            assertEquals("One task should be queued", 1, agent1.getQueueSize());
-            assertEquals("One task should be queued", 1, agent2.getQueueSize());
+
+            assertEquals("One key should be queued", 1, agent1.getQueueSize());
+            assertEquals("One key should be queued", 1, agent2.getQueueSize());
         }
     }
 

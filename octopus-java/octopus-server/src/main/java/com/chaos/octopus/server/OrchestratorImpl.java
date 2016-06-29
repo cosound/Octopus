@@ -7,7 +7,6 @@ package com.chaos.octopus.server;
 import com.chaos.octopus.commons.core.*;
 import com.chaos.octopus.commons.core.message.ConnectMessage;
 import com.chaos.octopus.commons.core.message.Message;
-import com.chaos.octopus.commons.core.message.TaskMessage;
 import com.chaos.octopus.commons.exception.ConnectException;
 import com.chaos.octopus.commons.http.SimpleServer;
 import com.chaos.octopus.commons.util.Commands;
@@ -26,15 +25,12 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrchestratorImpl implements Orchestrator, Runnable {
+public class OrchestratorImpl implements Orchestrator {
   // keeps track of the jobs thqt need to be updated
   // listens for packets from the agents
   // Parses the message and decides how to handle it
   // Contains the synchronization
   private final ConcurrentJobQueue _jobsWithUpdates;
-  private boolean _isRunning = false;
-  private Thread _thread;
-  private ServerSocket _socket;
   private int _port;
   private AllocationHandler _AllocationHandler;
   private Synchronization _synchronization;
@@ -51,9 +47,10 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
     _jobsWithUpdates = queue;
     _synchronization = sync;
 
-    _simpleServer = new SimpleServer();
+    _simpleServer = new SimpleServer(listeningPort);
     _simpleServer.addEndpoint("Task/Update", new TaskUpdateEndpoint());
     _simpleServer.addEndpoint("Task/Complete", new TaskCompleteEndpoint());
+    _simpleServer.addEndpoint("Agent/Connect", new AgentConnectEndpoint());
   }
 
   public static OrchestratorImpl create(OctopusConfiguration config) throws IOException {
@@ -75,53 +72,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
   }
 
   public void open() {
-    try {
-      _socket = new ServerSocket(_port);
-      _isRunning = true;
-
-      _thread = new Thread(this);
-      _thread.setName("Orchestrator");
-      _thread.start();
-
-      // todo: move interval to configuration
-      _synchronization.synchronize(30 * 1000); // synchronize every 30 seconds
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void run() {
-    while (_isRunning) {
-      try (Socket socket = _socket.accept()) {
-        String result = StreamUtilities.ReadString(socket.getInputStream());
-
-        Message message = Message.createFromJson(result);
-
-        // todo: refactor switch, perhaps using the specification pattern.
-        switch (message.getAction()) {
-          case Commands.CONNECT: {
-            ConnectMessage connect = ConnectMessage.createFromJson(result);
-
-            try {
-              AgentProxy ap = new AgentProxy(connect.get_Hostname(), connect.get_Port());
-              ap.InitializeAgent();
-
-              _AllocationHandler.addAgent(ap);
-            } catch (ConnectException e) {
-              System.err.println("Connection to Agent could not be established, hostname: " + connect.get_Hostname() + ", port: " + connect.get_Port());
-              e.printStackTrace();
-            }
-
-            break;
-          }
-        }
-      } catch (SocketException se) {
-        // if the socket is closed it means the server is turned off, so we can ignore the exception
-        if (!_socket.isClosed()) se.printStackTrace();
-      } catch (IOException | InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
+    // todo: move interval to configuration
+    _synchronization.synchronize(30 * 1000); // synchronize every 30 seconds
   }
 
   @Override
@@ -161,10 +113,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
   }
 
   public void close() throws Exception {
-    _isRunning = false;
     _simpleServer.stop();
 
-    if (_socket != null) _socket.close();
     if (_AllocationHandler != null) _AllocationHandler.close();
     if (_synchronization != null) _synchronization.stop();
   }
@@ -186,6 +136,7 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
   private class TaskUpdateEndpoint implements Endpoint {
     public Response invoke(Request request) {
       String taskJson = request.queryString.get("task");
+
       Task task = StreamUtilities.ReadJson(taskJson, Task.class);
 
       taskUpdate(task);
@@ -200,6 +151,25 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
       Task task = StreamUtilities.ReadJson(taskJson, Task.class);
 
       taskCompleted(task);
+
+      return new Response();
+    }
+  }
+
+  private class AgentConnectEndpoint implements Endpoint {
+    public Response invoke(Request request) {
+      String hostname = request.queryString.get("hostname");
+      int port = Integer.parseInt(request.queryString.get("port"));
+
+      try {
+        AgentProxy ap = new AgentProxy(hostname, port);
+        ap.InitializeAgent();
+
+        _AllocationHandler.addAgent(ap);
+      } catch (ConnectException e) {
+        System.err.println("Connection to Agent could not be established, hostname: " + hostname + ", port: " + port);
+        e.printStackTrace();
+      }
 
       return new Response();
     }

@@ -21,8 +21,8 @@ public class Heartbeat implements SynchronizationTask {
     for (AgentProxy ap : allocationHandler.getAgents()){
       ClusterState.AgentState as = ap.getState();
       as.hasAvailableSlots = !ap.isQueueFull();
-      as.hostname = ap.get_network().get_hostname();
-      as.port = ap.get_network().get_port();
+      as.hostname = ap.getHostname();
+      as.port = ap.port;
 
       state.agents.add(as);
     }

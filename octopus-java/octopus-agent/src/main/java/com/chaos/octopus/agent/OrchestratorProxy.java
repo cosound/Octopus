@@ -5,28 +5,24 @@
 package com.chaos.octopus.agent;
 
 import com.chaos.octopus.commons.core.*;
-import com.chaos.octopus.commons.core.message.ConnectMessage;
-import com.chaos.octopus.commons.core.message.TaskMessage;
-import com.chaos.octopus.commons.util.Commands;
-import com.chaos.octopus.commons.util.NetworkingUtil;
-import com.chaos.octopus.commons.util.StreamUtilities;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class OrchestratorProxy implements Orchestrator {
+  private final int port;
+  private final String hostname;
   private int _localListenPort;
   private String _localHostAddress;
-  private NetworkingUtil _network;
 
   public OrchestratorProxy(String hostname, int port, int listenPort) {
     _localHostAddress = getHostAddress();
     _localListenPort = listenPort;
-    _network = new NetworkingUtil(hostname, port);
+    this.port = port;
+    this.hostname = hostname;
   }
 
   private String getHostAddress() {
@@ -42,29 +38,54 @@ public class OrchestratorProxy implements Orchestrator {
   }
 
   public void open() throws ConnectException {
-    ConnectMessage msg = new ConnectMessage(_localHostAddress, _localListenPort);
-
-    _network.send(msg.toJson());
+    sendResponse("Agent/Connect",
+        new KeyValue("hostname", _localHostAddress),
+        new KeyValue("port", _localListenPort + ""));
   }
 
   public void taskCompleted(Task task) {
-    try(Socket socket = new Socket("localhost", 8080)) {
-      String taskString = new Gson().toJson(task);
+    String taskString = new Gson().toJson(task);
 
-      socket.getOutputStream().write(String.format("GET /Task/Complete/?task=%1s HTTP/1.1", taskString).getBytes());
-    } catch (IOException e) {
+    sendResponse("Task/Complete", new KeyValue("task", taskString));
+  }
+
+  public void taskUpdate(Task task) {
+    String taskString = new Gson().toJson(task);
+
+    sendResponse("Task/Update", new KeyValue("task", taskString));
+  }
+
+  private void sendResponse(String endpoint, KeyValue... parameters) {
+    String queryString = "";
+
+    for (KeyValue entry: parameters)
+      queryString += String.format("%1s=%2s&", entry.key, entry.value);
+
+    sendResponse(String.format("GET /%1s/?%2s HTTP/1.1", endpoint, queryString), 10);
+  }
+
+  private void sendResponse(String message, int retries) {
+    try(Socket socket = new Socket(hostname, port)) {
+      socket.getOutputStream().write(message.getBytes());
+    } catch (ConnectException e) {
+      throw new com.chaos.octopus.commons.exception.ConnectException("Connection to Orchestrator could not be established, check hostname and port", e);
+    } catch (Exception e) {
+      if (retries > 0) {
+        sleep(250);
+        sendResponse(message, --retries);
+      }
+
+      // TODO This exception should be handled at a higher level
+      System.err.println("Couldn't connect to: " + "" + ":" + "");
       e.printStackTrace();
     }
   }
 
-  @Override
-  public void taskUpdate(Task task) {
-    try(Socket socket = new Socket("localhost", 8080)) {
-      String taskString = new Gson().toJson(task);
+  private void sleep(int millis) {
+    try {
+      Thread.sleep(millis);
+    } catch (InterruptedException e1) {
 
-      socket.getOutputStream().write(String.format("GET /Task/Update/?task=%1s HTTP/1.1", taskString).getBytes());
-    } catch (IOException e) {
-      e.printStackTrace();
     }
   }
 

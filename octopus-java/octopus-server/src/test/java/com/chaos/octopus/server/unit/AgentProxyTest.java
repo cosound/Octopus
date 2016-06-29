@@ -8,6 +8,8 @@ import com.chaos.sdk.v6.dto.ClusterState;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import static junit.framework.Assert.*;
+
 public class AgentProxyTest {
   @Test
   public void getState_AgentNotConnected_ReturnDisconnectedState(){
@@ -15,7 +17,7 @@ public class AgentProxyTest {
 
     ClusterState.AgentState state = ap.getState();
 
-    Assert.assertEquals("Disconnected", state.state);
+    assertEquals("Disconnected", state.state);
   }
 
   @Test
@@ -28,8 +30,8 @@ public class AgentProxyTest {
 
       ClusterState.AgentState state = ap.getState();
 
-      Assert.assertEquals("Connected", state.state);
-      Assert.assertEquals(1, state.parallelism);
+      assertEquals("Connected", state.state);
+      assertEquals("Parallelism not set", 1, state.parallelism);
     }
   }
 }

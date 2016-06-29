@@ -9,7 +9,7 @@ import org.junit.Test;
 public class SimpleServerTest {
   @Test
   public void nothing() throws InterruptedException {
-    SimpleServer ss = new SimpleServer();
+    SimpleServer ss = new SimpleServer(8080);
     ss.addEndpoint("test", new TestEndpoint());
 
     //Thread.sleep(100000);

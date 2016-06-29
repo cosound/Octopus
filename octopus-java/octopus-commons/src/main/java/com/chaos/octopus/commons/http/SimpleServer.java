@@ -18,9 +18,9 @@ public class SimpleServer implements Runnable{
   private ExecutorService _pool = Executors.newFixedThreadPool(8);
   private Map<String, Endpoint> _endpoints = new HashMap<>();
 
-  public SimpleServer(){
+  public SimpleServer(int listeningPort){
     try {
-      _serverSocket = new ServerSocket(8080);
+      _serverSocket = new ServerSocket(listeningPort);
       _thread = new Thread(this);
       _thread.setName("CHAOS Webserver");
       _thread.start();
@@ -66,6 +66,9 @@ public class SimpleServer implements Runnable{
 
         SendResponse(res);
         socket.close();
+      } catch (SocketException se) {
+        // if the socket is closed it means the server is turned off, so we can ignore the exception
+        if (!socket.isClosed()) se.printStackTrace();
       } catch (IOException e) {
         e.printStackTrace();
       }
