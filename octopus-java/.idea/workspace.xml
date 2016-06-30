@@ -2,23 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="057f0053-f4e8-40ac-9d01-6a2f351d655a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/endpoint/PluginGetEndpoint.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/endpoint/StateGetEndpoint.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/endpoint/TaskEnqueueEndpoint.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/endpoint/AgentConnectEndpoint.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/endpoint/TaskCompleteEndpoint.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/endpoint/TaskUpdateEndpoint.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/action/AgentAction.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/action/AgentStateAction.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/action/EnqueueTaskAction.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/action/ListSupportedPluginsAction.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/Agent.java" afterPath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/Agent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/ExecutionHandler.java" afterPath="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/ExecutionHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-agent/src/test/java/com/chaos/octopus/agent/unit/AgentTest.java" afterPath="$PROJECT_DIR$/octopus-agent/src/test/java/com/chaos/octopus/agent/unit/AgentTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-agent/src/test/java/com/chaos/octopus/agent/unit/action/AgentStateActionTest.java" afterPath="$PROJECT_DIR$/octopus-agent/src/test/java/com/chaos/octopus/agent/unit/action/AgentStateActionTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AllocationHandler.java" afterPath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AllocationHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java" afterPath="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java" />
     </list>
     <ignored path="parent-project.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -52,13 +36,15 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Agent.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/Agent.java">
+      <file leaf-file-name="AllocationHandler.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AllocationHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-98">
-              <caret line="30" column="14" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
+            <state relative-caret-position="176">
+              <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#2118#2119#0" expanded="true" />
+                <element signature="e#2144#2145#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -122,7 +108,6 @@
         <option value="$PROJECT_DIR$/octopus-commons/src/main/java/com/chaos/octopus/commons/core/AgentStateResult.java" />
         <option value="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AgentProxy.java" />
         <option value="$PROJECT_DIR$/octopus-integrationtests/src/test/java/com/chaos/octopus/integrationtests/DistributeToWorkersTest.java" />
-        <option value="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AllocationHandler.java" />
         <option value="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/StateGetEndpoint.java" />
         <option value="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/endpoint/PluginGetEndpoint.java" />
         <option value="$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/endpoint/TaskEnqueueEndpoint.java" />
@@ -137,6 +122,7 @@
         <option value="$PROJECT_DIR$/octopus-server/src/test/java/com/chaos/octopus/server/endpoint/AgentConnectEndpoint.java" />
         <option value="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/endpoint/AgentConnectEndpoint.java" />
         <option value="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java" />
+        <option value="$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AllocationHandler.java" />
       </list>
     </option>
   </component>
@@ -159,7 +145,38 @@
     </option>
   </component>
   <component name="MavenProjectNavigator">
-    <treeState />
+    <treeState>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="parent-project" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="parent-project" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Lifecycle" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$LifecycleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+      </PATH>
+    </treeState>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
@@ -1155,17 +1172,11 @@
       <workItem from="1467023521811" duration="7535000" />
       <workItem from="1467103515684" duration="15797000" />
       <workItem from="1467200687540" duration="14424000" />
-      <workItem from="1467282577172" duration="8225000" />
+      <workItem from="1467282577172" duration="8519000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="AgentStateActionTest_getState_OneTask_ReturnOneExecutingTask - 2016.06.30 at 16h 36m 54s.xml">
-      <configuration name="AgentStateActionTest.getState_OneTask_ReturnOneExecutingTask" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="AgentStateActionTest_getState_OneTask_ReturnOneExecutingTask - 2016.06.30 at 16h 37m 29s.xml">
-      <configuration name="AgentStateActionTest.getState_OneTask_ReturnOneExecutingTask" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="AgentStateActionTest_getState_OneTask_ReturnOneExecutingTask - 2016.06.30 at 16h 37m 46s.xml">
       <configuration name="AgentStateActionTest.getState_OneTask_ReturnOneExecutingTask" configurationId="JUnit" />
     </history-entry>
@@ -1190,9 +1201,15 @@
     <history-entry file="All_Tests - 2016.06.30 at 16h 48m 26s.xml">
       <configuration name="All Tests" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="All_Tests - 2016.06.30 at 16h 51m 14s.xml">
+      <configuration name="All Tests" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_Tests - 2016.06.30 at 16h 52m 59s.xml">
+      <configuration name="All Tests" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62566000" />
+    <option name="totallyTimeSpent" value="62860000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1511,17 +1528,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AllocationHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2167#2168#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/endpoint/PluginGetEndpoint.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="320">
@@ -1603,26 +1609,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/endpoint/AgentConnectEndpoint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/OrchestratorImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="112">
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/ExecutionHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1661,12 +1651,40 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/endpoint/AgentConnectEndpoint.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="3" column="46" selection-start-line="3" selection-start-column="46" selection-end-line="3" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/Agent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-98">
-          <caret line="30" column="14" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
+        <state relative-caret-position="286">
+          <caret line="54" column="40" selection-start-line="54" selection-start-column="40" selection-end-line="54" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-agent/src/main/java/com/chaos/octopus/agent/ExecutionHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/octopus-server/src/main/java/com/chaos/octopus/server/AllocationHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2118#2119#0" expanded="true" />
+            <element signature="e#2144#2145#0" expanded="true" />
           </folding>
         </state>
       </provider>

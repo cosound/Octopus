@@ -66,8 +66,6 @@ public class AllocationHandler implements AutoCloseable {
       for (int i = 0; i < _agents.size(); i++) {
         AgentProxy agent = _agents.get(i);
 
-        System.out.println("Agent / " + agent);
-
         if(task.getTargetAgent() != null && !agent.getHostname().equals(task.getTargetAgent())) continue;
         if(agent.isQueueFull()) continue;
 
