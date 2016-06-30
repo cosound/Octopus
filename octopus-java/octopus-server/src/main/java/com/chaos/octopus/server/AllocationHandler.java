@@ -12,18 +12,21 @@ import com.chaos.octopus.commons.exception.ConnectException;
 import java.util.ArrayList;
 
 public class AllocationHandler implements AutoCloseable {
-  private ArrayList<AgentProxy> _agents;
-  private ArrayList<Job> _Jobs;
-
-  public AllocationHandler() {
-    _agents = new ArrayList<>();
-    _Jobs = new ArrayList<>();
-  }
+  private ArrayList<AgentProxy> _agents = new ArrayList<>();
+  private ArrayList<Job> _Jobs = new ArrayList<>();
 
   public void addAgent(AgentProxy agent) {
-    _agents.add(agent);
+    synchronized (_agents){
+      _agents.add(agent);
 
-    enqueueNextTaskOnAgent();
+      enqueueNextTaskOnAgent();
+    }
+  }
+
+  public void removeAgent(AgentProxy agent) {
+    synchronized (_agents){
+      _agents.remove(agent);
+    }
   }
 
   public void enqueue(Job job) {
@@ -59,20 +62,21 @@ public class AllocationHandler implements AutoCloseable {
   private Object enqueueLock = new Object();
 
   public void enqueue(Task task) {
-    for (int i = 0; i < _agents.size(); i++) {
-      AgentProxy agent = _agents.get(i);
+    synchronized (enqueueLock) {
+      for (int i = 0; i < _agents.size(); i++) {
+        AgentProxy agent = _agents.get(i);
 
-      if(task.getTargetAgent() != null && !agent.getHostname().equals(task.getTargetAgent())) continue;
+        System.out.println("Agent / " + agent);
 
-      synchronized (enqueueLock) {
+        if(task.getTargetAgent() != null && !agent.getHostname().equals(task.getTargetAgent())) continue;
         if(agent.isQueueFull()) continue;
 
         enqueueOrDisconnectAgent(task, agent);
+
+        task.set_State(TaskState.Queued);
+
+        return;
       }
-
-      task.set_State(TaskState.Queued);
-
-      return;
     }
   }
 
@@ -80,12 +84,12 @@ public class AllocationHandler implements AutoCloseable {
     try {
       agent.enqueue(task);
     } catch (ConnectException e) {
-      _agents.remove(agent);
+      removeAgent(agent);
     }
   }
 
   public ArrayList<AgentProxy> getAgents() {
-    return _agents;
+      return _agents;
   }
 
   public synchronized void taskUpdate(Task task) {

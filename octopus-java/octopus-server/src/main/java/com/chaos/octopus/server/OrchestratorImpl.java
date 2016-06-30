@@ -5,23 +5,13 @@
 package com.chaos.octopus.server;
 
 import com.chaos.octopus.commons.core.*;
-import com.chaos.octopus.commons.core.message.ConnectMessage;
-import com.chaos.octopus.commons.core.message.Message;
-import com.chaos.octopus.commons.exception.ConnectException;
 import com.chaos.octopus.commons.http.SimpleServer;
-import com.chaos.octopus.commons.util.Commands;
-import com.chaos.octopus.commons.util.StreamUtilities;
-import com.chaos.octopus.server.synchronization.EnqueueJobs;
-import com.chaos.octopus.server.synchronization.Heartbeat;
-import com.chaos.octopus.server.synchronization.Synchronization;
-import com.chaos.octopus.server.synchronization.UpdateJob;
+import com.chaos.octopus.server.endpoint.*;
+import com.chaos.octopus.server.synchronization.*;
 import com.chaos.sdk.AuthenticatedChaosClient;
 import com.chaos.sdk.Chaos;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +38,9 @@ public class OrchestratorImpl implements Orchestrator {
     _synchronization = sync;
 
     _simpleServer = new SimpleServer(listeningPort);
-    _simpleServer.addEndpoint("Task/Update", new TaskUpdateEndpoint());
-    _simpleServer.addEndpoint("Task/Complete", new TaskCompleteEndpoint());
-    _simpleServer.addEndpoint("Agent/Connect", new AgentConnectEndpoint());
+    _simpleServer.addEndpoint("Task/Update", new TaskUpdateEndpoint(this));
+    _simpleServer.addEndpoint("Task/Complete", new TaskCompleteEndpoint(this));
+    _simpleServer.addEndpoint("Agent/Connect", new AgentConnectEndpoint(_AllocationHandler));
   }
 
   public static OrchestratorImpl create(OctopusConfiguration config) throws IOException {
@@ -133,45 +123,4 @@ public class OrchestratorImpl implements Orchestrator {
     return _synchronization;
   }
 
-  private class TaskUpdateEndpoint implements Endpoint {
-    public Response invoke(Request request) {
-      String taskJson = request.queryString.get("task");
-
-      Task task = StreamUtilities.ReadJson(taskJson, Task.class);
-
-      taskUpdate(task);
-
-      return new Response();
-    }
-  }
-
-  private class TaskCompleteEndpoint implements Endpoint{
-    public Response invoke(Request request) {
-      String taskJson = request.queryString.get("task");
-      Task task = StreamUtilities.ReadJson(taskJson, Task.class);
-
-      taskCompleted(task);
-
-      return new Response();
-    }
-  }
-
-  private class AgentConnectEndpoint implements Endpoint {
-    public Response invoke(Request request) {
-      String hostname = request.queryString.get("hostname");
-      int port = Integer.parseInt(request.queryString.get("port"));
-
-      try {
-        AgentProxy ap = new AgentProxy(hostname, port);
-        ap.InitializeAgent();
-
-        _AllocationHandler.addAgent(ap);
-      } catch (ConnectException e) {
-        System.err.println("Connection to Agent could not be established, hostname: " + hostname + ", port: " + port);
-        e.printStackTrace();
-      }
-
-      return new Response();
-    }
-  }
 }
