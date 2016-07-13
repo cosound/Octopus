@@ -27,20 +27,19 @@ public class Program {
     }
 
     int port = Integer.parseInt(cmd.getOptionValue("p", "44000"));
-    String orchestratorAddress = cmd.getOptionValue("oa", "localhost");
+    String orchestratorAddress = cmd.getOptionValue("a", "localhost");
 
-    if (cmd.hasOption("op")) {
+    if (cmd.hasOption("s")) {
       System.out.println("Starting Agent");
-      int orchestratorport = Integer.parseInt(cmd.getOptionValue("op"));
+      String s = cmd.getOptionValue("s");
+
+      int orchestratorport = Integer.parseInt(s);
 
       instanciateAgent(port, orchestratorAddress, orchestratorport);
     } else{
       System.out.println("Starting Orchestrator");
       instanciateOrcestrator(port);
     }
-
-
-
   }
 
 
@@ -50,6 +49,10 @@ public class Program {
       agent.addPlugin(new CommandLinePlugin());
       agent.addPlugin(new ChaosPlugin());
       agent.open();
+
+      while (agent.getIsRunning())
+        Thread.sleep(1000);
+
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -59,11 +62,9 @@ public class Program {
     try (OrchestratorImpl leader = new OrchestratorImpl(port)) {
       leader.open();
 
-      try {
-        Thread.sleep(60000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
+      while (leader.getIsRunning())
+        Thread.sleep(1000);
+
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -80,9 +81,9 @@ public class Program {
 
   private static Options createOptions() {
     Options options = new Options();
-    options.addOption("p", "port", false, "Specify the listening port [44000]");
-    options.addOption("oa", "orchestrator-address", false, "Specify the IP address/hostname of the Orchestrator");
-    options.addOption("op", "orchestrator-port", false, "Specify the port of the Orchestrator");
+    options.addOption("p", "port", true, "Specify the listening port [44000]");
+    options.addOption("a", "orchestrator-address", true, "Specify the IP address/hostname of the Orchestrator");
+    options.addOption("s", "orchestrator-port", true, "Specify the port of the Orchestrator");
     options.addOption("d", "debug", false, "Prints debug message to stdout");
     options.addOption("h", "help", false, "Print help");
 

@@ -8,9 +8,6 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Jesper on 28-06-2016.
- */
 public class RequestParser {
   public static Request parse(String requestString) {
     int startOfEndpoint = requestString.indexOf(" ") + 1;
@@ -20,9 +17,8 @@ public class RequestParser {
     String endpoint = requestString.substring(startOfEndpoint, endOfEndpoint)
         .replaceAll("/$|^/", "");
 
-    Request request = new Request(endpoint);
+    Request request = new Request(endpoint.trim());
     request.queryString = parseQueryString(requestString);
-
 
     return request;
   }

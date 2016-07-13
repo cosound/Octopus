@@ -41,7 +41,7 @@ public class OrchestratorImpl implements Orchestrator {
     _simpleServer.addEndpoint("Task/Update", new TaskUpdateEndpoint(this));
     _simpleServer.addEndpoint("Task/Complete", new TaskCompleteEndpoint(this));
     _simpleServer.addEndpoint("Agent/Connect", new AgentConnectEndpoint(_AllocationHandler));
-    _simpleServer.addEndpoint("Heartbeat", new HeartbeatEndpoint());
+    _simpleServer.addEndpoint("Heartbeat", new HeartbeatEndpoint(_AllocationHandler));
   }
 
   public static OrchestratorImpl create(OctopusConfiguration config) throws IOException {
@@ -124,4 +124,7 @@ public class OrchestratorImpl implements Orchestrator {
     return _synchronization;
   }
 
+  public boolean getIsRunning(){
+    return _simpleServer.getIsRunning();
+  }
 }

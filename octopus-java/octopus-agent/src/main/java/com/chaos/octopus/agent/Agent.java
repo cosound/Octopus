@@ -78,4 +78,8 @@ public class Agent implements AutoCloseable, TaskStatusChangeListener {
   public int getQueueSize() {
     return _executionHandler.getQueueSize();
   }
+
+  public boolean getIsRunning() {
+    return _simpleServer.getIsRunning();
+  }
 }

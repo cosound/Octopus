@@ -8,8 +8,10 @@ import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.commons.core.Task;
 import com.chaos.octopus.commons.core.TaskState;
 import com.chaos.octopus.commons.exception.ConnectException;
+import com.chaos.sdk.v6.dto.ClusterState;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AllocationHandler implements AutoCloseable {
   private ArrayList<AgentProxy> _agents = new ArrayList<>();
@@ -133,5 +135,21 @@ public class AllocationHandler implements AutoCloseable {
 
   public int getQueued() {
     return _Jobs.size();
+  }
+
+  public List<ClusterState.AgentState> getAgentStates() {
+    List<ClusterState.AgentState> states = new ArrayList<>();
+
+    for (int i = 0; i < getAgents().size(); i++){
+      try{
+        states.add(getAgents().get(i).getAgentState());
+      }
+      catch (Error error) {
+        _agents.remove(i);
+        i--;
+      }
+    }
+
+    return states;
   }
 }

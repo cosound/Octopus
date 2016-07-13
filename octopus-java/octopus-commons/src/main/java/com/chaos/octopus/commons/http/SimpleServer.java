@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -51,6 +52,10 @@ public class SimpleServer implements Runnable{
     _endpoints.put(route, endpoint);
   }
 
+  public boolean getIsRunning() {
+    return _isRunning;
+  }
+
   private class RequestHandler implements Runnable {
     private Socket socket;
 
@@ -78,15 +83,7 @@ public class SimpleServer implements Runnable{
       if(_endpoints.containsKey(request.endpoint))
         return _endpoints.get(request.endpoint).invoke(request);
 
-      Response res = new Response();
-      Response.Result result = res.new Result();
-      res.Results.add(result);
-
-      for (String val : request.queryString.values()) {
-        result.Keys.add(val);
-      }
-
-      return res;
+      return new Response<>(new Response.Error("Endpoint not found: " + request.endpoint));
     }
 
     String readRequestFromStream() throws IOException {

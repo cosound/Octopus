@@ -5,19 +5,12 @@
 package com.chaos.octopus.server;
 
 import com.chaos.octopus.commons.core.*;
-import com.chaos.octopus.commons.core.message.AgentStateMessage;
-import com.chaos.octopus.commons.core.message.Message;
-import com.chaos.octopus.commons.core.message.TaskMessage;
 import com.chaos.octopus.commons.exception.ConnectException;
 import com.chaos.octopus.commons.exception.DisconnectError;
-import com.chaos.octopus.commons.util.Commands;
-import com.chaos.octopus.commons.util.NetworkingUtil;
-import com.chaos.octopus.commons.util.StreamUtilities;
 import com.chaos.sdk.v6.dto.ClusterState;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -43,7 +36,8 @@ public class AgentProxy {
   }
 
   public void InitializeAgent() {
-    Response<AgentConnectResult> response = sendRequest("Plugin/Get", new TypeToken<Response<AgentConnectResult>>(){}.getType());
+    Response<AgentConnectResult> response = sendRequest("Plugin/Get", new TypeToken<Response<AgentConnectResult>>() {
+    }.getType());
 
     InitializeAgent(response);
   }
@@ -62,11 +56,17 @@ public class AgentProxy {
   }
 
   public void enqueue(Task task) throws DisconnectError {
-      _AllocatedTasks.put(task.taskId, task);
+    _AllocatedTasks.put(task.taskId, task);
 
-      String taskString = new Gson().toJson(task);
+    String taskString = new Gson().toJson(task);
 
-      sendRequest("Task/Enqueue", new KeyValue("task", taskString));
+    sendRequest("Task/Enqueue", new KeyValue("task", taskString));
+  }
+
+  public ClusterState.AgentState getAgentState() throws DisconnectError {
+    return (ClusterState.AgentState) sendRequest("State/Get",
+            new TypeToken<Response<ClusterState.AgentState>>() {
+            }.getType()).Results.get(0);
   }
 
   public void taskCompleted(Task task) {
@@ -74,26 +74,27 @@ public class AgentProxy {
   }
 
   public boolean isQueueFull() {
-      return _MaxNumberOfSimultaneousTasks - _AllocatedTasks.size() == 0;
+    return _MaxNumberOfSimultaneousTasks - _AllocatedTasks.size() == 0;
   }
 
   public ClusterState.AgentState getState() {
     ClusterState.AgentState state = new ClusterState.AgentState();
 
-    try{
+    try {
       String stateString = new Gson().toJson(state);
 
       Response<AgentStateResult> result = sendRequest("State/Get",
-          new TypeToken<Response<AgentStateResult>>(){}.getType(),
-          new KeyValue("state", stateString));
+              new TypeToken<Response<AgentStateResult>>() {
+              }.getType(),
+              new KeyValue("state", stateString));
 
       state = result.Results.get(0).agentState;
       state.state = "Connected";
-    }catch (DisconnectError e){
+    } catch (DisconnectError e) {
       state.state = "Disconnected";
-    } catch (ConnectException e){
+    } catch (ConnectException e) {
       state.state = "Disconnected";
-    } catch (Exception e){
+    } catch (Exception e) {
       state.state = "Disconnected";
     }
 
@@ -107,50 +108,52 @@ public class AgentProxy {
   private <T> Response<T> sendRequest(String endpoint, KeyValue... parameters) {
     String queryString = "";
 
-    for (KeyValue entry: parameters)
+    for (KeyValue entry : parameters)
       queryString += String.format("%1s=%2s&", entry.key, entry.value);
 
     return sendRequest(String.format("GET /%1s/?%2s HTTP/1.1", endpoint, queryString),
-        new TypeToken<Response>(){}.getType(),
-        10);
+            new TypeToken<Response>() {
+            }.getType(),
+            10);
   }
 
   private <T> Response<T> sendRequest(String endpoint, Type t, KeyValue... parameters) {
     String queryString = "";
 
-    for (KeyValue entry: parameters)
+    for (KeyValue entry : parameters)
       queryString += String.format("%1s=%2s&", entry.key, entry.value);
 
     return sendRequest(String.format("GET /%1s/?%2s HTTP/1.1", endpoint, queryString), t, 10);
   }
 
   private <T> Response<T> sendRequest(String message, Type t, int retries) {
-    try(Socket socket = new Socket(hostname, port)) {
+    try (Socket socket = new Socket(hostname, port)) {
       socket.getOutputStream().write(message.getBytes());
 
-      while (socket.getInputStream().available() == 0){}
+      while (socket.getInputStream().available() == 0) {
+      }
 
       String reaponseString = "";
 
-      while(socket.getInputStream().available() != 0){
+      while (socket.getInputStream().available() != 0) {
         byte[] buffer = new byte[socket.getInputStream().available()];
         socket.getInputStream().read(buffer);
 
         reaponseString += new String(buffer);
       }
 
-      String content = reaponseString.substring(reaponseString.indexOf("\n\n")+2);
+      String content = reaponseString.substring(reaponseString.indexOf("\n\n") + 2);
 
       return new Gson().fromJson(content, t);
     } catch (java.net.ConnectException e) {
-      throw new com.chaos.octopus.commons.exception.ConnectException("Connection to Orchestrator could not be established, check hostname and port", e);
+      throw new com.chaos.octopus.commons.exception.ConnectException(
+              "Connection to Orchestrator could not be established, check hostname and port", e);
     } catch (Exception e) {
       if (retries > 0) {
         sleep(250);
         sendRequest(message, t, --retries);
       }
 
-      // TODO This exception should be handled at a higher level
       System.err.println("Couldn't connect to: " + "" + ":" + "");
       e.printStackTrace();
 
