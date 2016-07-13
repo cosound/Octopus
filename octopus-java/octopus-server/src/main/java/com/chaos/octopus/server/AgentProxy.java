@@ -64,9 +64,11 @@ public class AgentProxy {
   }
 
   public ClusterState.AgentState getAgentState() throws DisconnectError {
-    return (ClusterState.AgentState) sendRequest("State/Get",
-            new TypeToken<Response<ClusterState.AgentState>>() {
+    AgentStateResult result = (AgentStateResult) sendRequest("State/Get",
+            new TypeToken<Response<AgentStateResult>>() {
             }.getType()).Results.get(0);
+
+    return result.agentState;
   }
 
   public void taskCompleted(Task task) {

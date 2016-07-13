@@ -1,10 +1,7 @@
 package com.chaos.octopus.agent.endpoint;
 
 import com.chaos.octopus.agent.ExecutionHandler;
-import com.chaos.octopus.commons.core.AgentStateResult;
-import com.chaos.octopus.commons.core.Endpoint;
-import com.chaos.octopus.commons.core.Request;
-import com.chaos.octopus.commons.core.Response;
+import com.chaos.octopus.commons.core.*;
 import com.chaos.sdk.v6.dto.ClusterState;
 
 public class StateGetEndpoint implements Endpoint {
@@ -21,6 +18,7 @@ public class StateGetEndpoint implements Endpoint {
         : executionHandler.getQueueSize();
     state.queueSize = executionHandler.getQueueSize();
     state.parallelism = executionHandler.getParallelism();
+    state.ramUsage = (int) ((int) Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
 
     Response<AgentStateResult> response = new Response<>();
     response.Results.add(new AgentStateResult(state));

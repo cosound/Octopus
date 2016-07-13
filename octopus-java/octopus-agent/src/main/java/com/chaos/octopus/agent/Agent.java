@@ -21,8 +21,8 @@ public class Agent implements AutoCloseable, TaskStatusChangeListener {
     this(new OrchestratorProxy(orchestratorHostname, orchestratorPort, listenPort), 4);
   }
 
-  public Agent(String orchestratorHostname, int orchestratorPort, int listenPort, int parrallelism) {
-    this(new OrchestratorProxy(orchestratorHostname, orchestratorPort, listenPort), parrallelism);
+  public Agent(String orchestratorHostname, int orchestratorPort, int listenPort, int parallelism) {
+    this(new OrchestratorProxy(orchestratorHostname, orchestratorPort, listenPort), parallelism);
   }
 
   public Agent(Orchestrator orchestrator, int parallelism) {

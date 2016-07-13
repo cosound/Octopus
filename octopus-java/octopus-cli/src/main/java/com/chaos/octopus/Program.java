@@ -27,15 +27,16 @@ public class Program {
     }
 
     int port = Integer.parseInt(cmd.getOptionValue("p", "44000"));
-    String orchestratorAddress = cmd.getOptionValue("a", "localhost");
+    String orchestratorAddress = cmd.getOptionValue("oa", "localhost");
 
-    if (cmd.hasOption("s")) {
+    if (cmd.hasOption("op")) {
       System.out.println("Starting Agent");
-      String s = cmd.getOptionValue("s");
+      String s = cmd.getOptionValue("op");
 
       int orchestratorport = Integer.parseInt(s);
+      int parallelism = Integer.parseInt(cmd.getOptionValue("ap", Runtime.getRuntime().availableProcessors() + ""));
 
-      instanciateAgent(port, orchestratorAddress, orchestratorport);
+      instanciateAgent(port, orchestratorAddress, orchestratorport, parallelism);
     } else{
       System.out.println("Starting Orchestrator");
       instanciateOrcestrator(port);
@@ -43,8 +44,8 @@ public class Program {
   }
 
 
-  private static void instanciateAgent(int port, String orchestratorAddress, int orchestratorport) {
-    try (Agent agent = new Agent(orchestratorAddress, orchestratorport, port)) {
+  private static void instanciateAgent(int port, String orchestratorAddress, int orchestratorport, int parallelism) {
+    try (Agent agent = new Agent(orchestratorAddress, orchestratorport, port, parallelism)) {
       agent.addPlugin(new TestPlugin());
       agent.addPlugin(new CommandLinePlugin());
       agent.addPlugin(new ChaosPlugin());
@@ -82,8 +83,9 @@ public class Program {
   private static Options createOptions() {
     Options options = new Options();
     options.addOption("p", "port", true, "Specify the listening port [44000]");
-    options.addOption("a", "orchestrator-address", true, "Specify the IP address/hostname of the Orchestrator");
-    options.addOption("s", "orchestrator-port", true, "Specify the port of the Orchestrator");
+    options.addOption("oa", "orchestrator-address", true, "Specify the IP address/hostname of the Orchestrator");
+    options.addOption("op", "orchestrator-port", true, "Specify the port of the Orchestrator");
+    options.addOption("ap", "agent-parallelism", true, "Specify the max number of parallel tasks [# of CPU cores]");
     options.addOption("d", "debug", false, "Prints debug message to stdout");
     options.addOption("h", "help", false, "Print help");
 
