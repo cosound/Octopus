@@ -11,93 +11,79 @@ import org.apache.commons.cli.*;
 
 import java.io.*;
 
-public class Program
-{
-    public static void main(String[] args) throws IOException
-    {
-        Options options = createOptions();
+public class Program {
+  public static void main(String[] args) throws IOException, ParseException {
+    Options options = createOptions();
 
-        CommandLineParser parser = new BasicParser();
+    CommandLineParser parser = new BasicParser();
+    CommandLine cmd = parser.parse(options, args);
 
-        try
-        {
-            CommandLine cmd = parser.parse(options, args);
+    if (!cmd.hasOption("d"))
+      System.setOut(createPrintStreamNullObject());
 
-            if(!cmd.hasOption("d"))
-            {
-                System.setOut(createPrintStreamNullObject());
-            }
-
-            if(cmd.hasOption("h"))
-            {
-                HelpFormatter help = new HelpFormatter();
-                help.printHelp("octopus-cli [OPTION]... [FILE]...", options);
-            }
-
-            executeJob(cmd);
-        }
-        catch (Exception e)
-        {
-            System.err.println(e.getMessage());
-        }
+    if (cmd.hasOption("h")) {
+      HelpFormatter help = new HelpFormatter();
+      help.printHelp("octopus-cli [OPTION]", options);
     }
 
-    private static PrintStream createPrintStreamNullObject()
-    {
-        return new PrintStream(new OutputStream()
-        {
-            @Override
-            public void write(int b) throws IOException
-            {
+    int port = Integer.parseInt(cmd.getOptionValue("p", "44000"));
+    String orchestratorAddress = cmd.getOptionValue("oa", "localhost");
 
-            }
-        });
+    if (cmd.hasOption("op")) {
+      System.out.println("Starting Agent");
+      int orchestratorport = Integer.parseInt(cmd.getOptionValue("op"));
+
+      instanciateAgent(port, orchestratorAddress, orchestratorport);
+    } else{
+      System.out.println("Starting Orchestrator");
+      instanciateOrcestrator(port);
     }
 
-    private static void executeJob(CommandLine cmd) throws Exception
-    {
-        CommandLineFileHelper fileHelper = new CommandLineFileHelper(cmd);
 
-        try(OrchestratorImpl leader = new OrchestratorImpl(56541);
-            Agent agent = new Agent("localhost", 56541, 56541 +1))
-        {
-            agent.addPlugin(new TestPlugin());
-            agent.addPlugin(new CommandLinePlugin());
-            agent.addPlugin(new ChaosPlugin());
-            leader.open();
-            agent.open();
-
-            try(BufferedReader reader = fileHelper.getStream())
-            {
-                Gson gson = new Gson();
-
-                Job job = gson.fromJson(reader, Job.class);
-
-                if(job.validate())
-                {
-                    leader.enqueue(job);
-                    waitForJobToComplete(job);
-                }
-                else
-                    System.err.println("The job format is not valid, ensure all steps contain tasks");
-            }
-        }
+    try {
+      Thread.sleep(60000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
+  }
 
-    private static void waitForJobToComplete(Job job) throws InterruptedException
-    {
-        while(!job.isComplete())
-        {
-            Thread.sleep(10);
-        }
+
+  private static void instanciateAgent(int port, String orchestratorAddress, int orchestratorport) {
+    try (Agent agent = new Agent(orchestratorAddress, orchestratorport, port)) {
+      agent.addPlugin(new TestPlugin());
+      agent.addPlugin(new CommandLinePlugin());
+      agent.addPlugin(new ChaosPlugin());
+      agent.open();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
-    private static Options createOptions()
-    {
-        Options options = new Options();
-        options.addOption("d", "debug", false, "Prints debug message to stdout");
-        options.addOption("h", "help", false, "Print help");
-
-        return options;
+  private static void instanciateOrcestrator(int port) {
+    try (OrchestratorImpl leader = new OrchestratorImpl(56541)) {
+      leader.open();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
+
+  private static PrintStream createPrintStreamNullObject() {
+    return new PrintStream(new OutputStream() {
+      @Override
+      public void write(int b) throws IOException {
+
+      }
+    });
+  }
+
+  private static Options createOptions() {
+    Options options = new Options();
+    options.addOption("p", "port", false, "Specify the listening port [44000]");
+    options.addOption("oa", "orchestrator-address", false, "Specify the IP address/hostname of the Orchestrator");
+    options.addOption("op", "orchestrator-port", false, "Specify the port of the Orchestrator");
+    options.addOption("d", "debug", false, "Prints debug message to stdout");
+    options.addOption("h", "help", false, "Print help");
+
+    return options;
+  }
 }
