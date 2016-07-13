@@ -2,11 +2,8 @@ package com.chaos.octopus.agent.unit.action;
 
 import com.chaos.octopus.agent.ExecutionHandler;
 import com.chaos.octopus.agent.TaskStatusChangeListener;
-import com.chaos.octopus.agent.action.AgentStateAction;
-import com.chaos.octopus.commons.core.Plugin;
-import com.chaos.octopus.commons.core.Task;
-import com.chaos.octopus.commons.core.TaskState;
-import com.chaos.octopus.commons.core.TestPlugin;
+import com.chaos.octopus.agent.endpoint.StateGetEndpoint;
+import com.chaos.octopus.commons.core.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -23,10 +20,11 @@ public class AgentStateActionTest{
 
       }
     }, 1);
-    AgentStateAction esa = new AgentStateAction(eh);
 
-    assertEquals(0, esa.getState().runningSize);
-    assertEquals(0, esa.getState().queueSize);
+    Response<AgentStateResult> response = new StateGetEndpoint(eh).invoke(new Request("State/Get"));
+
+    assertEquals(0, response.Results.get(0).agentState.runningSize);
+    assertEquals(0, response.Results.get(0).agentState.queueSize);
   }
 
   @Test
@@ -40,15 +38,16 @@ public class AgentStateActionTest{
 
       }
     }, 1);
-    AgentStateAction esa = new AgentStateAction(eh);
     Plugin p = new TestPlugin().create(Make_TestTaskThatTake10msToExecute());
     eh.enqueue(p);
 
     for (int i = 1000; i > 0 && p.getTask().get_State() != TaskState.Executing; i--)
       Thread.sleep(1);
 
-    assertEquals(1, esa.getState().runningSize);
-    assertEquals(1, esa.getState().queueSize);
+    Response<AgentStateResult> response = new StateGetEndpoint(eh).invoke(new Request("State/Get"));
+
+    assertEquals("queueSize", 1, response.Results.get(0).agentState.queueSize);
+    assertEquals("runningSize", 1, response.Results.get(0).agentState.runningSize);
   }
 
   @Test
@@ -62,7 +61,6 @@ public class AgentStateActionTest{
 
       }
     }, 1);
-    AgentStateAction esa = new AgentStateAction(eh);
     Plugin p = new TestPlugin().create(Make_TestTaskThatTake10msToExecute());
     eh.enqueue(p);
     eh.enqueue(new TestPlugin().create(Make_TestTaskThatTake10msToExecute()));
@@ -70,8 +68,10 @@ public class AgentStateActionTest{
     for (int i = 1000; i > 0 && p.getTask().get_State() != TaskState.Executing; i--)
       Thread.sleep(1);
 
-    assertEquals(1, esa.getState().runningSize);
-    assertEquals(2, esa.getState().queueSize);
+    Response<AgentStateResult> response = new StateGetEndpoint(eh).invoke(new Request("State/Get"));
+
+    assertEquals(1, response.Results.get(0).agentState.runningSize);
+    assertEquals(2, response.Results.get(0).agentState.queueSize);
   }
 
   protected Task Make_TestTaskThatTake10msToExecute() {

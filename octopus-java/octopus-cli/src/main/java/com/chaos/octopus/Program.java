@@ -40,11 +40,7 @@ public class Program {
     }
 
 
-    try {
-      Thread.sleep(60000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+
   }
 
 
@@ -60,8 +56,14 @@ public class Program {
   }
 
   private static void instanciateOrcestrator(int port) {
-    try (OrchestratorImpl leader = new OrchestratorImpl(56541)) {
+    try (OrchestratorImpl leader = new OrchestratorImpl(port)) {
       leader.open();
+
+      try {
+        Thread.sleep(60000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }

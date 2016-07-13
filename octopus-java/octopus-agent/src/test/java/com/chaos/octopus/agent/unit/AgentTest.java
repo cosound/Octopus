@@ -1,19 +1,8 @@
 package com.chaos.octopus.agent.unit;
 
 import static org.junit.Assert.*;
-
-import java.util.List;
-
-import com.chaos.octopus.agent.ExecutionHandler;
-import com.chaos.octopus.agent.PluginFactory;
-import com.chaos.octopus.agent.TaskStatusChangeListener;
-import com.chaos.octopus.agent.action.AgentStateAction;
-import com.chaos.octopus.agent.action.EnqueueTaskAction;
-import com.chaos.octopus.agent.action.ListSupportedPluginsAction;
 import com.chaos.octopus.commons.core.*;
-import com.chaos.sdk.v6.dto.ClusterState;
 import org.junit.Test;
-
 import com.chaos.octopus.agent.Agent;
 
 public class AgentTest {

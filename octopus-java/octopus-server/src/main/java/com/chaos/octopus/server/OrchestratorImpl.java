@@ -5,42 +5,26 @@
 package com.chaos.octopus.server;
 
 import com.chaos.octopus.commons.core.*;
-import com.chaos.octopus.commons.core.message.AgentStateMessage;
-import com.chaos.octopus.commons.core.message.ConnectMessage;
-import com.chaos.octopus.commons.core.message.Message;
-import com.chaos.octopus.commons.core.message.TaskMessage;
-import com.chaos.octopus.commons.exception.ConnectException;
-import com.chaos.octopus.commons.util.Commands;
-import com.chaos.octopus.commons.util.NetworkingUtil;
-import com.chaos.octopus.commons.util.StreamUtilities;
-import com.chaos.octopus.server.synchronization.EnqueueJobs;
-import com.chaos.octopus.server.synchronization.Heartbeat;
-import com.chaos.octopus.server.synchronization.Synchronization;
-import com.chaos.octopus.server.synchronization.UpdateJob;
+import com.chaos.octopus.commons.http.SimpleServer;
+import com.chaos.octopus.server.endpoint.*;
+import com.chaos.octopus.server.synchronization.*;
 import com.chaos.sdk.AuthenticatedChaosClient;
 import com.chaos.sdk.Chaos;
-import com.chaos.sdk.v6.dto.ClusterState;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrchestratorImpl implements Orchestrator, Runnable {
+public class OrchestratorImpl implements Orchestrator {
   // keeps track of the jobs thqt need to be updated
   // listens for packets from the agents
   // Parses the message and decides how to handle it
   // Contains the synchronization
   private final ConcurrentJobQueue _jobsWithUpdates;
-  private boolean _isRunning = false;
-  private Thread _thread;
-  private ServerSocket _socket;
   private int _port;
   private AllocationHandler _AllocationHandler;
   private Synchronization _synchronization;
+  private SimpleServer _simpleServer;
 
   public OrchestratorImpl(int port) {
     this(port, new Synchronization(), new ConcurrentJobQueue());
@@ -52,6 +36,12 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
 
     _jobsWithUpdates = queue;
     _synchronization = sync;
+
+    _simpleServer = new SimpleServer(listeningPort);
+    _simpleServer.addEndpoint("Task/Update", new TaskUpdateEndpoint(this));
+    _simpleServer.addEndpoint("Task/Complete", new TaskCompleteEndpoint(this));
+    _simpleServer.addEndpoint("Agent/Connect", new AgentConnectEndpoint(_AllocationHandler));
+    _simpleServer.addEndpoint("Heartbeat", new HeartbeatEndpoint());
   }
 
   public static OrchestratorImpl create(OctopusConfiguration config) throws IOException {
@@ -73,67 +63,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
   }
 
   public void open() {
-    try {
-      _socket = new ServerSocket(_port);
-      _isRunning = true;
-
-      _thread = new Thread(this);
-      _thread.setName("Orchestrator");
-      _thread.start();
-
-      // todo: move interval to configuration
-      _synchronization.synchronize(30 * 1000); // synchronize every 30 seconds
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void run() {
-    while (_isRunning) {
-      try (Socket socket = _socket.accept()) {
-        String result = StreamUtilities.ReadString(socket.getInputStream());
-
-        Message message = Message.createFromJson(result);
-
-        // todo: refactor switch, perhaps using the specification pattern.
-        switch (message.getAction()) {
-          case Commands.CONNECT: {
-            ConnectMessage connect = ConnectMessage.createFromJson(result);
-
-            try {
-              AgentProxy ap = new AgentProxy(connect.get_Hostname(), connect.get_Port());
-              ap.InitializeAgent();
-
-              _AllocationHandler.addAgent(ap);
-            } catch (ConnectException e) {
-              System.err.println("Connection to Agent could not be established, hostname: " + connect.get_Hostname() + ", port: " + connect.get_Port());
-              e.printStackTrace();
-            }
-
-            break;
-          }
-          case Commands.TASK_DONE: {
-            TaskMessage taskMessage = TaskMessage.createFromJson(result);
-
-            taskCompleted(taskMessage.getTask());
-
-            break;
-          }
-          case Commands.TASK_UPDATE: {
-            TaskMessage taskMessage = TaskMessage.createFromJson(result);
-
-            taskUpdate(taskMessage.getTask());
-
-            break;
-          }
-        }
-      } catch (SocketException se) {
-        // if the socket is closed it means the server is turned off, so we can ignore the exception
-        if (!_socket.isClosed()) se.printStackTrace();
-      } catch (IOException | InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
+    // todo: move interval to configuration
+    _synchronization.synchronize(30 * 1000); // synchronize every 30 seconds
   }
 
   @Override
@@ -173,9 +104,8 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
   }
 
   public void close() throws Exception {
-    _isRunning = false;
+    _simpleServer.stop();
 
-    if (_socket != null) _socket.close();
     if (_AllocationHandler != null) _AllocationHandler.close();
     if (_synchronization != null) _synchronization.stop();
   }
@@ -193,4 +123,5 @@ public class OrchestratorImpl implements Orchestrator, Runnable {
   public Synchronization get_synchronization() {
     return _synchronization;
   }
+
 }

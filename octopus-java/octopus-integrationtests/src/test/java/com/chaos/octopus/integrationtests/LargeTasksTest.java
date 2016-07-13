@@ -37,7 +37,7 @@ public class LargeTasksTest {
                 public Boolean isTrue() {return agent1.getQueueSize() == 1;}
             });
 
-            assertEquals("One task should be queued", 1, agent1.getQueueSize());
+            assertEquals("One key should be queued", 1, agent1.getQueueSize());
         }
     }
 

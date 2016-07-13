@@ -32,6 +32,7 @@ public class ExecutionHandler implements AutoCloseable, TaskCompleteListener {
 
   public void enqueue(Plugin plugin) {
     _currentQueueSize.incrementAndGet();
+
     ExecutionSlot slot = new ExecutionSlot(plugin);
     slot.addTaskCompleteListener(this);
     slot.addTaskUpdateListener(_taskStatusChangedListener);
