@@ -12,6 +12,8 @@ import com.chaos.sdk.AuthenticatedChaosClient;
 import com.chaos.sdk.Chaos;
 
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +43,12 @@ public class OrchestratorImpl implements Orchestrator {
     _simpleServer.addEndpoint("Task/Update", new TaskUpdateEndpoint(this));
     _simpleServer.addEndpoint("Task/Complete", new TaskCompleteEndpoint(this));
     _simpleServer.addEndpoint("Agent/Connect", new AgentConnectEndpoint(_AllocationHandler));
-    _simpleServer.addEndpoint("Heartbeat", new HeartbeatEndpoint(_AllocationHandler));
+    try {
+      _simpleServer.addEndpoint("Heartbeat", new HeartbeatEndpoint(_AllocationHandler, listeningPort, Inet4Address.getLocalHost().getHostAddress()));
+    } catch (UnknownHostException e) {
+      _simpleServer.addEndpoint("Heartbeat", new HeartbeatEndpoint(_AllocationHandler, listeningPort, "Unknown Hostname"));
+    }
+    _simpleServer.addEndpoint("Job/Enqueue", new JobEnqueueEndpoint(this));
   }
 
   public static OrchestratorImpl create(OctopusConfiguration config) throws IOException {

@@ -16,9 +16,11 @@ public class StateGetEndpoint implements Endpoint {
     state.runningSize = executionHandler.getQueueSize() > executionHandler.getParallelism()
         ? executionHandler.getParallelism()
         : executionHandler.getQueueSize();
+    state.hasAvailableSlots = state.runningSize < executionHandler.getParallelism();
     state.queueSize = executionHandler.getQueueSize();
     state.parallelism = executionHandler.getParallelism();
-    state.ramUsage = (int) ((int) Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+    state.ramUsage = (int) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+
 
     Response<AgentStateResult> response = new Response<>();
     response.Results.add(new AgentStateResult(state));

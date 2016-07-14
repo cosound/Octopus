@@ -12,7 +12,7 @@ import com.chaos.sdk.v6.dto.ClusterState;
 
 import java.util.ArrayList;
 import java.util.List;
-
+// todo Extract enqueue logic from sending a task to an Agent by putting the execution logic on a separate Thread
 public class AllocationHandler implements AutoCloseable {
   private ArrayList<AgentProxy> _agents = new ArrayList<>();
   private ArrayList<Job> _Jobs = new ArrayList<>();
@@ -32,12 +32,13 @@ public class AllocationHandler implements AutoCloseable {
   }
 
   public void enqueue(Job job) {
+    job.resume();
+
     synchronized (_Jobs) {
       for (Job j : _Jobs)
         if (j.id.equals(job.id)) return;
 
-      job.print();
-      job.resume();
+      //job.print();
 
       _Jobs.add(job);
 

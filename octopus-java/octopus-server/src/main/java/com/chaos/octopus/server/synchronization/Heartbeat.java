@@ -16,7 +16,7 @@ public class Heartbeat implements SynchronizationTask {
 
   public void action() {
     ClusterState state = new ClusterState();
-    state.jobsInQueue = allocationHandler.getQueued();
+    state.queueSize = allocationHandler.getQueued();
 
     for (AgentProxy ap : allocationHandler.getAgents()){
       ClusterState.AgentState as = ap.getState();

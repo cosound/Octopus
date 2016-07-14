@@ -28,7 +28,7 @@ public class HeartbeatTest {
 
     AuthenticatedChaosClient authenticate = chaos.authenticate("90f4183870e5d60bbb1b595c10f0c48a4edb17a1befeaee3e4146a9d492f0c84");
     ClusterState state = new ClusterState();
-    state.jobsInQueue = 1;
+    state.queueSize = 1;
     state.agents = new ArrayList<>();
     ClusterState.AgentState agentState = new ClusterState.AgentState();
     agentState.state = "Disconnected";

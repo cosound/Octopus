@@ -68,6 +68,9 @@ public class AgentProxy {
             new TypeToken<Response<AgentStateResult>>() {
             }.getType()).Results.get(0);
 
+    result.agentState.hostname = hostname;
+    result.agentState.port = port;
+
     return result.agentState;
   }
 
