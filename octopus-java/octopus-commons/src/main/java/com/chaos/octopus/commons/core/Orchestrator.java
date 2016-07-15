@@ -6,7 +6,7 @@ package com.chaos.octopus.commons.core;
 
 import java.net.ConnectException;
 
-public interface Orchestrator extends AutoCloseable, JobEnqueuer {
+public interface Orchestrator extends AutoCloseable, JobQueue {
   void open() throws ConnectException;
   void taskCompleted(Task task);
   void taskUpdate(Task task);

@@ -1,5 +1,5 @@
 package com.chaos.octopus.commons.core;
 
-public interface JobEnqueuer{
+public interface JobQueue {
   void enqueue(Job job);
 }

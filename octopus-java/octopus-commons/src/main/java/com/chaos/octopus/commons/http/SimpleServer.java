@@ -16,7 +16,7 @@ public class SimpleServer implements Runnable{
   private Thread _thread;
   private boolean _isRunning = true;
   private ServerSocket _serverSocket;
-  private ExecutorService _pool = Executors.newFixedThreadPool(8);
+  private ExecutorService _pool = Executors.newFixedThreadPool(64);
   private Map<String, Endpoint> _endpoints = new HashMap<>();
 
   public SimpleServer(int listeningPort){

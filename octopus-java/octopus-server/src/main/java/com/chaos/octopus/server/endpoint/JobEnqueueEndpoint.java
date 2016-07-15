@@ -6,10 +6,10 @@ import com.google.gson.Gson;
 import java.util.UUID;
 
 public class JobEnqueueEndpoint implements Endpoint {
-  private JobEnqueuer jobEnqueuer;
+  private JobQueue jobQueue;
 
-  public JobEnqueueEndpoint(JobEnqueuer jobEnqueuer) {
-    this.jobEnqueuer = jobEnqueuer;
+  public JobEnqueueEndpoint(JobQueue jobQueue) {
+    this.jobQueue = jobQueue;
   }
 
   public Response invoke(Request request) {
@@ -18,8 +18,19 @@ public class JobEnqueueEndpoint implements Endpoint {
     if(job.id == null || "".equals(job.id))
       job.id = UUID.randomUUID().toString();
 
-    jobEnqueuer.enqueue(job);
+    jobQueue.enqueue(job);
 
-    return new Response();
+    boolean shouldWait = request.queryString.containsKey("wait") && "true".equals(request.queryString.get("wait"));
+
+    while (shouldWait && !job.isComplete()){
+      try {
+        Thread.sleep(1);
+      } catch (InterruptedException e) { }
+    }
+
+    Response<Job> response = new Response();
+    response.Results.add(job);
+
+    return response;
   }
 }

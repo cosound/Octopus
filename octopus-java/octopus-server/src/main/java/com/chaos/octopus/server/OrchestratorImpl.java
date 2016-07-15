@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrchestratorImpl implements Orchestrator {
-  // keeps track of the jobs thqt need to be updated
-  // listens for packets from the agents
-  // Parses the message and decides how to handle it
+  // keeps track of the jobs that need to be updated
   // Contains the synchronization
   private final ConcurrentJobQueue _jobsWithUpdates;
   private int _port;
@@ -80,8 +78,6 @@ public class OrchestratorImpl implements Orchestrator {
     try {
       Job job = _AllocationHandler.getJob(task);
       _jobsWithUpdates.put(job);
-
-      System.out.println(new Gson().toJson(task));
 
       _AllocationHandler.taskComplete(task);
     } catch (ArrayIndexOutOfBoundsException e) {
