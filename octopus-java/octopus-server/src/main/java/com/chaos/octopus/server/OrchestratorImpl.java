@@ -10,7 +10,6 @@ import com.chaos.octopus.server.endpoint.*;
 import com.chaos.octopus.server.synchronization.*;
 import com.chaos.sdk.AuthenticatedChaosClient;
 import com.chaos.sdk.Chaos;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.Inet4Address;
