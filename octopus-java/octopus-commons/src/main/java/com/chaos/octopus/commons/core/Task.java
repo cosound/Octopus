@@ -6,11 +6,11 @@ import java.util.UUID;
 public class Task {
   public String taskId;
   public String pluginId;
-  public double progress;
-  public HashMap<String, String> properties = new HashMap<String, String>();
-
   private TaskState _State;
+  public double progress;
   private String targetAgent = null;
+  public HashMap<String, String> properties = new HashMap<String, String>();
+  public String output = "";
 
   public Task() {
     taskId = UUID.randomUUID().toString();

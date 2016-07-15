@@ -52,6 +52,8 @@ public class CommandLinePlugin implements Plugin, PluginDefinition {
       String line;
 
       while ((line = reader.readLine()) != null) {
+        _Task.output += line;
+
         Pattern r = Pattern.compile("<PROGRESS>(.*?)</PROGRESS>", Pattern.CASE_INSENSITIVE);
         Matcher m = r.matcher(line);
 

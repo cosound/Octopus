@@ -10,6 +10,7 @@ import com.chaos.octopus.server.endpoint.*;
 import com.chaos.octopus.server.synchronization.*;
 import com.chaos.sdk.AuthenticatedChaosClient;
 import com.chaos.sdk.Chaos;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -79,6 +80,8 @@ public class OrchestratorImpl implements Orchestrator {
     try {
       Job job = _AllocationHandler.getJob(task);
       _jobsWithUpdates.put(job);
+
+      System.out.println(new Gson().toJson(task));
 
       _AllocationHandler.taskComplete(task);
     } catch (ArrayIndexOutOfBoundsException e) {
