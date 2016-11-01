@@ -14,16 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 // todo Extract enqueue logic from sending a task to an Agent by putting the execution logic on a separate Thread
 public class AllocationHandler implements AutoCloseable {
-  private ArrayList<AgentProxy> _agents = new ArrayList<>();
-  private ArrayList<Job> _Jobs = new ArrayList<>();
+    private ArrayList<AgentProxy> _agents = new ArrayList<>();
+    private ArrayList<Job> _Jobs = new ArrayList<>();
 
-  public void addAgent(AgentProxy agent) {
-    synchronized (_agents){
-      _agents.add(agent);
+    public void addAgent(AgentProxy agent) {
+      synchronized (_agents){
+        _agents.add(agent);
 
-      enqueueNextTaskOnAgent();
+        enqueueNextTaskOnAgent();
+      }
     }
-  }
 
   public void removeAgent(AgentProxy agent) {
     synchronized (_agents){

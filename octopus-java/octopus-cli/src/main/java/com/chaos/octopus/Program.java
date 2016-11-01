@@ -43,7 +43,6 @@ public class Program {
     }
   }
 
-
   private static void instanciateAgent(int port, String orchestratorAddress, int orchestratorport, int parallelism) {
     try (Agent agent = new Agent(orchestratorAddress, orchestratorport, port, parallelism)) {
       agent.addPlugin(new TestPlugin());

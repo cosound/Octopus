@@ -54,11 +54,14 @@ public class OrchestratorImpl implements Orchestrator {
     ConcurrentJobQueue queue = new ConcurrentJobQueue();
     OrchestratorImpl leader = new OrchestratorImpl(config.getListeningPort(), sync, queue);
 
-    Chaos chaos = new Chaos(config.getChaosApiUrl());
-    AuthenticatedChaosClient client = chaos.authenticate(config.getChaosApiKey());
-    sync.addSynchronizationTask(new UpdateJob(queue, client));
-    sync.addSynchronizationTask(new EnqueueJobs(leader, client));
-    sync.addSynchronizationTask(new Heartbeat(leader._AllocationHandler, client));
+    if(config.getChaosApiUrl() != null && config.getChaosApiKey() != null)
+    {
+      Chaos chaos = new Chaos(config.getChaosApiUrl());
+      AuthenticatedChaosClient client = chaos.authenticate(config.getChaosApiKey());
+      sync.addSynchronizationTask(new UpdateJob(queue, client));
+      sync.addSynchronizationTask(new EnqueueJobs(leader, client));
+      sync.addSynchronizationTask(new Heartbeat(leader._AllocationHandler, client));
+    }
 
     return leader;
   }
