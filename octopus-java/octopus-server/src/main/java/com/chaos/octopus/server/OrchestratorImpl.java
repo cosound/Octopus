@@ -62,6 +62,10 @@ public class OrchestratorImpl implements Orchestrator {
       sync.addSynchronizationTask(new EnqueueJobs(leader, client));
       sync.addSynchronizationTask(new Heartbeat(leader._AllocationHandler, client));
     }
+    else
+    {
+      sync.addSynchronizationTask(new StandaloneUpdateJob(queue));
+    }
 
     return leader;
   }
@@ -134,5 +138,19 @@ public class OrchestratorImpl implements Orchestrator {
 
   public boolean getIsRunning(){
     return _simpleServer.getIsRunning();
+  }
+
+  private static class StandaloneUpdateJob implements SynchronizationTask {
+    private ConcurrentJobQueue queue;
+
+    public StandaloneUpdateJob(ConcurrentJobQueue queue) {
+      this.queue = queue;
+    }
+
+    public void action() {
+      for (Job job:queue.popAll()) {
+
+      }
+    }
   }
 }
