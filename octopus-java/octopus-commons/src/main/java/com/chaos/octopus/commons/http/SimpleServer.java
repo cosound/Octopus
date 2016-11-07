@@ -74,7 +74,7 @@ public class SimpleServer implements Runnable{
       } catch (SocketException se) {
         // if the socket is closed it means the server is turned off, so we can ignore the exception
         if (!socket.isClosed()) se.printStackTrace();
-      } catch (IOException e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
@@ -86,8 +86,15 @@ public class SimpleServer implements Runnable{
       return new Response<>(new Response.Error("Endpoint not found: " + request.endpoint));
     }
 
-    String readRequestFromStream() throws IOException {
-      while(socket.getInputStream().available() == 0);
+    String readRequestFromStream() throws Exception {
+      long timeout = System.currentTimeMillis() + 5000;
+
+      while(socket.getInputStream().available() == 0 && timeout > System.currentTimeMillis()){
+        Thread.sleep(1);
+      }
+
+      if(socket.getInputStream().available() == 0)
+        throw new Error("Connection closed before request data was sent");
 
       String requestString = "";
 
