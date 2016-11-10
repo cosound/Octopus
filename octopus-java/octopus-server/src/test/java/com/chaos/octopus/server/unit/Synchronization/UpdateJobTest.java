@@ -23,7 +23,7 @@ public class UpdateJobTest
 
         updateJob.action();
 
-        verify(chaos).jobSet(any(List.class));
+        verify(chaos).jobSet(any(Job.class));
     }
 
     @Test

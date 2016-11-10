@@ -34,6 +34,32 @@ public class ConcurrentJobQueue {
     return result;
   }
 
+  public Job pop() {
+    Job job;
+
+    synchronized (_hashJobs.values()) {
+      job = peek();
+
+      if(job != null)
+        _hashJobs.remove(job.id);
+    }
+
+    return job;
+  }
+
+  public Job peek() {
+    Job job = null;
+
+    synchronized (_hashJobs.values()) {
+      for (Job job1: _hashJobs.values()) {
+        job = job1;
+        break;
+      }
+    }
+
+    return job;
+  }
+
   public boolean contains(String id) {
     return _hashJobs.containsKey(id);
   }

@@ -14,12 +14,9 @@ public class ResponseTest {
 
     String json = new Gson().toJson(res1);
 
-    System.out.println(json);
-
     Type type = new TypeToken<Response<MyResult>>() {
     }.getType();
 
-    System.out.println(type);
     Response<MyResult> res11 = new Gson().fromJson(json, type);
 
     for (MyResult result : res11.Results) {

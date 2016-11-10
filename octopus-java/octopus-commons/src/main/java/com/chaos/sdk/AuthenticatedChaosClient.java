@@ -74,11 +74,9 @@ public class AuthenticatedChaosClient implements HeartbeatGateway{
     PortalResponse response = gateway.call("POST", "v6/Job/Set", "sessionGUID=" + sessionId + "&data=" + data);
   }
 
-  @Override
   public void set(ClusterState heartbeat) {
     try {
       String json = gson.toJson(heartbeat);
-      System.out.println(json);
       PortalResponse response = gateway.call("POST", "v6/Heartbeat/Set", "sessionGUID=" + sessionId + "&state=" + json);
 
       if("Chaos.Portal.Core.Exceptions.InsufficientPermissionsException".equals(response.Error.Fullname))

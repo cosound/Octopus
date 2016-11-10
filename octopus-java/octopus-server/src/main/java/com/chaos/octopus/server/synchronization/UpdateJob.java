@@ -4,6 +4,7 @@
  */
 package com.chaos.octopus.server.synchronization;
 
+import com.chaos.octopus.commons.core.Job;
 import com.chaos.octopus.server.ConcurrentJobQueue;
 import com.chaos.sdk.AuthenticatedChaosClient;
 
@@ -18,12 +19,13 @@ public class UpdateJob implements SynchronizationTask {
     this.client = client;
   }
 
-  @Override
   public void action() {
-    try {
-      client.jobSet(jobs.popAll());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+		for (Job job: this.jobs.popAll()) {
+			try {
+				client.jobSet(job);
+			} catch (IOException e){
+				this.jobs.put(job);
+			}
+		}
   }
 }
