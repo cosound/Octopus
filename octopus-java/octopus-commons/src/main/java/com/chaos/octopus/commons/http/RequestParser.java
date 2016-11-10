@@ -32,7 +32,12 @@ public class RequestParser {
     String query = requestString.substring(startOfQueryString +1, requestString.indexOf("HTTP"));
     try {
       query = URLDecoder.decode(query.trim(), "UTF-8");
-    } catch (UnsupportedEncodingException e) { }
+    } catch (UnsupportedEncodingException e) {
+    } catch (IllegalArgumentException e) {
+			System.err.println("RequestParser.parseQueryString()");
+			System.err.println(query.trim());
+			System.err.println();
+		}
 
     if("".equals(query)) return parameters;
 

@@ -1,6 +1,5 @@
 package com.chaos.octopus.server.synchronization;
 
-import com.chaos.octopus.server.AgentProxy;
 import com.chaos.octopus.server.AllocationHandler;
 import com.chaos.sdk.HeartbeatGateway;
 import com.chaos.sdk.v6.dto.ClusterState;
@@ -17,15 +16,7 @@ public class Heartbeat implements SynchronizationTask {
   public void action() {
     ClusterState state = new ClusterState();
     state.queueSize = allocationHandler.getQueued();
-
-    for (AgentProxy ap : allocationHandler.getAgents()){
-      ClusterState.AgentState as = ap.getState();
-      as.hasAvailableSlots = !ap.isQueueFull();
-      as.hostname = ap.getHostname();
-      as.port = ap.port;
-
-      state.agents.add(as);
-    }
+		state.agents = allocationHandler.getAgentStates();
 
     gateway.set(state);
   }

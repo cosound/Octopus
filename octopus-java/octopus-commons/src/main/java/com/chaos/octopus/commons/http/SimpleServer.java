@@ -64,10 +64,13 @@ public class SimpleServer implements Runnable {
 			this.socket = socket;
 		}
 
-		@Override
 		public void run() {
+			String requestString = null;
+
 			try {
-				Request request = RequestParser.parse(readRequestFromStream());
+				requestString = readRequestFromStream();
+
+				Request request = RequestParser.parse(requestString);
 				Response res = route(request);
 
 				SendResponse(res);
@@ -76,7 +79,15 @@ public class SimpleServer implements Runnable {
 				// if the socket is closed it means the server is turned off, so we can ignore the exception
 				if (!socket.isClosed()) se.printStackTrace();
 			} catch (Exception e) {
+
+				System.err.println("RequestHandler.Run()");
+
+				if(requestString != null)
+					System.err.println(requestString);
+
 				e.printStackTrace();
+
+				System.err.println();
 			}
 		}
 

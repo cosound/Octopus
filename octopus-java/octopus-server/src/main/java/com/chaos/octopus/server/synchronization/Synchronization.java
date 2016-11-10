@@ -42,6 +42,8 @@ public class Synchronization extends TimerTask {
                 task.action();
             } catch (Exception e) {
                 System.err.println("Synchronization (" + task.getClass().getName()+ ") - " + e.getMessage());
+                e.printStackTrace();
+                System.err.println();
             }
         }
     }
