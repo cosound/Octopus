@@ -12,13 +12,13 @@ import java.net.Inet4Address;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class OrchestratorProxy implements Orchestrator {
+class OrchestratorProxy implements Orchestrator {
   private final int port;
   private final String hostname;
   private int _localListenPort;
   private String _localHostAddress;
 
-  public OrchestratorProxy(String hostname, int port, int listenPort) {
+  OrchestratorProxy(String hostname, int port, int listenPort) {
     _localHostAddress = getHostAddress();
     _localListenPort = listenPort;
     this.port = port;
@@ -41,6 +41,8 @@ public class OrchestratorProxy implements Orchestrator {
     sendResponse("Agent/Connect",
         new KeyValue("hostname", _localHostAddress),
         new KeyValue("port", _localListenPort + ""));
+
+    System.out.println("Connected to orchestrator");
   }
 
   public void taskCompleted(Task task) {

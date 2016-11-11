@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AgentProxy {
-  public final int port;
+  private final int port;
   private final String hostname;
   private List<String> _SupportedPlugins;
   private int _MaxNumberOfSimultaneousTasks;
@@ -63,7 +63,7 @@ public class AgentProxy {
     sendRequest("Task/Enqueue", new KeyValue("task", taskString));
   }
 
-  public ClusterState.AgentState getAgentState() throws DisconnectError {
+  ClusterState.AgentState getAgentState() throws DisconnectError {
     AgentStateResult result = (AgentStateResult) sendRequest("State/Get",
             new TypeToken<Response<AgentStateResult>>() {
             }.getType()).Results.get(0);
@@ -74,11 +74,11 @@ public class AgentProxy {
     return result.agentState;
   }
 
-  public void taskCompleted(Task task) {
+  void taskCompleted(Task task) {
     _AllocatedTasks.remove(task.taskId);
   }
 
-  public boolean isQueueFull() {
+  boolean isQueueFull() {
     return _MaxNumberOfSimultaneousTasks - _AllocatedTasks.size() == 0;
   }
 
@@ -106,7 +106,7 @@ public class AgentProxy {
     return state;
   }
 
-  public String getHostname() {
+  String getHostname() {
     return hostname;
   }
 
@@ -132,10 +132,14 @@ public class AgentProxy {
   }
 
   private <T> Response<T> sendRequest(String message, Type t, int retries) {
-    try (Socket socket = new Socket(hostname, port)) {
-      socket.getOutputStream().write(message.getBytes());
 
-      while (socket.getInputStream().available() == 0) {
+		try (Socket socket = new Socket(hostname, port)) {
+			socket.getOutputStream().write(message.getBytes());
+
+      long timeout = System.currentTimeMillis() + 5000;
+
+      while (socket.getInputStream().available() == 0 && timeout > System.currentTimeMillis()) {
+        Thread.sleep(1);
       }
 
       String reaponseString = "";
@@ -151,11 +155,11 @@ public class AgentProxy {
 
       return new Gson().fromJson(content, t);
     } catch (java.net.ConnectException e) {
-      throw new com.chaos.octopus.commons.exception.ConnectException(
+			throw new com.chaos.octopus.commons.exception.ConnectException(
               "Connection to Orchestrator could not be established, check hostname and port", e);
     } catch (Exception e) {
       if (retries > 0) {
-        sleep(250);
+				sleep(100);
         sendRequest(message, t, --retries);
       }
 

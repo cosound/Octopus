@@ -24,6 +24,8 @@ public class AgentConnectEndpoint implements Endpoint {
       ap.InitializeAgent();
 
       allocationHandler.addAgent(ap);
+
+			System.out.println("Agent Connected");
     } catch (ConnectException e) {
       System.err.println("Connection to Agent could not be established, hostname: " + hostname + ", port: " + port);
       e.printStackTrace();
